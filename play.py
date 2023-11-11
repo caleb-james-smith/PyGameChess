@@ -12,8 +12,11 @@ def draw_square(my_game, my_screen, color, x_position, y_position, side):
 # Draw a piece
 # x_position: x position measured from left edge
 # y_position: y position measured from top edge
-def draw_piece(my_game, my_screen, color, x_position, y_position, size):
-    my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
+def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
+    if type == "circle":
+        my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
+    elif type == "triangle":
+        my_game.draw.polygon(my_screen, color, [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)], 0)
 
 # Get square color based on x, y coordinate indices
 def get_square_color(x, y, light_color, dark_color):
@@ -52,15 +55,17 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
             # choose light or dark color
             if y < half_n_squares:
                 color = dark_color
+                type = "triangle"
             else:
                 color = light_color
+                type = "circle"
             # Get piece position and size; note that this is different than the square position
             x_position = (x + 0.5) * square_side
             y_position = (y + 0.5) * square_side
             # FIXME: size should be smaller than square side
             size = square_side / 3
             # Draw piece
-            draw_piece(my_game, my_screen, color, x_position, y_position, size)
+            draw_piece(my_game, my_screen, color, x_position, y_position, size, type)
 
 # Run the game
 def run_game():
