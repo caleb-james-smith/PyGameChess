@@ -9,6 +9,30 @@ import pygame
 def draw_square(my_game, my_screen, color, x, y, side):
     my_game.draw.rect(my_screen, color, [x, y, side, side], 0)
 
+# Get square color based on x, y coordinate indices
+def get_square_color(x, y, light_color, dark_color):
+    # Use parity to determine square color
+    parity = (x + y) % 2
+    # Odd parity: dark color
+    if(parity):
+        return dark_color
+    # Even parity: light color
+    else:
+        return light_color
+
+# Draw the board
+def draw_board(my_game, my_screen, light_color, dark_color, squares_per_side, square_side):
+    # Draw squares
+    for x in range(squares_per_side):
+        for y in range(squares_per_side):
+            # Get square color
+            color = get_square_color(x, y, light_color, dark_color)
+            # Get square position
+            x_position = x * square_side
+            y_position = y * square_side
+            # Draw square
+            draw_square(my_game, my_screen, color, x_position, y_position, square_side)
+
 def run_game():
     # Initialize pygame
     pygame.init()
@@ -39,18 +63,9 @@ def run_game():
         # Fill the background with white
         screen.fill(PURE_WHITE)
 
-        # draw squares
-        for x in range(SQUARES_PER_SIDE):
-            for y in range(SQUARES_PER_SIDE):
-                parity = (x + y) % 2
-                # odd parity: dark color
-                if(parity):
-                    color = DARK_COLOR
-                # even parity: light color
-                else:
-                    color = LIGHT_COLOR
-                draw_square(pygame, screen, color, x * SQUARE_SIDE, y * SQUARE_SIDE, SQUARE_SIDE)
-
+        # Draw the board
+        draw_board(pygame, screen, LIGHT_COLOR, DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        
         # Flip the display
         pygame.display.flip()
 
