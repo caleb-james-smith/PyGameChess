@@ -74,10 +74,11 @@ def run_game():
     #BOARD_DARK_COLOR  = PURE_BLACK
     BOARD_LIGHT_COLOR = (233, 237, 204)
     BOARD_DARK_COLOR  = (119, 153, 84)
-    PIECE_LIGHT_COLOR = PURE_WHITE
-    PIECE_DARK_COLOR  = PURE_BLACK
-    #PIECE_LIGHT_COLOR = (233, 237, 204)
-    #PIECE_DARK_COLOR  = (119, 153, 84)
+    # FIXME: pick nice piece colors
+    #PIECE_LIGHT_COLOR = PURE_WHITE
+    #PIECE_DARK_COLOR  = PURE_BLACK
+    PIECE_LIGHT_COLOR = (233, 237, 204)
+    PIECE_DARK_COLOR  = (119, 153, 84)
 
     # Set up the drawing window (screen)
     SCREEN_WIDTH        = 800
