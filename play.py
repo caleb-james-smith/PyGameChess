@@ -58,7 +58,7 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
             else:
                 color = light_color
             # choose piece type
-            if x == 0 or x == squares_per_side - 1:
+            if y == 0 or y == squares_per_side - 1:
                 type = "circle"
             else:
                 type = "triangle"
