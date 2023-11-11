@@ -44,8 +44,13 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
     # Draw pieces
     for x in range(squares_per_side):
         for y in range(squares_per_side):
-            # FIXME: draw pieces using both colors
-            if y < (squares_per_side / 2):
+            half_n_squares    = squares_per_side / 2
+            quarter_n_squares = squares_per_side / 4
+            # do not draw pieces in the central rows; depends on the squares per side
+            if quarter_n_squares <= y < 3 * quarter_n_squares:
+                continue
+            # choose light or dark color
+            if y < half_n_squares:
                 color = dark_color
             else:
                 color = light_color
