@@ -58,7 +58,7 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
             x_position = (x + 0.5) * square_side
             y_position = (y + 0.5) * square_side
             # FIXME: size should be smaller than square side
-            size = square_side / 2
+            size = square_side / 3
             # Draw piece
             draw_piece(my_game, my_screen, color, x_position, y_position, size)
 
@@ -70,10 +70,14 @@ def run_game():
     # Define colors
     PURE_WHITE  = (255, 255, 255)
     PURE_BLACK  = (0, 0, 0)
-    #LIGHT_COLOR = PURE_WHITE
-    #DARK_COLOR  = PURE_BLACK
-    LIGHT_COLOR = (233, 237, 204)
-    DARK_COLOR  = (119, 153, 84)
+    #BOARD_LIGHT_COLOR = PURE_WHITE
+    #BOARD_DARK_COLOR  = PURE_BLACK
+    BOARD_LIGHT_COLOR = (233, 237, 204)
+    BOARD_DARK_COLOR  = (119, 153, 84)
+    PIECE_LIGHT_COLOR = PURE_WHITE
+    PIECE_DARK_COLOR  = PURE_BLACK
+    #PIECE_LIGHT_COLOR = (233, 237, 204)
+    #PIECE_DARK_COLOR  = (119, 153, 84)
 
     # Set up the drawing window (screen)
     SCREEN_WIDTH        = 800
@@ -96,10 +100,10 @@ def run_game():
         screen.fill(PURE_WHITE)
 
         # Draw the board
-        draw_board(pygame, screen, LIGHT_COLOR, DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        draw_board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
         
         # Draw the pieces
-        draw_pieces(pygame, screen, PURE_WHITE, PURE_BLACK, SQUARES_PER_SIDE, SQUARE_SIDE)
+        draw_pieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()
