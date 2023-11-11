@@ -52,13 +52,16 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
             # do not draw pieces in the central rows; depends on the squares per side
             if quarter_n_squares <= y < 3 * quarter_n_squares:
                 continue
-            # choose light or dark color
+            # choose piece color
             if y < half_n_squares:
                 color = dark_color
-                type = "triangle"
             else:
                 color = light_color
+            # choose piece type
+            if x == 0 or x == squares_per_side - 1:
                 type = "circle"
+            else:
+                type = "triangle"
             # Get piece position and size; note that this is different than the square position
             x_position = (x + 0.5) * square_side
             y_position = (y + 0.5) * square_side
