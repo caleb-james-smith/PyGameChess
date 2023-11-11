@@ -45,7 +45,10 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
     for x in range(squares_per_side):
         for y in range(squares_per_side):
             # FIXME: draw pieces using both colors
-            color = light_color
+            if y < (squares_per_side / 2):
+                color = dark_color
+            else:
+                color = light_color
             # Get piece position and size; note that this is different than the square position
             x_position = (x + 0.5) * square_side
             y_position = (y + 0.5) * square_side
