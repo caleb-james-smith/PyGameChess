@@ -91,8 +91,7 @@ def run_game():
         draw_board(pygame, screen, LIGHT_COLOR, DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
         
         # Draw the pieces
-        # FIXME: piece colors should be different than board colors
-        draw_pieces(pygame, screen, LIGHT_COLOR, DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        draw_pieces(pygame, screen, PURE_WHITE, PURE_BLACK, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()
