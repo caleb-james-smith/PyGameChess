@@ -103,6 +103,9 @@ def run_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                position = pygame.mouse.get_pos()
+                print("mouse button down at (x, y) = ({0}, {1})".format(position[0], position[1]))
 
         # Fill the background with white
         screen.fill(PURE_WHITE)
