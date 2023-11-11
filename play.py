@@ -14,8 +14,8 @@ def run_game():
     pygame.init()
 
     # Define colors
-    #LIGHT_COLOR = (255, 255, 255)
-    #DARK_COLOR = (0, 0, 0)
+    PURE_WHITE  = (255, 255, 255)
+    PURE_BLACK  = (0, 0, 0)
     LIGHT_COLOR = (233, 237, 204)
     DARK_COLOR  = (119, 153, 84)
 
@@ -37,18 +37,19 @@ def run_game():
                 running = False
 
         # Fill the background with white
-        screen.fill(LIGHT_COLOR)
+        screen.fill(PURE_WHITE)
 
-        # draw black squares
-        for row in range(SQUARES_PER_SIDE):
-            y = row * SQUARE_SIDE
-            # determine starting x value for each row
-            if row % 2 == 0:
-                x_start = SQUARE_SIDE
-            else:
-                x_start = 0
-            for x in range(x_start, BOARD_SIDE, 2 * SQUARE_SIDE):
-                draw_square(pygame, screen, DARK_COLOR, x, y, SQUARE_SIDE)
+        # draw squares
+        for x in range(SQUARES_PER_SIDE):
+            for y in range(SQUARES_PER_SIDE):
+                parity = (x + y) % 2
+                # odd parity: dark color
+                if(parity):
+                    color = DARK_COLOR
+                # even parity: light color
+                else:
+                    color = LIGHT_COLOR
+                draw_square(pygame, screen, color, x * SQUARE_SIDE, y * SQUARE_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()
