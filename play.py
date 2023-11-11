@@ -18,6 +18,9 @@ def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
     elif type == "triangle":
         my_game.draw.polygon(my_screen, color, [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)], 0)
 
+# FIXME: may need a function to draw clicked square
+#def draw_clicked_square(color):
+
 # Get square color based on x, y coordinate indices
 def get_square_color(x, y, light_color, dark_color):
     # Use parity to determine square color
@@ -86,6 +89,7 @@ def run_game():
     BOARD_DARK_COLOR  = (119, 153, 84)
     PIECE_LIGHT_COLOR = (248, 248, 248)
     PIECE_DARK_COLOR  = (85, 83, 82)
+    CLICK_COLOR       = PURE_BLACK
 
     # Set up the drawing window (screen)
     SCREEN_WIDTH        = 800
@@ -97,21 +101,33 @@ def run_game():
 
     # Run until the user asks to quit
     running = True
+    
+    # Click position
+    click_position = None
+
     while running:
 
-        # Did the user click the window close button?
         for event in pygame.event.get():
+            # If the user clicks the window close button, stop running.
             if event.type == pygame.QUIT:
                 running = False
+            # Get position of click
             if event.type == pygame.MOUSEBUTTONDOWN:
-                position = pygame.mouse.get_pos()
-                print("mouse button down at (x, y) = ({0}, {1})".format(position[0], position[1]))
+                click_position = pygame.mouse.get_pos()
+                print("click at (x, y) = ({0}, {1})".format(click_position[0], click_position[1]))
 
         # Fill the background with white
         screen.fill(PURE_WHITE)
-
+        
         # Draw the board
         draw_board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        
+        # If click, draw clicked square
+        if click_position:
+            # FIXME: the position should be the position of the board square, not the click
+            click_x = click_position[0]
+            click_y = click_position[1]
+            draw_square(pygame, screen, CLICK_COLOR, click_x, click_y, SQUARE_SIDE)
         
         # Draw the pieces
         draw_pieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
