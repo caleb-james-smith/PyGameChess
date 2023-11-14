@@ -13,7 +13,7 @@
 # - 6: king
 
 class State:
-    def __init__(self, state):
+    def __init__(self, state=None):
         self.state = state
         # chess pieces
         self.pieces = {
@@ -36,9 +36,27 @@ class State:
         self.state = state
 
     def PrintState(self):
-        print("State: {0}".format(self.state))
+        print("State:")
+        if self.state:
+            for row in self.state:
+                print(row)
+        else:
+            print(self.state)
 
-    def GetName(self, value):
+    def SetInitialState(self):
+        state = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0]            
+        ]
+        self.SetState(state)
+
+    def GetPieceName(self, value):
         result = ""
         
         # get name of piece based on value; use absolute value
@@ -56,15 +74,19 @@ class State:
             result = "black {0}".format(result)
         
         return result
+    
+    # print types of pieces
+    def PrintPieceTypes(self):
+        # print types of pieces
+        for i in range(-6, 7):
+            print("{0}: {1}".format(i, self.GetPieceName(i)))
 
 def main():
-    state = State("Checkers")
+    state = State()
     state.PrintState()
-    state.SetState("Chess")
-    print("State: {0}".format(state.GetState()))
-    print("State: {0}".format(state))
-    for i in range(-10, 11):
-        print("{0}: {1}".format(i, state.GetName(i)))
+    state.SetInitialState()
+    state.PrintState()
+    state.PrintPieceTypes()
 
 if __name__ == "__main__":
     main()
