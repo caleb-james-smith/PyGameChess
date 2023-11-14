@@ -1,4 +1,6 @@
-# Simple pygame program
+# Chess using the pygame library.
+# - Author: Caleb Smith
+# - Date: Project started on November 10, 2023
 
 # Import the pygame library
 import pygame

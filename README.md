@@ -1,2 +1,2 @@
 # PyGameChess
-Chess using pygame library.
+Chess using the pygame library.

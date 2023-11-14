@@ -12,6 +12,14 @@
 # - 5: queen
 # - 6: king
 
+# TODO:
+# - Define a mapping between x, y coordinates and chess notation coordinates
+# - When a square is clicked, print out the x, y and chess notation coordinates
+# DONE:
+# - Create a class for the game state
+# - Define numbers and names for chess pieces
+# - Create a class for the chess board
+
 # class to define current game state (piece positions)
 class State:
     def __init__(self, state=None):
