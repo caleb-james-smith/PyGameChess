@@ -16,6 +16,9 @@ class State:
     def __init__(self, state):
         self.state = state
 
+    def __str__(self):
+        return str(self.state)
+
     def GetState(self):
         return self.state
 
@@ -30,6 +33,7 @@ def main():
     state.PrintState()
     state.SetState("Burritos.")
     print("State: {0}".format(state.GetState()))
+    print("State: {0}".format(state))
 
 if __name__ == "__main__":
     main()
