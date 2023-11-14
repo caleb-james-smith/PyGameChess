@@ -13,7 +13,6 @@
 # - 6: king
 
 # TODO:
-# - Define a mapping between x, y coordinates and chess notation coordinates
 # - When a square is clicked, print out the x, y and chess notation coordinates
 # DONE:
 # - Create a class for the game state
