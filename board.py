@@ -5,13 +5,14 @@
 # - Define a mapping between x, y coordinates and chess notation coordinates
 # - Define valid x, y coordinates
 # - Define valid chess notation
+# - Fix bug: x, y coordinates (rows, columns) are inverted for notation!
 
 class Board:
     def __init__(self):
         return
 
     # get chess notation for given x, y coordinates
-    # example: input = [2, 3], output = "d6"
+    # example: input = [2, 3], output = "c5"
     def GetChessNotation(self, location):
         chess_notation = None
         
@@ -24,16 +25,18 @@ class Board:
         y = location[1]
         
         # chess notation
-        # row:    integers 1 to 8, starting from the bottom row
         # column: letters "a" to "h", starting from the left column
-        # Written as column + row
-        row = str(8 - x)
-        column = chr(ord('a') + y)
+        # row:    integers 1 to 8, starting from the bottom row
+        # columns correspond to x coordinate!
+        # rows correspond to y coordinate!
+        # Notation is written as column + row
+        column = chr(ord('a') + x)
+        row = str(8 - y)
         chess_notation = column + row
         return chess_notation
     
     # get x, y coordinates based on chess notation
-    # example: input = "d6", output = [2, 3]
+    # example: input = "c5", output = [2, 3]
     def GetXY(self, chess_notation):
         x, y = None, None
         
@@ -43,10 +46,11 @@ class Board:
             return [x, y]
         
         column = chess_notation[0]
-        row    = chess_notation[1]        
+        row    = chess_notation[1]
         
-        x = 8 - int(row)
-        y = ord(column) - ord('a')
+        # invert the conversion to notation; solve for x and y
+        x = ord(column) - ord('a')
+        y = 8 - int(row)
 
         return [x, y]
     
@@ -94,9 +98,9 @@ class Board:
 
 def main():
     board = Board()
-    location = [0, 0]
+    #location = [0, 0]
     #location = [7, 7]
-    #location = [2, 3]
+    location = [2, 3]
     #location = [4, 3]
     #location = [4, 4]
     chess_notation = board.GetChessNotation(location)
@@ -104,7 +108,7 @@ def main():
     print("{0}: {1}".format(location, chess_notation))
     print("{0}: {1}".format(chess_notation, xy))
     
-    chess_notation = "a1"
+    chess_notation = "c5"
     xy = board.GetXY(chess_notation)
     print("{0}: {1}".format(chess_notation, xy))
 

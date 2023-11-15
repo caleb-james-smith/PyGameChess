@@ -3,10 +3,10 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - When a square is clicked, print out the x, y and chess notation coordinates
 # DONE:
 # - Draw colored square when clicked
 # - Fix bug: use square location instead of click location
+# - When a square is clicked, print out the x, y and chess notation coordinates
 
 # Import the pygame library
 import pygame
@@ -158,7 +158,6 @@ def run_game():
                 x = xy_position[0]
                 y = xy_position[1]
                 # chess notation
-                # TODO: fix bug; right now x/y (rows/columns) are inverted in notation!
                 chess_notation = board.GetChessNotation(xy_position)
 
                 print("click (x, y) = ({0}, {1}); square (x, y) = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}".format(click_x, click_y, square_x, square_y, x, y, chess_notation))
