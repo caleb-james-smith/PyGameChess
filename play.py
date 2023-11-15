@@ -31,14 +31,15 @@ def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
     elif type == "triangle":
         my_game.draw.polygon(my_screen, color, [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)], 0)
 
-# Draw clicked square
-def draw_clicked_square(my_game, my_screen, color, click_x, click_y, side):
+# Get position of clicked square based on click position
+def get_clicked_square(click_position, side):
+    click_x = click_position[0]
+    click_y = click_position[1]
     # Find square x, y based on click x, y;
     # round using the side length as the base
     square_x = round_using_base(click_x, side)
     square_y = round_using_base(click_y, side)
-    # Draw square
-    draw_square(my_game, my_screen, color, square_x, square_y, side)
+    return [square_x, square_y]
 
 # Get square color based on x, y coordinate indices
 def get_square_color(x, y, light_color, dark_color):
@@ -132,13 +133,15 @@ def run_game():
                 running = False
             # Get position of click
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # click position
                 click_position = pygame.mouse.get_pos()
-                # Find square x, y based on click x, y;
-                # round using the side length as the base
                 click_x = click_position[0]
                 click_y = click_position[1]
-                square_x = round_using_base(click_x, SQUARE_SIDE)
-                square_y = round_using_base(click_y, SQUARE_SIDE)
+                # clicked square position
+                square_position = get_clicked_square(click_position, SQUARE_SIDE)
+                square_x = square_position[0]
+                square_y = square_position[1]
+
                 print("click at (x, y) = ({0}, {1}); clicked square at (x, y) = ({2}, {3})".format(click_x, click_y, square_x, square_y))
 
         # Fill the background with white
@@ -149,10 +152,12 @@ def run_game():
         
         # If click, draw clicked square
         if click_position:
-            click_x = click_position[0]
-            click_y = click_position[1]
-            draw_clicked_square(pygame, screen, CLICK_COLOR, click_x, click_y, SQUARE_SIDE)
-        
+            square_position = get_clicked_square(click_position, SQUARE_SIDE)
+            square_x = square_position[0]
+            square_y = square_position[1]            
+            
+            draw_square(pygame, screen, CLICK_COLOR, square_x, square_y, SQUARE_SIDE)
+                    
         # Draw the pieces
         draw_pieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
