@@ -1,6 +1,6 @@
 # PyGameChess
-Chess using the pygame library.
 
+Chess using the pygame library for python3.
 
 ## Install pygame for python3
 
