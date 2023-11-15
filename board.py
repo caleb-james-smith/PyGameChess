@@ -100,7 +100,8 @@ def main():
     board = Board()
     #location = [0, 0]
     #location = [7, 7]
-    location = [2, 3]
+    #location = [2, 3]
+    location = [3, 2]
     #location = [4, 3]
     #location = [4, 4]
     chess_notation = board.GetChessNotation(location)
@@ -108,7 +109,7 @@ def main():
     print("{0}: {1}".format(location, chess_notation))
     print("{0}: {1}".format(chess_notation, xy))
     
-    chess_notation = "c5"
+    chess_notation = "d6"
     xy = board.GetXY(chess_notation)
     print("{0}: {1}".format(chess_notation, xy))
 
