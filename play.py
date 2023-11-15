@@ -1,7 +1,21 @@
-# Simple pygame program
+# Chess using the pygame library.
+# - Author: Caleb Smith
+# - Date: Project started on November 10, 2023
+
+# TODO:
+# DONE:
+# - Draw colored square when clicked
+# - Fix bug: use square location instead of click location
+# - When a square is clicked, print out the x, y and chess notation coordinates
 
 # Import the pygame library
 import pygame
+from board import Board
+
+# Round using a base
+def round_using_base(number, base):
+    result = number - (number % base)
+    return result
 
 # Draw a solid square
 # x_position: x position measured from left edge
@@ -17,6 +31,25 @@ def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
         my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
     elif type == "triangle":
         my_game.draw.polygon(my_screen, color, [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)], 0)
+
+# Get position of clicked square based on click position
+def get_clicked_square(click_position, side):
+    click_x = click_position[0]
+    click_y = click_position[1]
+    # Find square x, y based on click x, y;
+    # round using the side length as the base
+    square_x = round_using_base(click_x, side)
+    square_y = round_using_base(click_y, side)
+    return [square_x, square_y]
+
+# get x, y coordinates (ints) based on square x, y position
+def get_square_xy_coords(square_position, side):
+    square_x = square_position[0]
+    square_y = square_position[1]
+    # use integer division
+    x = square_x // side
+    y = square_y // side
+    return [x, y]
 
 # Get square color based on x, y coordinate indices
 def get_square_color(x, y, light_color, dark_color):
@@ -65,7 +98,7 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
             # Get piece position and size; note that this is different than the square position
             x_position = (x + 0.5) * square_side
             y_position = (y + 0.5) * square_side
-            # FIXME: size should be smaller than square side
+            # Size should be smaller than square side
             size = square_side / 3
             # Draw piece
             draw_piece(my_game, my_screen, color, x_position, y_position, size, type)
@@ -74,6 +107,8 @@ def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, s
 def run_game():
     # Initialize pygame
     pygame.init()
+
+    board = Board()
 
     # Define colors
     PURE_WHITE  = (255, 255, 255)
@@ -86,6 +121,7 @@ def run_game():
     BOARD_DARK_COLOR  = (119, 153, 84)
     PIECE_LIGHT_COLOR = (248, 248, 248)
     PIECE_DARK_COLOR  = (85, 83, 82)
+    CLICK_COLOR       = PURE_BLACK
 
     # Set up the drawing window (screen)
     SCREEN_WIDTH        = 800
@@ -97,19 +133,49 @@ def run_game():
 
     # Run until the user asks to quit
     running = True
+    
+    # Click position
+    click_position = None
+
     while running:
 
-        # Did the user click the window close button?
         for event in pygame.event.get():
+            # If the user clicks the window close button, stop running.
             if event.type == pygame.QUIT:
                 running = False
+            # Get position of click
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # click position
+                click_position = pygame.mouse.get_pos()
+                click_x = click_position[0]
+                click_y = click_position[1]
+                # clicked square position
+                square_position = get_clicked_square(click_position, SQUARE_SIDE)
+                square_x = square_position[0]
+                square_y = square_position[1]
+                # x, y coordinates
+                xy_position = get_square_xy_coords(square_position, SQUARE_SIDE)
+                x = xy_position[0]
+                y = xy_position[1]
+                # chess notation
+                chess_notation = board.GetChessNotation(xy_position)
+
+                print("click (x, y) = ({0}, {1}); square (x, y) = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}".format(click_x, click_y, square_x, square_y, x, y, chess_notation))
 
         # Fill the background with white
         screen.fill(PURE_WHITE)
-
+        
         # Draw the board
         draw_board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
         
+        # If click, draw clicked square
+        if click_position:
+            square_position = get_clicked_square(click_position, SQUARE_SIDE)
+            square_x = square_position[0]
+            square_y = square_position[1]            
+
+            draw_square(pygame, screen, CLICK_COLOR, square_x, square_y, SQUARE_SIDE)
+                    
         # Draw the pieces
         draw_pieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
