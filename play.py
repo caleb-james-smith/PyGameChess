@@ -2,6 +2,12 @@
 # - Author: Caleb Smith
 # - Date: Project started on November 10, 2023
 
+# TODO:
+# - When a square is clicked, print out the x, y and chess notation coordinates
+# DONE:
+# - Draw colored square when clicked
+# - Fix bug: use square location instead of click location
+
 # Import the pygame library
 import pygame
 
@@ -127,7 +133,13 @@ def run_game():
             # Get position of click
             if event.type == pygame.MOUSEBUTTONDOWN:
                 click_position = pygame.mouse.get_pos()
-                print("click at (x, y) = ({0}, {1})".format(click_position[0], click_position[1]))
+                # Find square x, y based on click x, y;
+                # round using the side length as the base
+                click_x = click_position[0]
+                click_y = click_position[1]
+                square_x = round_using_base(click_x, SQUARE_SIDE)
+                square_y = round_using_base(click_y, SQUARE_SIDE)
+                print("click at (x, y) = ({0}, {1}); clicked square at (x, y) = ({2}, {3})".format(click_x, click_y, square_x, square_y))
 
         # Fill the background with white
         screen.fill(PURE_WHITE)

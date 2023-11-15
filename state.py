@@ -13,7 +13,6 @@
 # - 6: king
 
 # TODO:
-# - When a square is clicked, print out the x, y and chess notation coordinates
 # DONE:
 # - Create a class for the game state
 # - Define numbers and names for chess pieces
