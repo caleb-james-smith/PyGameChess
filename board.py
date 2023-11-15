@@ -23,7 +23,6 @@ class Board:
         x = location[0]
         y = location[1]
         
-
         # chess notation
         # row:    integers 1 to 8, starting from the bottom row
         # column: letters "a" to "h", starting from the left column

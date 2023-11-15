@@ -10,6 +10,7 @@
 
 # Import the pygame library
 import pygame
+from board import Board
 
 # Round using a base
 def round_using_base(number, base):
@@ -40,6 +41,15 @@ def get_clicked_square(click_position, side):
     square_x = round_using_base(click_x, side)
     square_y = round_using_base(click_y, side)
     return [square_x, square_y]
+
+# get x, y coordinates (ints) based on square x, y position
+def get_square_xy_coords(square_position, side):
+    square_x = square_position[0]
+    square_y = square_position[1]
+    # use integer division
+    x = square_x // side
+    y = square_y // side
+    return [x, y]
 
 # Get square color based on x, y coordinate indices
 def get_square_color(x, y, light_color, dark_color):
@@ -98,6 +108,8 @@ def run_game():
     # Initialize pygame
     pygame.init()
 
+    board = Board()
+
     # Define colors
     PURE_WHITE  = (255, 255, 255)
     PURE_BLACK  = (0, 0, 0)
@@ -141,8 +153,15 @@ def run_game():
                 square_position = get_clicked_square(click_position, SQUARE_SIDE)
                 square_x = square_position[0]
                 square_y = square_position[1]
+                # x, y coordinates
+                xy_position = get_square_xy_coords(square_position, SQUARE_SIDE)
+                x = xy_position[0]
+                y = xy_position[1]
+                # chess notation
+                # TODO: fix bug; right now x/y (rows/columns) are inverted in notation!
+                chess_notation = board.GetChessNotation(xy_position)
 
-                print("click at (x, y) = ({0}, {1}); clicked square at (x, y) = ({2}, {3})".format(click_x, click_y, square_x, square_y))
+                print("click (x, y) = ({0}, {1}); square (x, y) = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}".format(click_x, click_y, square_x, square_y, x, y, chess_notation))
 
         # Fill the background with white
         screen.fill(PURE_WHITE)
@@ -155,7 +174,7 @@ def run_game():
             square_position = get_clicked_square(click_position, SQUARE_SIDE)
             square_x = square_position[0]
             square_y = square_position[1]            
-            
+
             draw_square(pygame, screen, CLICK_COLOR, square_x, square_y, SQUARE_SIDE)
                     
         # Draw the pieces
