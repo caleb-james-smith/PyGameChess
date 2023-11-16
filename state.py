@@ -64,6 +64,7 @@ class State:
     # set initial state (starting position)
     def SetInitialState(self):
         # initial state: chess starting position
+        # note: index with y first (rows), then x (columns)
         state = [
             [-4, -2, -3, -5, -6, -3, -2, -4],
             [-1, -1, -1, -1, -1, -1, -1, -1],
@@ -96,6 +97,20 @@ class State:
         
         return result
     
+    # get piece value in position
+    def GetPieceValueInPosition(self, position):
+        x = position[0]
+        y = position[1]
+        # note: index with y first (rows), then x (columns)
+        piece_value = self.state[y][x]
+        return piece_value
+    
+    # get piece name in position
+    def GetPieceNameInPosition(self, position):
+        piece_value = self.GetPieceValueInPosition(position)
+        piece_name  = self.GetPieceName(piece_value)
+        return piece_name
+
     # print types of pieces
     def PrintPieceTypes(self):
         # print types of pieces

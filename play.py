@@ -3,14 +3,19 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Draw different shapes for all chess pieces
+# - Move board parameters and drawing functions to board class
+# - Make piece class
 # DONE:
 # - Draw colored square when clicked
 # - Fix bug: use square location instead of click location
 # - When a square is clicked, print out the x, y and chess notation coordinates
+# - For clicked square, print number and name of piece in square (or empty).
 
 # Import the pygame library
 import pygame
 from board import Board
+from state import State
 
 # Round using a base
 def round_using_base(number, base):
@@ -109,6 +114,8 @@ def run_game():
     pygame.init()
 
     board = Board()
+    state = State()
+    state.SetInitialState()
 
     # Define colors
     PURE_WHITE  = (255, 255, 255)
@@ -159,8 +166,11 @@ def run_game():
                 y = xy_position[1]
                 # chess notation
                 chess_notation = board.GetChessNotation(xy_position)
+                # piece in position
+                piece_value = state.GetPieceValueInPosition(xy_position)
+                piece_name  = state.GetPieceNameInPosition(xy_position)
 
-                print("click (x, y) = ({0}, {1}); square (x, y) = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}".format(click_x, click_y, square_x, square_y, x, y, chess_notation))
+                print("click = ({0}, {1}); square = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}; piece = {7}: {8}".format(click_x, click_y, square_x, square_y, x, y, chess_notation, piece_value, piece_name))
 
         # Fill the background with white
         screen.fill(PURE_WHITE)
