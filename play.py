@@ -32,10 +32,47 @@ def draw_square(my_game, my_screen, color, x_position, y_position, side):
 # x_position: x position measured from left edge
 # y_position: y position measured from top edge
 def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
-    if type == "circle":
+    # if type == "circle":
+    #     my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
+    # elif type == "triangle":
+    #     my_game.draw.polygon(my_screen, color, [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)], 0)
+
+    # pawn: small triangle
+    # knight: triangle pointing left
+    # bishop: tall triangle
+    # rook: tall rectangle
+    # queen: pentagon
+    # king: square
+
+    # When drawing, recall that positive x is to the right and positive y is down.
+
+    # pawn: small triangle
+    if type == "pawn":
+        points = [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)]
+        my_game.draw.polygon(my_screen, color, points, 0)
+    # knight: triangle pointing left
+    elif type == "knight":
+        points = [(x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position)]
+        my_game.draw.polygon(my_screen, color, points, 0)
+    # bishop: tall triangle
+    elif type == "bishop":
+        points = [(x_position - size, y_position + 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position, y_position - 1.5 * size)]
+        my_game.draw.polygon(my_screen, color, points, 0)
+    # rook: tall rectangle
+    elif type == "rook":
+        points = [(x_position - size, y_position - 1.5 * size), (x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position + 1.5 * size)]
+        my_game.draw.polygon(my_screen, color, points, 0)
+    # queen: pentagon
+    elif type == "queen":
+        points = [(x_position - size, y_position + 1.5 * size), (x_position - 1.5 * size, y_position), (x_position, y_position - 1.5 * size), (x_position + 1.5 * size, y_position), (x_position + size, y_position + 1.5 * size)]
+        my_game.draw.polygon(my_screen, color, points, 0)
+    # king: square
+    elif type == "king":
+        points = [(x_position - size, y_position - size), (x_position + size, y_position - size), (x_position + size, y_position + size), (x_position - size, y_position + size)]
+        my_game.draw.polygon(my_screen, color, points, 0)
+    # any other piece: circle
+    else:
         my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
-    elif type == "triangle":
-        my_game.draw.polygon(my_screen, color, [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)], 0)
 
 # Get position of clicked square based on click position
 def get_clicked_square(click_position, side):
@@ -81,32 +118,52 @@ def draw_board(my_game, my_screen, light_color, dark_color, squares_per_side, sq
             draw_square(my_game, my_screen, color, x_position, y_position, square_side)
 
 # Draw the pieces
-def draw_pieces(my_game, my_screen, light_color, dark_color, squares_per_side, square_side):
+def draw_pieces(my_game, my_screen, my_state, light_color, dark_color, squares_per_side, square_side):
     # Draw pieces
     for x in range(squares_per_side):
         for y in range(squares_per_side):
-            half_n_squares    = squares_per_side / 2
-            quarter_n_squares = squares_per_side / 4
-            # do not draw pieces in the central rows; depends on the squares per side
-            if quarter_n_squares <= y < 3 * quarter_n_squares:
+            # old version
+            # half_n_squares    = squares_per_side / 2
+            # quarter_n_squares = squares_per_side / 4
+            # # do not draw pieces in the central rows; depends on the squares per side
+            # if quarter_n_squares <= y < 3 * quarter_n_squares:
+            #     continue
+            # # choose piece color
+            # if y < half_n_squares:
+            #     color = dark_color
+            # else:
+            #     color = light_color
+            # # choose piece type
+            # if y == 0 or y == squares_per_side - 1:
+            #     type = "circle"
+            # else:
+            #     type = "triangle"
+            
+            position    = [x, y]
+            piece_name  = my_state.GetPieceNameInPosition(position)
+            # skip empty squares
+            if piece_name == "empty":
                 continue
-            # choose piece color
-            if y < half_n_squares:
-                color = dark_color
-            else:
+            
+            split_name  = piece_name.split()
+            piece_color = split_name[0]
+            piece_type  = split_name[1]
+            
+            # determine color
+            color = None
+            if piece_color == "white":
                 color = light_color
-            # choose piece type
-            if y == 0 or y == squares_per_side - 1:
-                type = "circle"
-            else:
-                type = "triangle"
+            if piece_color == "black":
+                color = dark_color
+
             # Get piece position and size; note that this is different than the square position
             x_position = (x + 0.5) * square_side
             y_position = (y + 0.5) * square_side
             # Size should be smaller than square side
-            size = square_side / 3
+            #size = square_side / 3
+            size = square_side / 4
             # Draw piece
-            draw_piece(my_game, my_screen, color, x_position, y_position, size, type)
+            draw_piece(my_game, my_screen, color, x_position, y_position, size, piece_type)
 
 # Run the game
 def run_game():
@@ -187,7 +244,7 @@ def run_game():
             draw_square(pygame, screen, CLICK_COLOR, square_x, square_y, SQUARE_SIDE)
                     
         # Draw the pieces
-        draw_pieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        draw_pieces(pygame, screen, state, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()
