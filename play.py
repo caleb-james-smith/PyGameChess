@@ -4,7 +4,6 @@
 
 # TODO:
 # - Make piece class
-# - Make it possible to move pieces
 # - Define allowed piece movement and captures
 # DONE:
 # - Draw colored square when clicked
@@ -14,6 +13,7 @@
 # - Draw different shapes for all chess pieces
 # - Move board parameters and drawing functions to board class
 # - Change click color depending on whether square is empty or occupied
+# - Make it possible to move pieces
 
 # Import the pygame library
 import pygame
@@ -188,15 +188,19 @@ def run_game():
                 piece_value = state.GetPieceValueInPosition(xy_position)
                 piece_name  = state.GetPieceNameInPosition(xy_position)
                 
-                # Move piece...
-                # FIXME: needs to use clicked_square_exists and clicked_square_is_empty from previous click
-                # FIXME: check all cases when clicked_square_exists and position_from should be set
-                # FIXME: need to know both "from" and "to" positions
-                # FIXME: do not move empty squares
+                # Move piece; this gets complicated!
+                # - Use clicked_square_exists and clicked_square_is_empty from previous click
+                # - Be careful about when to set clicked_square_exists
+                # - Need to keep track of "from" and "to" positions
+                # - Do not move empty squares
+                # - Piece can move to its current position
+
                 # Check if previously clicked square exists
                 if clicked_square_exists:
                     # Check if previously clicked square is empty
                     # Do not move empty squares!
+                    # However, we do need to update clicked_square_exists and position_from,
+                    # as the current square may contain a piece.
                     if clicked_square_is_empty:
                         clicked_square_exists = True
                         position_from = [x, y]
@@ -205,6 +209,7 @@ def run_game():
                         position_to = [x, y]
                         state.MovePiece(position_from, position_to)
                         clicked_square_exists = False
+                        position_from = None
                 else:
                     clicked_square_exists = True
                     position_from = [x, y]
