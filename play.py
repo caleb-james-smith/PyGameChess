@@ -3,14 +3,16 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Move board parameters and drawing functions to board class
 # - Make piece class
+# - Make it possible to move pieces
+# - Define allowed piece movement and captures
 # DONE:
 # - Draw colored square when clicked
 # - Fix bug: use square location instead of click location
 # - When a square is clicked, print out the x, y and chess notation coordinates
 # - For clicked square, print number and name of piece in square (or empty).
 # - Draw different shapes for all chess pieces
+# - Move board parameters and drawing functions to board class
 
 # Import the pygame library
 import pygame
@@ -22,11 +24,24 @@ def round_using_base(number, base):
     result = number - (number % base)
     return result
 
-# Draw a solid square
-# x_position: x position measured from left edge
-# y_position: y position measured from top edge
-def draw_square(my_game, my_screen, color, x_position, y_position, side):
-    my_game.draw.rect(my_screen, color, [x_position, y_position, side, side], 0)
+# Get position of clicked square based on click position
+def get_clicked_square(click_position, side):
+    click_x = click_position[0]
+    click_y = click_position[1]
+    # Find square x, y based on click x, y;
+    # round using the side length as the base
+    square_x = round_using_base(click_x, side)
+    square_y = round_using_base(click_y, side)
+    return [square_x, square_y]
+
+# get x, y coordinates (ints) based on square x, y position
+def get_square_xy_coords(square_position, side):
+    square_x = square_position[0]
+    square_y = square_position[1]
+    # use integer division
+    x = square_x // side
+    y = square_y // side
+    return [x, y]
 
 # Draw a piece
 # x_position: x position measured from left edge
@@ -69,49 +84,6 @@ def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
     # any other piece: circle
     else:
         my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
-
-# Get position of clicked square based on click position
-def get_clicked_square(click_position, side):
-    click_x = click_position[0]
-    click_y = click_position[1]
-    # Find square x, y based on click x, y;
-    # round using the side length as the base
-    square_x = round_using_base(click_x, side)
-    square_y = round_using_base(click_y, side)
-    return [square_x, square_y]
-
-# get x, y coordinates (ints) based on square x, y position
-def get_square_xy_coords(square_position, side):
-    square_x = square_position[0]
-    square_y = square_position[1]
-    # use integer division
-    x = square_x // side
-    y = square_y // side
-    return [x, y]
-
-# Get square color based on x, y coordinate indices
-def get_square_color(x, y, light_color, dark_color):
-    # Use parity to determine square color
-    parity = (x + y) % 2
-    # Odd parity: dark color
-    if parity:
-        return dark_color
-    # Even parity: light color
-    else:
-        return light_color
-
-# Draw the board
-def draw_board(my_game, my_screen, light_color, dark_color, squares_per_side, square_side):
-    # Draw squares
-    for x in range(squares_per_side):
-        for y in range(squares_per_side):
-            # Get square color
-            color = get_square_color(x, y, light_color, dark_color)
-            # Get square position
-            x_position = x * square_side
-            y_position = y * square_side
-            # Draw square
-            draw_square(my_game, my_screen, color, x_position, y_position, square_side)
 
 # Draw the pieces
 def draw_pieces(my_game, my_screen, my_state, light_color, dark_color, squares_per_side, square_side):
@@ -214,16 +186,13 @@ def run_game():
         screen.fill(PURE_WHITE)
         
         # Draw the board
-        #draw_board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
         board.DrawBoard()
 
         # If there was a click, draw the clicked square
         if click_position:
             square_position = get_clicked_square(click_position, SQUARE_SIDE)
             square_x = square_position[0]
-            square_y = square_position[1]            
-
-            #draw_square(pygame, screen, CLICK_COLOR, square_x, square_y, SQUARE_SIDE)
+            square_y = square_position[1]
             board.DrawSquare(CLICK_COLOR, square_x, square_y)
                     
         # Draw the pieces

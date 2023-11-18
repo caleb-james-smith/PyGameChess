@@ -34,7 +34,6 @@ class Board:
         self.game.draw.rect(self.screen, color, [x_position, y_position, self.square_side, self.square_side], 0)
 
     # Draw the board
-    # TODO: finish updating and test
     def DrawBoard(self):
         # Draw squares
         for x in range(self.squares_per_side):
