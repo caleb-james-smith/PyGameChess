@@ -13,6 +13,7 @@
 # - For clicked square, print number and name of piece in square (or empty).
 # - Draw different shapes for all chess pieces
 # - Move board parameters and drawing functions to board class
+# - Change click color depending on whether square is empty or occupied
 
 # Import the pygame library
 import pygame
@@ -126,7 +127,9 @@ def run_game():
     BOARD_DARK_COLOR    = (119, 153, 84)
     PIECE_LIGHT_COLOR   = (248, 248, 248)
     PIECE_DARK_COLOR    = (85, 83, 82)
-    CLICK_COLOR         = PURE_BLACK
+    #CLICK_COLOR         = PURE_BLACK
+    CLICK_COLOR_EMPTY   = (255, 113, 113)
+    CLICK_COLOR_PIECE   = (91, 175, 255)
 
     # Set up the drawing window (screen)
     #SCREEN_WIDTH        = 800
@@ -153,6 +156,7 @@ def run_game():
     
     # Click position
     click_position = None
+    clicked_square_is_empty = False
 
     while running:
 
@@ -179,6 +183,11 @@ def run_game():
                 # piece in position
                 piece_value = state.GetPieceValueInPosition(xy_position)
                 piece_name  = state.GetPieceNameInPosition(xy_position)
+                # Record if square is empty
+                if piece_name == "empty":
+                    clicked_square_is_empty = True
+                else:
+                    clicked_square_is_empty = False
 
                 print("click = ({0}, {1}); square = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}; piece = {7}: {8}".format(click_x, click_y, square_x, square_y, x, y, chess_notation, piece_value, piece_name))
 
@@ -193,7 +202,11 @@ def run_game():
             square_position = get_clicked_square(click_position, SQUARE_SIDE)
             square_x = square_position[0]
             square_y = square_position[1]
-            board.DrawSquare(CLICK_COLOR, square_x, square_y)
+            # Use different colors based on whether square is empty or occupied
+            if clicked_square_is_empty:
+                board.DrawSquare(CLICK_COLOR_EMPTY, square_x, square_y)
+            else:
+                board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
                     
         # Draw the pieces
         draw_pieces(pygame, screen, state, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
