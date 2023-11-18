@@ -46,12 +46,12 @@ class Board:
                 # Draw square
                 self.DrawSquare(color, x_position, y_position)
 
-    # get chess notation for given x, y coordinates
-    # example: input = [2, 3], output = "c5"
+    # Get chess notation for given x, y coordinates
+    # Example: input = [2, 3], output = "c5"
     def GetChessNotation(self, location):
         chess_notation = None
         
-        # check for valid location:
+        # Check for valid location:
         if not self.LocationIsValid(location):
             print("ERROR: The location [x, y] = {0} is not valid!".format(location))
             return chess_notation
@@ -59,7 +59,7 @@ class Board:
         x = location[0]
         y = location[1]
         
-        # chess notation
+        # Chess notation
         # column: letters "a" to "h", starting from the left column
         # row:    integers 1 to 8, starting from the bottom row
         # columns correspond to x coordinate!
@@ -70,12 +70,12 @@ class Board:
         chess_notation = column + row
         return chess_notation
     
-    # get x, y coordinates based on chess notation
-    # example: input = "c5", output = [2, 3]
+    # Get x, y coordinates based on chess notation
+    # Example: input = "c5", output = [2, 3]
     def GetXY(self, chess_notation):
         x, y = None, None
         
-        # check for valid notation:
+        # Check for valid notation:
         if not self.NotationIsValid(chess_notation):
             print("ERROR: The chess notation coordinate '{0}' is not valid!".format(chess_notation))
             return [x, y]
@@ -83,13 +83,13 @@ class Board:
         column = chess_notation[0]
         row    = chess_notation[1]
         
-        # invert the conversion to notation; solve for x and y
+        # Invert the conversion to notation; solve for x and y
         x = ord(column) - ord('a')
         y = 8 - int(row)
 
         return [x, y]
     
-    # check if location coordinate (x, y) is valid
+    # Check if location coordinate (x, y) is valid
     def LocationIsValid(self, location):
         if not location:
             return False
@@ -104,7 +104,7 @@ class Board:
             return False
         return True
     
-    # check if chess notation coordinate is valid
+    # Check if chess notation coordinate is valid
     def NotationIsValid(self, chess_notation):
         if not chess_notation:
             return False

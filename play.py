@@ -47,7 +47,7 @@ def get_square_xy_coords(square_position, side):
 # Draw a piece
 # x_position: x position measured from left edge
 # y_position: y position measured from top edge
-def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
+def draw_piece(my_game, my_screen, color, x_position, y_position, size, piece_type):
     # Piece Shapes
     # - pawn:   small triangle
     # - knight: triangle pointing left
@@ -59,27 +59,27 @@ def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
     # When drawing, recall that positive x is to the right and positive y is down.
 
     # pawn: small triangle
-    if type == "pawn":
+    if piece_type == "pawn":
         points = [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)]
         my_game.draw.polygon(my_screen, color, points, 0)
     # knight: triangle pointing left
-    elif type == "knight":
+    elif piece_type == "knight":
         points = [(x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position)]
         my_game.draw.polygon(my_screen, color, points, 0)
     # bishop: tall triangle
-    elif type == "bishop":
+    elif piece_type == "bishop":
         points = [(x_position - size, y_position + 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position, y_position - 1.5 * size)]
         my_game.draw.polygon(my_screen, color, points, 0)
     # rook: tall rectangle
-    elif type == "rook":
+    elif piece_type == "rook":
         points = [(x_position - size, y_position - 1.5 * size), (x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position + 1.5 * size)]
         my_game.draw.polygon(my_screen, color, points, 0)
     # queen: pentagon
-    elif type == "queen":
+    elif piece_type == "queen":
         points = [(x_position - size, y_position + 1.5 * size), (x_position - 1.5 * size, y_position), (x_position, y_position - 1.5 * size), (x_position + 1.5 * size, y_position), (x_position + size, y_position + 1.5 * size)]
         my_game.draw.polygon(my_screen, color, points, 0)
     # king: square
-    elif type == "king":
+    elif piece_type == "king":
         points = [(x_position - size, y_position - size), (x_position + size, y_position - size), (x_position + size, y_position + size), (x_position - size, y_position + size)]
         my_game.draw.polygon(my_screen, color, points, 0)
     # any other piece: circle
@@ -148,7 +148,7 @@ def run_game():
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
     # Initialize the game state
-    state = State()
+    state = State(board)
     state.SetInitialState()
     
     # Run until the user asks to quit
@@ -156,10 +156,14 @@ def run_game():
     
     # Click position
     click_position = None
+    position_from  = None
+    position_to    = None
+    clicked_square_exists   = False
     clicked_square_is_empty = False
 
+    # Game running condition
     while running:
-
+        # Game event loop
         for event in pygame.event.get():
             # If the user clicks the window close button, stop running.
             if event.type == pygame.QUIT:
@@ -188,6 +192,18 @@ def run_game():
                     clicked_square_is_empty = True
                 else:
                     clicked_square_is_empty = False
+                # Move piece...
+                # FIXME: needs to use clicked_square_exists and clicked_square_is_empty from previous click
+                # FIXME: need to know both "from" and "to" positions
+                # FIXME: check all cases when clicked_square_exists and position_from should be set
+                if clicked_square_exists:
+                    if not clicked_square_is_empty:
+                        position_to = [x, y]
+                        state.MovePiece(position_from, position_to)
+                        clicked_square_exists = False
+                else:
+                    clicked_square_exists = True
+                    position_from = [x, y]
 
                 print("click = ({0}, {1}); square = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}; piece = {7}: {8}".format(click_x, click_y, square_x, square_y, x, y, chess_notation, piece_value, piece_name))
 
@@ -214,7 +230,7 @@ def run_game():
         # Flip the display
         pygame.display.flip()
 
-    # Done! Time to quit.
+    # Game over! Time to quit.
     pygame.quit()
 
 def main():
