@@ -8,8 +8,44 @@
 # - Fix bug: x, y coordinates (rows, columns) are inverted for notation!
 
 class Board:
-    def __init__(self):
-        return
+    def __init__(self, game, screen, light_color, dark_color, squares_per_side, square_side):
+        self.game               = game
+        self.screen             = screen
+        self.light_color        = light_color
+        self.dark_color         = dark_color
+        self.squares_per_side   = squares_per_side
+        self.square_side        = square_side
+
+    # Get square color based on x, y coordinate indices
+    def GetSquareColor(self, x, y):
+        # Use parity to determine square color
+        parity = (x + y) % 2
+        # Odd parity: dark color
+        if parity:
+            return self.dark_color
+        # Even parity: light color
+        else:
+            return self.light_color
+
+    # Draw a solid square
+    # x_position: x position measured from left edge
+    # y_position: y position measured from top edge
+    def DrawSquare(self, color, x_position, y_position):
+        self.game.draw.rect(self.screen, color, [x_position, y_position, self.square_side, self.square_side], 0)
+
+    # Draw the board
+    # TODO: finish updating and test
+    def DrawBoard(self):
+        # Draw squares
+        for x in range(self.squares_per_side):
+            for y in range(self.squares_per_side):
+                # Get square color
+                color = self.GetSquareColor(x, y)
+                # Get square position
+                x_position = x * self.square_side
+                y_position = y * self.square_side
+                # Draw square
+                self.DrawSquare(color, x_position, y_position)
 
     # get chess notation for given x, y coordinates
     # example: input = [2, 3], output = "c5"
@@ -17,7 +53,7 @@ class Board:
         chess_notation = None
         
         # check for valid location:
-        if not self.locationIsValid(location):
+        if not self.LocationIsValid(location):
             print("ERROR: The location [x, y] = {0} is not valid!".format(location))
             return chess_notation
 
@@ -41,7 +77,7 @@ class Board:
         x, y = None, None
         
         # check for valid notation:
-        if not self.notationIsValid(chess_notation):
+        if not self.NotationIsValid(chess_notation):
             print("ERROR: The chess notation coordinate '{0}' is not valid!".format(chess_notation))
             return [x, y]
         
@@ -55,7 +91,7 @@ class Board:
         return [x, y]
     
     # check if location coordinate (x, y) is valid
-    def locationIsValid(self, location):
+    def LocationIsValid(self, location):
         if not location:
             return False
         if len(location) != 2:
@@ -70,7 +106,7 @@ class Board:
         return True
     
     # check if chess notation coordinate is valid
-    def notationIsValid(self, chess_notation):
+    def NotationIsValid(self, chess_notation):
         if not chess_notation:
             return False
         if len(chess_notation) != 2:

@@ -3,7 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Draw different shapes for all chess pieces
 # - Move board parameters and drawing functions to board class
 # - Make piece class
 # DONE:
@@ -11,6 +10,7 @@
 # - Fix bug: use square location instead of click location
 # - When a square is clicked, print out the x, y and chess notation coordinates
 # - For clicked square, print number and name of piece in square (or empty).
+# - Draw different shapes for all chess pieces
 
 # Import the pygame library
 import pygame
@@ -147,13 +147,6 @@ def draw_pieces(my_game, my_screen, my_state, light_color, dark_color, squares_p
 
 # Run the game
 def run_game():
-    # Initialize pygame
-    pygame.init()
-
-    board = Board()
-    state = State()
-    state.SetInitialState()
-
     # Define colors
     PURE_WHITE          = (255, 255, 255)
     PURE_BLACK          = (0, 0, 0)
@@ -164,13 +157,25 @@ def run_game():
     CLICK_COLOR         = PURE_BLACK
 
     # Set up the drawing window (screen)
-    SCREEN_WIDTH        = 800
-    SCREEN_HEIGHT       = 800
-    SQUARE_SIDE         = 100
+    #SCREEN_WIDTH        = 800
+    #SCREEN_HEIGHT       = 800
+    #SQUARE_SIDE         = 100
+    SCREEN_WIDTH        = 600
+    SCREEN_HEIGHT       = 600
+    SQUARE_SIDE         = 75
     SQUARES_PER_SIDE    = 8
     BOARD_SIDE          = SQUARES_PER_SIDE * SQUARE_SIDE
+    
+    # Initialize pygame
+    pygame.init()    
+    # Create the screen
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-
+    # Initialize the board
+    board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+    # Initialize the game state
+    state = State()
+    state.SetInitialState()
+    
     # Run until the user asks to quit
     running = True
     
@@ -209,15 +214,17 @@ def run_game():
         screen.fill(PURE_WHITE)
         
         # Draw the board
-        draw_board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
-        
+        #draw_board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        board.DrawBoard()
+
         # If there was a click, draw the clicked square
         if click_position:
             square_position = get_clicked_square(click_position, SQUARE_SIDE)
             square_x = square_position[0]
             square_y = square_position[1]            
 
-            draw_square(pygame, screen, CLICK_COLOR, square_x, square_y, SQUARE_SIDE)
+            #draw_square(pygame, screen, CLICK_COLOR, square_x, square_y, SQUARE_SIDE)
+            board.DrawSquare(CLICK_COLOR, square_x, square_y)
                     
         # Draw the pieces
         draw_pieces(pygame, screen, state, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
