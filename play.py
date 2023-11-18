@@ -187,24 +187,34 @@ def run_game():
                 # piece in position
                 piece_value = state.GetPieceValueInPosition(xy_position)
                 piece_name  = state.GetPieceNameInPosition(xy_position)
-                # Record if square is empty
-                if piece_name == "empty":
-                    clicked_square_is_empty = True
-                else:
-                    clicked_square_is_empty = False
+                
                 # Move piece...
                 # FIXME: needs to use clicked_square_exists and clicked_square_is_empty from previous click
-                # FIXME: need to know both "from" and "to" positions
                 # FIXME: check all cases when clicked_square_exists and position_from should be set
+                # FIXME: need to know both "from" and "to" positions
+                # FIXME: do not move empty squares
+                # Check if previously clicked square exists
                 if clicked_square_exists:
-                    if not clicked_square_is_empty:
+                    # Check if previously clicked square is empty
+                    # Do not move empty squares!
+                    if clicked_square_is_empty:
+                        clicked_square_exists = True
+                        position_from = [x, y]
+                    else:
+                        # Move piece
                         position_to = [x, y]
                         state.MovePiece(position_from, position_to)
                         clicked_square_exists = False
                 else:
                     clicked_square_exists = True
                     position_from = [x, y]
-
+                
+                # Record if square is empty; do this after moving piece
+                if piece_name == "empty":
+                    clicked_square_is_empty = True
+                else:
+                    clicked_square_is_empty = False
+                
                 print("click = ({0}, {1}); square = ({2}, {3}); (x, y) = ({4}, {5}); notation: {6}; piece = {7}: {8}".format(click_x, click_y, square_x, square_y, x, y, chess_notation, piece_value, piece_name))
 
         # Fill the background with white
