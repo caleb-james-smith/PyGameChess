@@ -32,17 +32,13 @@ def draw_square(my_game, my_screen, color, x_position, y_position, side):
 # x_position: x position measured from left edge
 # y_position: y position measured from top edge
 def draw_piece(my_game, my_screen, color, x_position, y_position, size, type):
-    # if type == "circle":
-    #     my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
-    # elif type == "triangle":
-    #     my_game.draw.polygon(my_screen, color, [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)], 0)
-
-    # pawn: small triangle
-    # knight: triangle pointing left
-    # bishop: tall triangle
-    # rook: tall rectangle
-    # queen: pentagon
-    # king: square
+    # Piece Shapes
+    # - pawn:   small triangle
+    # - knight: triangle pointing left
+    # - bishop: tall triangle
+    # - rook:   tall rectangle
+    # - queen:  pentagon
+    # - king:   square
 
     # When drawing, recall that positive x is to the right and positive y is down.
 
@@ -121,46 +117,30 @@ def draw_board(my_game, my_screen, light_color, dark_color, squares_per_side, sq
 def draw_pieces(my_game, my_screen, my_state, light_color, dark_color, squares_per_side, square_side):
     # Draw pieces
     for x in range(squares_per_side):
-        for y in range(squares_per_side):
-            # old version
-            # half_n_squares    = squares_per_side / 2
-            # quarter_n_squares = squares_per_side / 4
-            # # do not draw pieces in the central rows; depends on the squares per side
-            # if quarter_n_squares <= y < 3 * quarter_n_squares:
-            #     continue
-            # # choose piece color
-            # if y < half_n_squares:
-            #     color = dark_color
-            # else:
-            #     color = light_color
-            # # choose piece type
-            # if y == 0 or y == squares_per_side - 1:
-            #     type = "circle"
-            # else:
-            #     type = "triangle"
-            
+        for y in range(squares_per_side):            
+            # Get piece name based on position (from game state)
             position    = [x, y]
             piece_name  = my_state.GetPieceNameInPosition(position)
-            # skip empty squares
+            
+            # Skip empty squares
             if piece_name == "empty":
                 continue
             
+            # Get piece color and type from name
             split_name  = piece_name.split()
             piece_color = split_name[0]
             piece_type  = split_name[1]
-            
-            # determine color
+            # Determine color
             color = None
             if piece_color == "white":
                 color = light_color
             if piece_color == "black":
                 color = dark_color
 
-            # Get piece position and size; note that this is different than the square position
+            # Get piece position: note that this is different than the square position
             x_position = (x + 0.5) * square_side
             y_position = (y + 0.5) * square_side
-            # Size should be smaller than square side
-            #size = square_side / 3
+            # Piece size should be smaller than square side
             size = square_side / 4
             # Draw piece
             draw_piece(my_game, my_screen, color, x_position, y_position, size, piece_type)
@@ -175,17 +155,13 @@ def run_game():
     state.SetInitialState()
 
     # Define colors
-    PURE_WHITE  = (255, 255, 255)
-    PURE_BLACK  = (0, 0, 0)
-    #BOARD_LIGHT_COLOR = PURE_WHITE
-    #BOARD_DARK_COLOR  = PURE_BLACK
-    #PIECE_LIGHT_COLOR = PURE_WHITE
-    #PIECE_DARK_COLOR  = PURE_BLACK
-    BOARD_LIGHT_COLOR = (233, 237, 204)
-    BOARD_DARK_COLOR  = (119, 153, 84)
-    PIECE_LIGHT_COLOR = (248, 248, 248)
-    PIECE_DARK_COLOR  = (85, 83, 82)
-    CLICK_COLOR       = PURE_BLACK
+    PURE_WHITE          = (255, 255, 255)
+    PURE_BLACK          = (0, 0, 0)
+    BOARD_LIGHT_COLOR   = (233, 237, 204)
+    BOARD_DARK_COLOR    = (119, 153, 84)
+    PIECE_LIGHT_COLOR   = (248, 248, 248)
+    PIECE_DARK_COLOR    = (85, 83, 82)
+    CLICK_COLOR         = PURE_BLACK
 
     # Set up the drawing window (screen)
     SCREEN_WIDTH        = 800
@@ -235,7 +211,7 @@ def run_game():
         # Draw the board
         draw_board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
         
-        # If click, draw clicked square
+        # If there was a click, draw the clicked square
         if click_position:
             square_position = get_clicked_square(click_position, SQUARE_SIDE)
             square_x = square_position[0]
