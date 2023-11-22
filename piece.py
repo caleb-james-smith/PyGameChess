@@ -1,9 +1,11 @@
 # Piece class and subclasses
 
 # TODO:
+# - Define how each type of piece is drawn
+# - Define how each piece can move
+# DONE:
 # - Create piece class (superclass or base class)
 # - Create subclass for each type of piece
-# DONE:
 
 class Piece:
     def __init__(self, color, position):
