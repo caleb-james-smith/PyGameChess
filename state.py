@@ -116,14 +116,12 @@ class State:
         result = ""
         
         # Get name of piece based on value; use absolute value
-        #abs_value = abs(value)
-        #if abs_value in self.pieces:
         if self.PieceIsValid(value):
             abs_value = abs(value)
             result = self.pieces[abs_value]
         else:
             print("ERROR: The value {0} does not represent a valid piece.".format(value))
-            return
+            return result
         
         # Assign white or black based on sign
         if value > 0:

@@ -19,6 +19,7 @@
 import pygame
 from board import Board
 from state import State
+from piece import Piece, Pawn
 
 # Round using a base
 def round_using_base(number, base):
@@ -150,6 +151,13 @@ def run_game():
     # Initialize the game state
     state = State(board)
     state.SetInitialState()
+    # Test classes
+    my_white_piece = Piece("white", [0, 0])
+    my_white_pawn = Pawn("white", [1, 1])
+    my_black_pawn = Pawn("black", [2, 2])
+    print("value: {0}, name: {1}".format(my_white_piece.GetValue(), my_white_piece.GetName()))
+    print("value: {0}, name: {1}".format(my_white_pawn.GetValue(), my_white_pawn.GetName()))
+    print("value: {0}, name: {1}".format(my_black_pawn.GetValue(), my_white_pawn.GetName()))
     
     # Run until the user asks to quit
     running = True
