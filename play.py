@@ -21,7 +21,6 @@
 import pygame
 from board import Board
 from state import State
-from piece import Piece, Pawn
 
 # Run the game
 def run_game():
