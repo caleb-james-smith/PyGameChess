@@ -183,7 +183,13 @@ class State:
                 if piece_color == "black":
                     color = dark_color
 
-                piece.Draw(game, screen, color, square_side)
+                # Get piece position: note that this is different than the square position
+                x_position = (x + 0.5) * square_side
+                y_position = (y + 0.5) * square_side
+                # Piece size should be smaller than square side
+                size = square_side / 4
+
+                piece.Draw(game, screen, color, x_position, y_position, size)
 
     
     # Place a piece in the piece state

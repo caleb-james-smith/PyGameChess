@@ -95,16 +95,7 @@ class Pawn(Piece):
         super().__init__(color, position)
         self.SetupValueAndName(1)
     
-    def Draw(self, game, screen, color, square_side):
-        # FIXME: move to draw pieces function
-        position = self.GetPosition()
-        x = position[0]
-        y = position[1]
-        # Get piece position: note that this is different than the square position
-        x_position = (x + 0.5) * square_side
-        y_position = (y + 0.5) * square_side
-        # Piece size should be smaller than square side
-        size = square_side / 4
+    def Draw(self, game, screen, color, x_position, y_position, size):
         # pawn: small triangle
         points = [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)]
         game.draw.polygon(screen, color, points, 0)
