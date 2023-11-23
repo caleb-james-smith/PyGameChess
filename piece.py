@@ -90,6 +90,19 @@ class Piece:
         name = self.GetPieceName()
         self.SetName(name)
     
+# Drawing pieces
+# x_position: x position measured from left edge
+# y_position: y position measured from top edge
+# When drawing, recall that positive x is to the right and positive y is down.
+#
+# Piece Shapes
+# - pawn:   small triangle
+# - knight: triangle pointing left
+# - bishop: tall triangle
+# - rook:   tall rectangle
+# - queen:  pentagon
+# - king:   square
+
 class Pawn(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
