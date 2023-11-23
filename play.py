@@ -3,7 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Move some functions to board class
 # - Define allowed piece movement and captures
 # DONE:
 # - Draw colored square when clicked
@@ -16,38 +15,13 @@
 # - Make it possible to move pieces
 # - Make piece class
 # - Draw pieces using piece classes
+# - Move some functions to board class
 
 # Import the pygame library
 import pygame
 from board import Board
 from state import State
 from piece import Piece, Pawn
-
-# Round using a base
-def round_using_base(number, base):
-    result = number - (number % base)
-    return result
-
-# TODO: Move to board class
-# Get position of clicked square based on click position
-def get_clicked_square(click_position, side):
-    click_x = click_position[0]
-    click_y = click_position[1]
-    # Find square x, y based on click x, y;
-    # round using the side length as the base
-    square_x = round_using_base(click_x, side)
-    square_y = round_using_base(click_y, side)
-    return [square_x, square_y]
-
-# TODO: Move to board class
-# Get x, y coordinates (ints) based on square x, y position
-def get_square_xy_coords(square_position, side):
-    square_x = square_position[0]
-    square_y = square_position[1]
-    # use integer division
-    x = square_x // side
-    y = square_y // side
-    return [x, y]
 
 # Run the game
 def run_game():
@@ -106,11 +80,11 @@ def run_game():
                 click_x = click_position[0]
                 click_y = click_position[1]
                 # clicked square position
-                square_position = get_clicked_square(click_position, SQUARE_SIDE)
+                square_position = board.GetClickedSquare(click_position)
                 square_x = square_position[0]
                 square_y = square_position[1]
                 # x, y coordinates
-                xy_position = get_square_xy_coords(square_position, SQUARE_SIDE)
+                xy_position = board.GetSquareXYCoords(square_position)
                 x = xy_position[0]
                 y = xy_position[1]
                 # chess notation
@@ -173,7 +147,7 @@ def run_game():
 
         # If there was a click, draw the clicked square
         if click_position:
-            square_position = get_clicked_square(click_position, SQUARE_SIDE)
+            square_position = board.GetClickedSquare(click_position)
             square_x = square_position[0]
             square_y = square_position[1]
             # Use different colors based on whether square is empty or occupied
