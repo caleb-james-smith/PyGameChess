@@ -95,9 +95,7 @@ class Pawn(Piece):
         super().__init__(color, position)
         self.SetupValueAndName(1)
     
-    def Draw(self, game, screen, square_side):
-        #FIXME: you will need to use light and dark colors
-        color = self.GetColor()
+    def Draw(self, game, screen, color, square_side):
         # FIXME: move to draw pieces function
         position = self.GetPosition()
         x = position[0]

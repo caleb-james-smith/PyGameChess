@@ -162,18 +162,28 @@ class State:
         for piece in black_pieces:
             self.PlacePiece(piece)
 
-    # FIXME: use light and dark colors
-    def DrawPieces(self, game, screen, squares_per_side, square_side):
+    # Draw the pieces
+    def DrawPieces(self, game, screen, light_color, dark_color, squares_per_side, square_side):
         # Draw pieces
         for x in range(squares_per_side):
             for y in range(squares_per_side):
                 # Get piece based on position
                 position = [x, y]
                 piece = self.GetPieceInPosition(position)
+                
                 # Skip empty squares
                 if not piece:
                     continue
-                piece.Draw(game, screen, square_side)
+                
+                # Determine color
+                piece_color = piece.GetColor()
+                color = None
+                if piece_color == "white":
+                    color = light_color
+                if piece_color == "black":
+                    color = dark_color
+
+                piece.Draw(game, screen, color, square_side)
 
     
     # Place a piece in the piece state

@@ -254,7 +254,7 @@ def run_game():
                     
         # Draw the pieces
         #draw_pieces(pygame, screen, state, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
-        state.DrawPieces(pygame, screen, SQUARES_PER_SIDE, SQUARE_SIDE)
+        state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()
