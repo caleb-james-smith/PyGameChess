@@ -1,11 +1,11 @@
 # Piece class and subclasses
 
 # TODO:
-# - Define how each type of piece is drawn
 # - Define how each piece can move
 # DONE:
 # - Create piece class (superclass or base class)
 # - Create subclass for each type of piece
+# - Define how each type of piece is drawn
 
 class Piece:
     def __init__(self, color, position):
@@ -105,22 +105,47 @@ class Knight(Piece):
         super().__init__(color, position)
         self.SetupValueAndName(2)
 
+    def Draw(self, game, screen, color, x_position, y_position, size):
+        # knight: triangle pointing left
+        points = [(x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position)]
+        game.draw.polygon(screen, color, points, 0)
+
 class Bishop(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
         self.SetupValueAndName(3)
+
+    def Draw(self, game, screen, color, x_position, y_position, size):
+        # bishop: tall triangle
+        points = [(x_position - size, y_position + 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position, y_position - 1.5 * size)]
+        game.draw.polygon(screen, color, points, 0)
 
 class Rook(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
         self.SetupValueAndName(4)
 
+    def Draw(self, game, screen, color, x_position, y_position, size):
+        # rook: tall rectangle
+        points = [(x_position - size, y_position - 1.5 * size), (x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position + 1.5 * size)]
+        game.draw.polygon(screen, color, points, 0)
+
 class Queen(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
         self.SetupValueAndName(5)
 
+    def Draw(self, game, screen, color, x_position, y_position, size):
+        # queen: pentagon
+        points = [(x_position - size, y_position + 1.5 * size), (x_position - 1.5 * size, y_position), (x_position, y_position - 1.5 * size), (x_position + 1.5 * size, y_position), (x_position + size, y_position + 1.5 * size)]
+        game.draw.polygon(screen, color, points, 0)
+
 class King(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
         self.SetupValueAndName(6)
+
+    def Draw(self, game, screen, color, x_position, y_position, size):
+        # king: square
+        points = [(x_position - size, y_position - size), (x_position + size, y_position - size), (x_position + size, y_position + size), (x_position - size, y_position + size)]
+        game.draw.polygon(screen, color, points, 0)

@@ -3,7 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Draw pieces using piece classes
 # - Define allowed piece movement and captures
 # DONE:
 # - Draw colored square when clicked
@@ -15,6 +14,7 @@
 # - Change click color depending on whether square is empty or occupied
 # - Make it possible to move pieces
 # - Make piece class
+# - Draw pieces using piece classes
 
 # Import the pygame library
 import pygame
