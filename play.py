@@ -3,6 +3,7 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Move some functions to board class
 # - Define allowed piece movement and captures
 # DONE:
 # - Draw colored square when clicked
@@ -27,6 +28,7 @@ def round_using_base(number, base):
     result = number - (number % base)
     return result
 
+# TODO: Move to board class
 # Get position of clicked square based on click position
 def get_clicked_square(click_position, side):
     click_x = click_position[0]
@@ -37,7 +39,8 @@ def get_clicked_square(click_position, side):
     square_y = round_using_base(click_y, side)
     return [square_x, square_y]
 
-# get x, y coordinates (ints) based on square x, y position
+# TODO: Move to board class
+# Get x, y coordinates (ints) based on square x, y position
 def get_square_xy_coords(square_position, side):
     square_x = square_position[0]
     square_y = square_position[1]
