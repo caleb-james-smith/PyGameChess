@@ -140,7 +140,14 @@ def run_game():
                     else:
                         # Move piece
                         position_to = [x, y]
-                        state.MovePiece(position_from, position_to)
+                        # Check if move is valid for piece
+                        piece_to_move = state.GetPieceInPosition(position_from)
+                        #piece_to_move_value = piece_to_move.GetValue()
+                        #piece_to_move_name  = piece_to_move.GetName()
+                        #print("piece to move: piece: {0}, value: {1}, name: {2}".format(piece_to_move, piece_to_move_value, piece_to_move_name))
+                        move_is_valid = piece_to_move.MoveIsValid(position_to)
+                        if move_is_valid:
+                            state.MovePiece(position_from, position_to)
                         clicked_square_exists = False
                         position_from = None
                 else:

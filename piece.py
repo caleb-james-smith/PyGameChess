@@ -47,9 +47,18 @@ class Piece:
     def SetName(self, name):
         self.name = name
     
+    # Determine if piece value is valid
     def PieceIsValid(self):
         abs_value = abs(self.value)
         if abs_value in self.chess_pieces:
+            return True
+        else:
+            return False
+
+    # Determine if moving to a position is valid    
+    def MoveIsValid(self, position_to):
+        moves = self.GetValidMoves()
+        if position_to in moves:
             return True
         else:
             return False
@@ -63,6 +72,7 @@ class Piece:
             print("ERROR: The color '{0}' is not valid!".format(self.color))
             return None
     
+    # Get piece name based on value
     def GetPieceName(self):
         result = ""
         
@@ -82,6 +92,7 @@ class Piece:
         
         return result
     
+    # Set piece value and name
     def SetupValueAndName(self, value):
         # first, set value
         sign = self.GetSign()
@@ -113,6 +124,25 @@ class Pawn(Piece):
         points = [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)]
         game.draw.polygon(screen, color, points, 0)
     
+    # Get valid moves
+    # - Constrained to an empty board
+    # - Independent of other pieces (empty board)
+    def GetValidMoves(self):
+        moves = []
+        position = self.GetPosition()
+        piece_x, piece_y = position
+        # Check all x, y positions on the board
+        for x in range(8):
+            for y in range(8):
+                x_diff = x - piece_x
+                y_diff = y - piece_y
+                # movement for king
+                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
+                    # cannot move to current position
+                    if not (x_diff == 0 and y_diff == 0):
+                        moves.append([x, y])
+        return moves
+
 class Knight(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
@@ -122,6 +152,25 @@ class Knight(Piece):
         # knight: triangle pointing left
         points = [(x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position)]
         game.draw.polygon(screen, color, points, 0)
+
+    # Get valid moves
+    # - Constrained to an empty board
+    # - Independent of other pieces (empty board)
+    def GetValidMoves(self):
+        moves = []
+        position = self.GetPosition()
+        piece_x, piece_y = position
+        # Check all x, y positions on the board
+        for x in range(8):
+            for y in range(8):
+                x_diff = x - piece_x
+                y_diff = y - piece_y
+                # movement for king
+                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
+                    # cannot move to current position
+                    if not (x_diff == 0 and y_diff == 0):
+                        moves.append([x, y])
+        return moves
 
 class Bishop(Piece):
     def __init__(self, color, position):
@@ -133,6 +182,25 @@ class Bishop(Piece):
         points = [(x_position - size, y_position + 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position, y_position - 1.5 * size)]
         game.draw.polygon(screen, color, points, 0)
 
+    # Get valid moves
+    # - Constrained to an empty board
+    # - Independent of other pieces (empty board)
+    def GetValidMoves(self):
+        moves = []
+        position = self.GetPosition()
+        piece_x, piece_y = position
+        # Check all x, y positions on the board
+        for x in range(8):
+            for y in range(8):
+                x_diff = x - piece_x
+                y_diff = y - piece_y
+                # movement for king
+                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
+                    # cannot move to current position
+                    if not (x_diff == 0 and y_diff == 0):
+                        moves.append([x, y])
+        return moves
+
 class Rook(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
@@ -143,6 +211,25 @@ class Rook(Piece):
         points = [(x_position - size, y_position - 1.5 * size), (x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position + 1.5 * size)]
         game.draw.polygon(screen, color, points, 0)
 
+    # Get valid moves
+    # - Constrained to an empty board
+    # - Independent of other pieces (empty board)
+    def GetValidMoves(self):
+        moves = []
+        position = self.GetPosition()
+        piece_x, piece_y = position
+        # Check all x, y positions on the board
+        for x in range(8):
+            for y in range(8):
+                x_diff = x - piece_x
+                y_diff = y - piece_y
+                # movement for king
+                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
+                    # cannot move to current position
+                    if not (x_diff == 0 and y_diff == 0):
+                        moves.append([x, y])
+        return moves
+    
 class Queen(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
@@ -153,6 +240,25 @@ class Queen(Piece):
         points = [(x_position - size, y_position + 1.5 * size), (x_position - 1.5 * size, y_position), (x_position, y_position - 1.5 * size), (x_position + 1.5 * size, y_position), (x_position + size, y_position + 1.5 * size)]
         game.draw.polygon(screen, color, points, 0)
 
+    # Get valid moves
+    # - Constrained to an empty board
+    # - Independent of other pieces (empty board)
+    def GetValidMoves(self):
+        moves = []
+        position = self.GetPosition()
+        piece_x, piece_y = position
+        # Check all x, y positions on the board
+        for x in range(8):
+            for y in range(8):
+                x_diff = x - piece_x
+                y_diff = y - piece_y
+                # movement for king
+                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
+                    # cannot move to current position
+                    if not (x_diff == 0 and y_diff == 0):
+                        moves.append([x, y])
+        return moves
+
 class King(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
@@ -162,3 +268,22 @@ class King(Piece):
         # king: square
         points = [(x_position - size, y_position - size), (x_position + size, y_position - size), (x_position + size, y_position + size), (x_position - size, y_position + size)]
         game.draw.polygon(screen, color, points, 0)
+
+    # Get valid moves
+    # - Constrained to an empty board
+    # - Independent of other pieces (empty board)
+    def GetValidMoves(self):
+        moves = []
+        position = self.GetPosition()
+        piece_x, piece_y = position
+        # Check all x, y positions on the board
+        for x in range(8):
+            for y in range(8):
+                x_diff = x - piece_x
+                y_diff = y - piece_y
+                # movement for king
+                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
+                    # cannot move to current position
+                    if not (x_diff == 0 and y_diff == 0):
+                        moves.append([x, y])
+        return moves
