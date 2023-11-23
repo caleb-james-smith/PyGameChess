@@ -1,11 +1,11 @@
 # Piece class and subclasses
 
 # TODO:
-# - Define how each piece can move
 # DONE:
 # - Create piece class (superclass or base class)
 # - Create subclass for each type of piece
 # - Define how each type of piece is drawn
+# - Define how each piece can move
 
 class Piece:
     def __init__(self, color, position):
@@ -129,18 +129,32 @@ class Pawn(Piece):
     # - Independent of other pieces (empty board)
     def GetValidMoves(self):
         moves = []
+        color = self.GetColor()
         position = self.GetPosition()
         piece_x, piece_y = position
-        # Check all x, y positions on the board
-        for x in range(8):
+        # Movement for pawn
+        # Assume white pawns move up (decreasing y)
+        if color == "white":
             for y in range(8):
-                x_diff = x - piece_x
                 y_diff = y - piece_y
-                # movement for king
-                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
-                    # cannot move to current position
-                    if not (x_diff == 0 and y_diff == 0):
-                        moves.append([x, y])
+                # Move forward one square
+                if y_diff == -1:
+                    moves.append([piece_x, y])
+                # Move forward two squares
+                if piece_y == 6:
+                    if y_diff == -2:
+                        moves.append([piece_x, y])
+        # Assume black pawns move down (increasing y)
+        if color == "black":
+            for y in range(8):
+                y_diff = y - piece_y
+                # Move forward one square
+                if y_diff == 1:
+                    moves.append([piece_x, y])
+                # Move forward two squares
+                if piece_y == 1:
+                    if y_diff == 2:
+                        moves.append([piece_x, y])
         return moves
 
 class Knight(Piece):
@@ -160,14 +174,14 @@ class Knight(Piece):
         moves = []
         position = self.GetPosition()
         piece_x, piece_y = position
+        # Movement for knight
         # Check all x, y positions on the board
         for x in range(8):
             for y in range(8):
                 x_diff = x - piece_x
                 y_diff = y - piece_y
-                # movement for king
-                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
-                    # cannot move to current position
+                if (abs(x_diff) == 2 and abs(y_diff) == 1) or (abs(x_diff) == 1 and abs(y_diff) == 2):
+                    # Cannot move to current position
                     if not (x_diff == 0 and y_diff == 0):
                         moves.append([x, y])
         return moves
@@ -189,14 +203,14 @@ class Bishop(Piece):
         moves = []
         position = self.GetPosition()
         piece_x, piece_y = position
+        # Movement for bishop
         # Check all x, y positions on the board
         for x in range(8):
             for y in range(8):
                 x_diff = x - piece_x
                 y_diff = y - piece_y
-                # movement for king
-                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
-                    # cannot move to current position
+                if abs(x_diff) == abs(y_diff):
+                    # Cannot move to current position
                     if not (x_diff == 0 and y_diff == 0):
                         moves.append([x, y])
         return moves
@@ -218,16 +232,16 @@ class Rook(Piece):
         moves = []
         position = self.GetPosition()
         piece_x, piece_y = position
-        # Check all x, y positions on the board
+        
+        # Movement for rook
         for x in range(8):
-            for y in range(8):
-                x_diff = x - piece_x
-                y_diff = y - piece_y
-                # movement for king
-                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
-                    # cannot move to current position
-                    if not (x_diff == 0 and y_diff == 0):
-                        moves.append([x, y])
+            # Cannot move to current position
+            if not x == piece_x:
+                moves.append([x, piece_y])
+        for y in range(8):
+            # Cannot move to current position
+            if not y == piece_y:
+                moves.append([piece_x, y])
         return moves
     
 class Queen(Piece):
@@ -247,14 +261,14 @@ class Queen(Piece):
         moves = []
         position = self.GetPosition()
         piece_x, piece_y = position
+        # Movement for queen
         # Check all x, y positions on the board
         for x in range(8):
             for y in range(8):
                 x_diff = x - piece_x
                 y_diff = y - piece_y
-                # movement for king
-                if abs(x_diff) <= 1 and abs(y_diff) <= 1:
-                    # cannot move to current position
+                if abs(x_diff) == abs(y_diff) or x_diff == 0 or y_diff == 0:
+                    # Cannot move to current position
                     if not (x_diff == 0 and y_diff == 0):
                         moves.append([x, y])
         return moves
@@ -276,14 +290,14 @@ class King(Piece):
         moves = []
         position = self.GetPosition()
         piece_x, piece_y = position
+        # Movement for king
         # Check all x, y positions on the board
         for x in range(8):
             for y in range(8):
                 x_diff = x - piece_x
                 y_diff = y - piece_y
-                # movement for king
                 if abs(x_diff) <= 1 and abs(y_diff) <= 1:
-                    # cannot move to current position
+                    # Cannot move to current position
                     if not (x_diff == 0 and y_diff == 0):
                         moves.append([x, y])
         return moves
