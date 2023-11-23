@@ -230,15 +230,12 @@ class State:
         x_from, y_from = position_from
         x_to, y_to     = position_to
         # Get value of piece in "from" position
-        #value = self.GetPieceValueInPosition(position_from)
         piece = self.GetPieceInPosition(position_from)
         
-        # Set "from" position to 0 for empty
-        #self.SetValue(position_from, 0)
+        # Set "from" position to None for empty
         self.piece_state[y_from][x_from] = None
         
-        # Set "to" position to value of piece
-        #self.SetValue(position_to, value)
+        # Set "to" position to piece and update piece position
         self.piece_state[y_to][x_to] = piece
         piece.SetPosition(position_to)
 

@@ -150,19 +150,8 @@ def run_game():
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
     # Initialize the game state
     state = State(board)
-    #state.SetInitialState()
-    state.SetEmptyState()
-    state.SetEmptyPieceState()
+    # Setup pieces
     state.SetInitialPieceState()
-    # Test classes
-    #my_white_piece = Piece("white", [0, 0])
-    #my_white_pawn = Pawn("white", [1, 1])
-    #my_black_pawn = Pawn("black", [2, 2])
-    #print("value: {0}, name: {1}".format(my_white_piece.GetValue(), my_white_piece.GetName()))
-    #print("value: {0}, name: {1}".format(my_white_pawn.GetValue(), my_white_pawn.GetName()))
-    #print("value: {0}, name: {1}".format(my_black_pawn.GetValue(), my_white_pawn.GetName()))
-    #state.PlacePiece(my_white_pawn)
-    #state.PlacePiece(my_black_pawn)
     
     # Run until the user asks to quit
     running = True
@@ -198,8 +187,6 @@ def run_game():
                 # chess notation
                 chess_notation = board.GetChessNotation(xy_position)
                 # piece in position
-                #piece_value = state.GetPieceValueInPosition(xy_position)
-                #piece_name  = state.GetPieceNameInPosition(xy_position)
                 piece = state.GetPieceInPosition(xy_position)
                 if piece:
                     piece_value = piece.GetValue()
@@ -260,7 +247,6 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
                     
         # Draw the pieces
-        #draw_pieces(pygame, screen, state, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
         state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
