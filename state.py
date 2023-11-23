@@ -119,14 +119,14 @@ class State:
         # Initial state: chess starting position
         
         white_pieces = [
-            Rook("white",   [0, 7]),
-            Knight("white", [1, 7]),
-            Bishop("white", [2, 7]),
-            Queen("white",  [3, 7]),
-            King("white",   [4, 7]),
-            Bishop("white", [5, 7]),
-            Knight("white", [6, 7]),
-            Rook("white",   [7, 7]),
+            #Rook("white",   [0, 7]),
+            #Knight("white", [1, 7]),
+            #Bishop("white", [2, 7]),
+            #Queen("white",  [3, 7]),
+            #King("white",   [4, 7]),
+            #Bishop("white", [5, 7]),
+            #Knight("white", [6, 7]),
+            #Rook("white",   [7, 7]),
             Pawn("white",   [0, 6]),
             Pawn("white",   [1, 6]),
             Pawn("white",   [2, 6]),
@@ -138,14 +138,14 @@ class State:
         ]
         
         black_pieces = [
-            Rook("black",   [0, 0]),
-            Knight("black", [1, 0]),
-            Bishop("black", [2, 0]),
-            Queen("black",  [3, 0]),
-            King("black",   [4, 0]),
-            Bishop("black", [5, 0]),
-            Knight("black", [6, 0]),
-            Rook("black",   [7, 0]),
+            #Rook("black",   [0, 0]),
+            #Knight("black", [1, 0]),
+            #Bishop("black", [2, 0]),
+            #Queen("black",  [3, 0]),
+            #King("black",   [4, 0]),
+            #Bishop("black", [5, 0]),
+            #Knight("black", [6, 0]),
+            #Rook("black",   [7, 0]),
             Pawn("black",   [0, 1]),
             Pawn("black",   [1, 1]),
             Pawn("black",   [2, 1]),
@@ -162,6 +162,20 @@ class State:
         for piece in black_pieces:
             self.PlacePiece(piece)
 
+    # FIXME: use light and dark colors
+    def DrawPieces(self, game, screen, squares_per_side, square_side):
+        # Draw pieces
+        for x in range(squares_per_side):
+            for y in range(squares_per_side):
+                # Get piece based on position
+                position = [x, y]
+                piece = self.GetPieceInPosition(position)
+                # Skip empty squares
+                if not piece:
+                    continue
+                piece.Draw(game, screen, square_side)
+
+    
     # Place a piece in the piece state
     def PlacePiece(self, piece):
         position = piece.GetPosition()
@@ -223,6 +237,13 @@ class State:
         
         return result
     
+    # Get piece object in position
+    def GetPieceInPosition(self, position):
+        x = position[0]
+        y = position[1]
+        piece = self.piece_state[y][x]
+        return piece
+
     # Get piece value in position
     def GetPieceValueInPosition(self, position):
         x = position[0]

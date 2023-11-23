@@ -3,7 +3,7 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Make piece class
+# - Draw pieces using piece classes
 # - Define allowed piece movement and captures
 # DONE:
 # - Draw colored square when clicked
@@ -14,6 +14,7 @@
 # - Move board parameters and drawing functions to board class
 # - Change click color depending on whether square is empty or occupied
 # - Make it possible to move pieces
+# - Make piece class
 
 # Import the pygame library
 import pygame
@@ -91,7 +92,7 @@ def draw_piece(my_game, my_screen, color, x_position, y_position, size, piece_ty
 def draw_pieces(my_game, my_screen, my_state, light_color, dark_color, squares_per_side, square_side):
     # Draw pieces
     for x in range(squares_per_side):
-        for y in range(squares_per_side):            
+        for y in range(squares_per_side):
             # Get piece name based on position (from game state)
             position    = [x, y]
             piece_name  = my_state.GetPieceNameInPosition(position)
@@ -128,7 +129,6 @@ def run_game():
     BOARD_DARK_COLOR    = (119, 153, 84)
     PIECE_LIGHT_COLOR   = (248, 248, 248)
     PIECE_DARK_COLOR    = (85, 83, 82)
-    #CLICK_COLOR         = PURE_BLACK
     CLICK_COLOR_EMPTY   = (255, 113, 113)
     CLICK_COLOR_PIECE   = (91, 175, 255)
 
@@ -254,6 +254,7 @@ def run_game():
                     
         # Draw the pieces
         #draw_pieces(pygame, screen, state, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        state.DrawPieces(pygame, screen, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()
