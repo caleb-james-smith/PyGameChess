@@ -3,7 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Make piece class
 # - Define allowed piece movement and captures
 # DONE:
 # - Draw colored square when clicked
@@ -14,109 +13,14 @@
 # - Move board parameters and drawing functions to board class
 # - Change click color depending on whether square is empty or occupied
 # - Make it possible to move pieces
+# - Make piece class
+# - Draw pieces using piece classes
+# - Move some functions to board class
 
 # Import the pygame library
 import pygame
 from board import Board
 from state import State
-
-# Round using a base
-def round_using_base(number, base):
-    result = number - (number % base)
-    return result
-
-# Get position of clicked square based on click position
-def get_clicked_square(click_position, side):
-    click_x = click_position[0]
-    click_y = click_position[1]
-    # Find square x, y based on click x, y;
-    # round using the side length as the base
-    square_x = round_using_base(click_x, side)
-    square_y = round_using_base(click_y, side)
-    return [square_x, square_y]
-
-# get x, y coordinates (ints) based on square x, y position
-def get_square_xy_coords(square_position, side):
-    square_x = square_position[0]
-    square_y = square_position[1]
-    # use integer division
-    x = square_x // side
-    y = square_y // side
-    return [x, y]
-
-# Draw a piece
-# x_position: x position measured from left edge
-# y_position: y position measured from top edge
-def draw_piece(my_game, my_screen, color, x_position, y_position, size, piece_type):
-    # Piece Shapes
-    # - pawn:   small triangle
-    # - knight: triangle pointing left
-    # - bishop: tall triangle
-    # - rook:   tall rectangle
-    # - queen:  pentagon
-    # - king:   square
-
-    # When drawing, recall that positive x is to the right and positive y is down.
-
-    # pawn: small triangle
-    if piece_type == "pawn":
-        points = [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)]
-        my_game.draw.polygon(my_screen, color, points, 0)
-    # knight: triangle pointing left
-    elif piece_type == "knight":
-        points = [(x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position)]
-        my_game.draw.polygon(my_screen, color, points, 0)
-    # bishop: tall triangle
-    elif piece_type == "bishop":
-        points = [(x_position - size, y_position + 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position, y_position - 1.5 * size)]
-        my_game.draw.polygon(my_screen, color, points, 0)
-    # rook: tall rectangle
-    elif piece_type == "rook":
-        points = [(x_position - size, y_position - 1.5 * size), (x_position + size, y_position - 1.5 * size), (x_position + size, y_position + 1.5 * size), (x_position - size, y_position + 1.5 * size)]
-        my_game.draw.polygon(my_screen, color, points, 0)
-    # queen: pentagon
-    elif piece_type == "queen":
-        points = [(x_position - size, y_position + 1.5 * size), (x_position - 1.5 * size, y_position), (x_position, y_position - 1.5 * size), (x_position + 1.5 * size, y_position), (x_position + size, y_position + 1.5 * size)]
-        my_game.draw.polygon(my_screen, color, points, 0)
-    # king: square
-    elif piece_type == "king":
-        points = [(x_position - size, y_position - size), (x_position + size, y_position - size), (x_position + size, y_position + size), (x_position - size, y_position + size)]
-        my_game.draw.polygon(my_screen, color, points, 0)
-    # any other piece: circle
-    else:
-        my_game.draw.circle(my_screen, color, [x_position, y_position], size, 0)
-
-# Draw the pieces
-def draw_pieces(my_game, my_screen, my_state, light_color, dark_color, squares_per_side, square_side):
-    # Draw pieces
-    for x in range(squares_per_side):
-        for y in range(squares_per_side):            
-            # Get piece name based on position (from game state)
-            position    = [x, y]
-            piece_name  = my_state.GetPieceNameInPosition(position)
-            
-            # Skip empty squares
-            if piece_name == "empty":
-                continue
-            
-            # Get piece color and type from name
-            split_name  = piece_name.split()
-            piece_color = split_name[0]
-            piece_type  = split_name[1]
-            # Determine color
-            color = None
-            if piece_color == "white":
-                color = light_color
-            if piece_color == "black":
-                color = dark_color
-
-            # Get piece position: note that this is different than the square position
-            x_position = (x + 0.5) * square_side
-            y_position = (y + 0.5) * square_side
-            # Piece size should be smaller than square side
-            size = square_side / 4
-            # Draw piece
-            draw_piece(my_game, my_screen, color, x_position, y_position, size, piece_type)
 
 # Run the game
 def run_game():
@@ -127,7 +31,6 @@ def run_game():
     BOARD_DARK_COLOR    = (119, 153, 84)
     PIECE_LIGHT_COLOR   = (248, 248, 248)
     PIECE_DARK_COLOR    = (85, 83, 82)
-    #CLICK_COLOR         = PURE_BLACK
     CLICK_COLOR_EMPTY   = (255, 113, 113)
     CLICK_COLOR_PIECE   = (91, 175, 255)
 
@@ -149,7 +52,8 @@ def run_game():
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
     # Initialize the game state
     state = State(board)
-    state.SetInitialState()
+    # Setup pieces
+    state.SetInitialPieceState()
     
     # Run until the user asks to quit
     running = True
@@ -175,18 +79,23 @@ def run_game():
                 click_x = click_position[0]
                 click_y = click_position[1]
                 # clicked square position
-                square_position = get_clicked_square(click_position, SQUARE_SIDE)
+                square_position = board.GetClickedSquare(click_position)
                 square_x = square_position[0]
                 square_y = square_position[1]
                 # x, y coordinates
-                xy_position = get_square_xy_coords(square_position, SQUARE_SIDE)
+                xy_position = board.GetSquareXYCoords(square_position)
                 x = xy_position[0]
                 y = xy_position[1]
                 # chess notation
                 chess_notation = board.GetChessNotation(xy_position)
                 # piece in position
-                piece_value = state.GetPieceValueInPosition(xy_position)
-                piece_name  = state.GetPieceNameInPosition(xy_position)
+                piece = state.GetPieceInPosition(xy_position)
+                if piece:
+                    piece_value = piece.GetValue()
+                    piece_name  = piece.GetName()
+                else:
+                    piece_value = 0
+                    piece_name  = "empty"
                 
                 # Move piece; this gets complicated!
                 # - Use clicked_square_exists and clicked_square_is_empty from previous click
@@ -207,7 +116,14 @@ def run_game():
                     else:
                         # Move piece
                         position_to = [x, y]
-                        state.MovePiece(position_from, position_to)
+                        # Check if move is valid for piece
+                        piece_to_move = state.GetPieceInPosition(position_from)
+                        #piece_to_move_value = piece_to_move.GetValue()
+                        #piece_to_move_name  = piece_to_move.GetName()
+                        #print("piece to move: piece: {0}, value: {1}, name: {2}".format(piece_to_move, piece_to_move_value, piece_to_move_name))
+                        move_is_valid = piece_to_move.MoveIsValid(position_to)
+                        if move_is_valid:
+                            state.MovePiece(position_from, position_to)
                         clicked_square_exists = False
                         position_from = None
                 else:
@@ -230,7 +146,7 @@ def run_game():
 
         # If there was a click, draw the clicked square
         if click_position:
-            square_position = get_clicked_square(click_position, SQUARE_SIDE)
+            square_position = board.GetClickedSquare(click_position)
             square_x = square_position[0]
             square_y = square_position[1]
             # Use different colors based on whether square is empty or occupied
@@ -240,7 +156,7 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
                     
         # Draw the pieces
-        draw_pieces(pygame, screen, state, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()

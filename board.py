@@ -7,6 +7,12 @@
 # - Define valid chess notation
 # - Fix bug: x, y coordinates (rows, columns) are inverted for notation!
 
+
+# Round using a base
+def round_using_base(number, base):
+    result = number - (number % base)
+    return result
+
 class Board:
     def __init__(self, game, screen, light_color, dark_color, squares_per_side, square_side):
         self.game               = game
@@ -46,6 +52,25 @@ class Board:
                 # Draw square
                 self.DrawSquare(color, x_position, y_position)
 
+    # Get position of clicked square based on click position
+    def GetClickedSquare(self, click_position):
+        click_x = click_position[0]
+        click_y = click_position[1]
+        # Find square x, y based on click x, y;
+        # round using the side length as the base.
+        square_x = round_using_base(click_x, self.square_side)
+        square_y = round_using_base(click_y, self.square_side)
+        return [square_x, square_y]
+    
+    # Get x, y coordinates (ints) based on square x, y position
+    def GetSquareXYCoords(self, square_position):
+        square_x = square_position[0]
+        square_y = square_position[1]
+        # Use integer division
+        x = square_x // self.square_side
+        y = square_y // self.square_side
+        return [x, y]
+    
     # Get chess notation for given x, y coordinates
     # Example: input = [2, 3], output = "c5"
     def GetChessNotation(self, location):
