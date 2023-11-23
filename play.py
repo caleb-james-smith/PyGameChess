@@ -198,8 +198,15 @@ def run_game():
                 # chess notation
                 chess_notation = board.GetChessNotation(xy_position)
                 # piece in position
-                piece_value = state.GetPieceValueInPosition(xy_position)
-                piece_name  = state.GetPieceNameInPosition(xy_position)
+                #piece_value = state.GetPieceValueInPosition(xy_position)
+                #piece_name  = state.GetPieceNameInPosition(xy_position)
+                piece = state.GetPieceInPosition(xy_position)
+                if piece:
+                    piece_value = piece.GetValue()
+                    piece_name  = piece.GetName()
+                else:
+                    piece_value = 0
+                    piece_name  = "empty"
                 
                 # Move piece; this gets complicated!
                 # - Use clicked_square_exists and clicked_square_is_empty from previous click

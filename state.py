@@ -202,6 +202,7 @@ class State:
                 x = position[0]
                 y = position[1]
                 piece_state[y][x] = piece
+                self.SetPieceState(piece_state)
             else:
                 print("ERROR: The piece value {0} is not valid!".format(value))
         else:
@@ -226,12 +227,20 @@ class State:
 
     # Move piece from one position to another
     def MovePiece(self, position_from, position_to):
+        x_from, y_from = position_from
+        x_to, y_to     = position_to
         # Get value of piece in "from" position
-        value = self.GetPieceValueInPosition(position_from)
+        #value = self.GetPieceValueInPosition(position_from)
+        piece = self.GetPieceInPosition(position_from)
+        
         # Set "from" position to 0 for empty
-        self.SetValue(position_from, 0)
+        #self.SetValue(position_from, 0)
+        self.piece_state[y_from][x_from] = None
+        
         # Set "to" position to value of piece
-        self.SetValue(position_to, value)
+        #self.SetValue(position_to, value)
+        self.piece_state[y_to][x_to] = piece
+        piece.SetPosition(position_to)
 
     # Get name of piece based on value
     def GetPieceName(self, value):
