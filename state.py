@@ -26,10 +26,13 @@ from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
 # Class to define current game state (piece positions)
 class State:
-    def __init__(self, board, state=None, piece_state=None):
+    def __init__(self, board, white_player, black_player):
         self.board = board
-        self.state = state
-        self.piece_state = piece_state
+        self.state = None
+        self.piece_state = None
+        self.white_player = white_player
+        self.black_player = black_player
+        self.current_player = None
         # Chess pieces
         self.pieces = {
             0: "empty",
@@ -55,6 +58,18 @@ class State:
     
     def SetPieceState(self, piece_state):
         self.piece_state = piece_state
+    
+    def GetCurrentPlayer(self):
+        return self.current_player
+    
+    def SetCurrentPlayer(self, current_player):
+        self.current_player = current_player
+
+    def SwitchTurn(self):
+        if self.current_player == self.white_player:
+            self.current_player = self.black_player
+        elif self.current_player == self.black_player:
+            self.current_player = self.white_player
     
     # Check if piece has a valid value
     def PieceIsValid(self, value):

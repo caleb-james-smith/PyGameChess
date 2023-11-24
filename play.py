@@ -4,6 +4,9 @@
 
 # TODO:
 # - Define allowed piece movement and captures
+# - Define check
+# - Define checkmate
+# - Get set of legal moves for current player
 # DONE:
 # - Draw colored square when clicked
 # - Fix bug: use square location instead of click location
@@ -16,11 +19,15 @@
 # - Make piece class
 # - Draw pieces using piece classes
 # - Move some functions to board class
+# - Define player class
+# - Track current player turn in state class
+# - Switch between players
 
 # Import the pygame library
 import pygame
 from board import Board
 from state import State
+from player import Player
 
 # Run the game
 def run_game():
@@ -50,10 +57,15 @@ def run_game():
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
-    # Initialize the game state
-    state = State(board)
-    # Setup pieces
+    # Create players
+    white_player = Player("Bilbo", "white")
+    black_player = Player("Gollum", "black")    
+    # Setup the game state
+    state = State(board, white_player, black_player)
     state.SetInitialPieceState()
+    state.SetCurrentPlayer(white_player)
+    current_player = state.GetCurrentPlayer()
+    print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
     
     # Run until the user asks to quit
     running = True
@@ -118,12 +130,17 @@ def run_game():
                         position_to = [x, y]
                         # Check if move is valid for piece
                         piece_to_move = state.GetPieceInPosition(position_from)
+                        piece_to_move_color = piece_to_move.GetColor()
                         #piece_to_move_value = piece_to_move.GetValue()
                         #piece_to_move_name  = piece_to_move.GetName()
                         #print("piece to move: piece: {0}, value: {1}, name: {2}".format(piece_to_move, piece_to_move_value, piece_to_move_name))
+                        current_color = current_player.GetColor()
                         move_is_valid = piece_to_move.MoveIsValid(position_to)
-                        if move_is_valid:
+                        if (piece_to_move_color == current_color) and move_is_valid:
                             state.MovePiece(position_from, position_to)
+                            state.SwitchTurn()
+                            current_player = state.GetCurrentPlayer()
+                            print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
                         clicked_square_exists = False
                         position_from = None
                 else:
