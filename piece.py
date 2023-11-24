@@ -279,6 +279,8 @@ class King(Piece):
         self.SetupValueAndName(6)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
+        # Increase size parameter
+        size *= 1.25
         # king: square
         points = [(x_position - size, y_position - size), (x_position + size, y_position - size), (x_position + size, y_position + size), (x_position - size, y_position + size)]
         game.draw.polygon(screen, color, points, 0)
