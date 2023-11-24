@@ -3,9 +3,17 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Save all moves made in chess game
+# - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # - Define allowed piece movement and captures
+# - Differentiate pawn movement and capture
+# - Do not let a player capture his own pieces
+# - Do not let pieces jump other pieces (except for knights)
 # - Define check
 # - Define checkmate
+# - Define castling
+# - Define pawn promotion
+# - Define pawn en passant
 # - Get set of legal moves for current player
 # DONE:
 # - Draw colored square when clicked
@@ -22,6 +30,7 @@
 # - Define player class
 # - Track current player turn in state class
 # - Switch between players
+# - Add black borders to chess pieces
 
 # Import the pygame library
 import pygame
@@ -38,6 +47,7 @@ def run_game():
     BOARD_DARK_COLOR    = (119, 153, 84)
     PIECE_LIGHT_COLOR   = (248, 248, 248)
     PIECE_DARK_COLOR    = (85, 83, 82)
+    PIECE_BORDER_COLOR  = PURE_BLACK
     CLICK_COLOR_EMPTY   = (255, 113, 113)
     CLICK_COLOR_PIECE   = (91, 175, 255)
 
@@ -173,7 +183,7 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
                     
         # Draw the pieces
-        state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()

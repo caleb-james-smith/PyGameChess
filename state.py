@@ -178,7 +178,7 @@ class State:
             self.PlacePiece(piece)
 
     # Draw the pieces
-    def DrawPieces(self, game, screen, light_color, dark_color, squares_per_side, square_side):
+    def DrawPieces(self, game, screen, light_color, dark_color, border_color, squares_per_side, square_side):
         # Draw pieces
         for x in range(squares_per_side):
             for y in range(squares_per_side):
@@ -203,9 +203,10 @@ class State:
                 y_position = (y + 0.5) * square_side
                 # Piece size should be smaller than square side
                 size = square_side / 4
-
-                piece.Draw(game, screen, color, x_position, y_position, size)
-
+                # Draw piece (border color)
+                piece.Draw(game, screen, border_color, x_position, y_position, size)
+                # Draw piece (primary color)
+                piece.Draw(game, screen, color, x_position, y_position, 0.75 * size)
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
