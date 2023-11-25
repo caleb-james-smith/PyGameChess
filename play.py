@@ -75,7 +75,9 @@ def run_game():
     state.SetInitialPieceState()
     state.SetCurrentPlayer(white_player)
     current_player = state.GetCurrentPlayer()
+    print("----------------------------------")
     print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
+    print("----------------------------------")
     
     # Run until the user asks to quit
     running = True
@@ -168,7 +170,9 @@ def run_game():
                                 state.MovePiece(position_from, position_to)
                                 state.SwitchTurn()
                                 current_player = state.GetCurrentPlayer()
+                                print("----------------------------------")
                                 print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
+                                print("----------------------------------")
                         
                         clicked_square_exists = False
                         position_from = None
