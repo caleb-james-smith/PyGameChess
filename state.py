@@ -65,6 +65,7 @@ class State:
     def SetCurrentPlayer(self, current_player):
         self.current_player = current_player
 
+    # Switch current player to opposite player
     def SwitchTurn(self):
         if self.current_player == self.white_player:
             self.current_player = self.black_player
@@ -78,6 +79,12 @@ class State:
             return True
         else:
             return False
+    
+    # Print current player
+    def PrintCurrentPlayer(self):
+        print("----------------------------------")
+        print("Current player: {0} - {1}".format(self.current_player.GetName(), self.current_player.GetColor()))
+        print("----------------------------------")
     
     # Print the state with pretty formatting
     def PrintState(self):

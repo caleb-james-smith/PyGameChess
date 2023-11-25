@@ -59,7 +59,6 @@ def run_game():
     SCREEN_HEIGHT       = 600
     SQUARE_SIDE         = 75
     SQUARES_PER_SIDE    = 8
-    BOARD_SIDE          = SQUARES_PER_SIDE * SQUARE_SIDE
     
     # Initialize pygame
     pygame.init()    
@@ -74,10 +73,8 @@ def run_game():
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
     state.SetCurrentPlayer(white_player)
+    state.PrintCurrentPlayer()
     current_player = state.GetCurrentPlayer()
-    print("----------------------------------")
-    print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
-    print("----------------------------------")
     
     # Run until the user asks to quit
     running = True
@@ -167,12 +164,12 @@ def run_game():
                         if (current_player_color == piece_to_move_color) and move_is_valid:
                             # Either empty square or piece of opposite color
                             if piece_name == "empty" or piece_of_opposite_color:
+                                # Move piece
                                 state.MovePiece(position_from, position_to)
+                                # Switch current player
                                 state.SwitchTurn()
+                                state.PrintCurrentPlayer()
                                 current_player = state.GetCurrentPlayer()
-                                print("----------------------------------")
-                                print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
-                                print("----------------------------------")
                         
                         clicked_square_exists = False
                         position_from = None
