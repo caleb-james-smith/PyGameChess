@@ -7,7 +7,6 @@
 # - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # - Define allowed piece movement and captures
 # - Differentiate pawn movement and capture
-# - Do not let a player capture his own pieces
 # - Do not let pieces jump other pieces (except for knights)
 # - Define check
 # - Define checkmate
@@ -31,6 +30,7 @@
 # - Track current player turn in state class
 # - Switch between players
 # - Add black borders to chess pieces
+# - Do not let a player capture his own pieces
 
 # Import the pygame library
 import pygame
@@ -137,20 +137,39 @@ def run_game():
                         position_from = [x, y]
                     else:
                         # Move piece
+                        current_player_color = current_player.GetColor()
+                        # Get piece to move and to capture
                         position_to = [x, y]
-                        # Check if move is valid for piece
-                        piece_to_move = state.GetPieceInPosition(position_from)
-                        piece_to_move_color = piece_to_move.GetColor()
-                        #piece_to_move_value = piece_to_move.GetValue()
-                        #piece_to_move_name  = piece_to_move.GetName()
-                        #print("piece to move: piece: {0}, value: {1}, name: {2}".format(piece_to_move, piece_to_move_value, piece_to_move_name))
-                        current_color = current_player.GetColor()
+                        piece_to_move       = state.GetPieceInPosition(position_from)
+                        piece_to_capture    = state.GetPieceInPosition(position_to)
+                        piece_to_move_name      = piece_to_move.GetName()
+                        piece_to_move_color     = piece_to_move.GetColor()
+                        piece_of_opposite_color = False
+                        
+                        # Only if piece to capture exists (not empty square)
+                        if piece_to_capture:
+                            piece_to_capture_name   = piece_to_capture.GetName()
+                            piece_to_capture_color  = piece_to_capture.GetColor()
+                            piece_of_opposite_color = (current_player_color != piece_to_capture_color)
+                            print("piece to move: {0}; piece to capture: {1}".format(piece_to_move_name, piece_to_capture_name))
+                        else:
+                            print("piece to move: {0}".format(piece_to_move_name))
+                        
                         move_is_valid = piece_to_move.MoveIsValid(position_to)
-                        if (piece_to_move_color == current_color) and move_is_valid:
-                            state.MovePiece(position_from, position_to)
-                            state.SwitchTurn()
-                            current_player = state.GetCurrentPlayer()
-                            print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
+
+                        # Check if move is valid
+                        # - Player can only move his own pieces (player color must match the color of the piece being moved)
+                        # - Player cannot capture his own pieces (player color cannot match the color of the piece being captured)
+                        # - Player can move to empty squares
+                        # - Move must be valid for the piece being moved
+                        if (current_player_color == piece_to_move_color) and move_is_valid:
+                            # Either empty square or piece of opposite color
+                            if piece_name == "empty" or piece_of_opposite_color:
+                                state.MovePiece(position_from, position_to)
+                                state.SwitchTurn()
+                                current_player = state.GetCurrentPlayer()
+                                print("Current player: {0} - {1}".format(current_player.GetName(), current_player.GetColor()))
+                        
                         clicked_square_exists = False
                         position_from = None
                 else:
