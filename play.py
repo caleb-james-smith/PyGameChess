@@ -156,34 +156,37 @@ def run_game():
                         
                         move_is_valid = piece_to_move.MoveIsValid(position_to)
 
-                        # Check if move is valid
+                        # Determine if move is valid
                         # - Player can only move his own pieces (player color must match the color of the piece being moved)
                         # - Player cannot capture his own pieces (player color cannot match the color of the piece being captured)
                         # - Player can move to empty squares
                         # - Move must be valid for the piece being moved
                         # - Pawns cannot capture forward
                         # TODO: allow pawns to capture diagonally
+                        all_systems_go = False
                         if (current_player_color == piece_to_move_color) and move_is_valid:
                             # Either empty square or piece of opposite color
                             if "pawn" in piece_to_move_name:
                                 if piece_name == "empty":
-                                    # Move piece
-                                    state.MovePiece(position_from, position_to)
-                                    # Switch current player
-                                    state.SwitchTurn()
-                                    state.PrintCurrentPlayer()
-                                    current_player = state.GetCurrentPlayer()
+                                    all_systems_go = True
                             else:
                                 if piece_name == "empty" or piece_of_opposite_color:
-                                    # Move piece
-                                    state.MovePiece(position_from, position_to)
-                                    # Switch current player
-                                    state.SwitchTurn()
-                                    state.PrintCurrentPlayer()
-                                    current_player = state.GetCurrentPlayer()
+                                    all_systems_go = True
                         
+                        # Move the piece
+                        if all_systems_go:
+                            # Move piece
+                            state.MovePiece(position_from, position_to)
+                            # Switch current player
+                            state.SwitchTurn()
+                            state.PrintCurrentPlayer()
+                            current_player = state.GetCurrentPlayer()
+                        
+                        # Reset clicked square and position from
+                        # Do this whether or not we moved a piece
                         clicked_square_exists = False
                         position_from = None
+                
                 else:
                     clicked_square_exists = True
                     position_from = [x, y]
