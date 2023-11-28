@@ -3,10 +3,10 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Differentiate pawn movement and capture
 # - Save all moves made in chess game
 # - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # - Define allowed piece movement and captures
-# - Differentiate pawn movement and capture
 # - Do not let pieces jump other pieces (except for knights)
 # - Define check
 # - Define checkmate
@@ -161,15 +161,26 @@ def run_game():
                         # - Player cannot capture his own pieces (player color cannot match the color of the piece being captured)
                         # - Player can move to empty squares
                         # - Move must be valid for the piece being moved
+                        # - Pawns cannot capture forward
+                        # TODO: allow pawns to capture diagonally
                         if (current_player_color == piece_to_move_color) and move_is_valid:
                             # Either empty square or piece of opposite color
-                            if piece_name == "empty" or piece_of_opposite_color:
-                                # Move piece
-                                state.MovePiece(position_from, position_to)
-                                # Switch current player
-                                state.SwitchTurn()
-                                state.PrintCurrentPlayer()
-                                current_player = state.GetCurrentPlayer()
+                            if "pawn" in piece_to_move_name:
+                                if piece_name == "empty":
+                                    # Move piece
+                                    state.MovePiece(position_from, position_to)
+                                    # Switch current player
+                                    state.SwitchTurn()
+                                    state.PrintCurrentPlayer()
+                                    current_player = state.GetCurrentPlayer()
+                            else:
+                                if piece_name == "empty" or piece_of_opposite_color:
+                                    # Move piece
+                                    state.MovePiece(position_from, position_to)
+                                    # Switch current player
+                                    state.SwitchTurn()
+                                    state.PrintCurrentPlayer()
+                                    current_player = state.GetCurrentPlayer()
                         
                         clicked_square_exists = False
                         position_from = None
