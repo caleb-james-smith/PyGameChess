@@ -21,15 +21,19 @@
 # - Define numbers and names for chess pieces
 # - Create a class for the chess board
 # - Make function to set initial piece state
+# - Write function to determine if there are any pieces on squares between two positions
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
 # Class to define current game state (piece positions)
 class State:
-    def __init__(self, board, state=None, piece_state=None):
+    def __init__(self, board, white_player, black_player):
         self.board = board
-        self.state = state
-        self.piece_state = piece_state
+        self.state = None
+        self.piece_state = None
+        self.white_player = white_player
+        self.black_player = black_player
+        self.current_player = None
         # Chess pieces
         self.pieces = {
             0: "empty",
@@ -56,6 +60,19 @@ class State:
     def SetPieceState(self, piece_state):
         self.piece_state = piece_state
     
+    def GetCurrentPlayer(self):
+        return self.current_player
+    
+    def SetCurrentPlayer(self, current_player):
+        self.current_player = current_player
+
+    # Switch current player to opposite player
+    def SwitchTurn(self):
+        if self.current_player == self.white_player:
+            self.current_player = self.black_player
+        elif self.current_player == self.black_player:
+            self.current_player = self.white_player
+    
     # Check if piece has a valid value
     def PieceIsValid(self, value):
         abs_value = abs(value)
@@ -63,6 +80,12 @@ class State:
             return True
         else:
             return False
+    
+    # Print current player
+    def PrintCurrentPlayer(self):
+        print("----------------------------------")
+        print("Current player: {0} - {1}".format(self.current_player.GetName(), self.current_player.GetColor()))
+        print("----------------------------------")
     
     # Print the state with pretty formatting
     def PrintState(self):
@@ -163,7 +186,7 @@ class State:
             self.PlacePiece(piece)
 
     # Draw the pieces
-    def DrawPieces(self, game, screen, light_color, dark_color, squares_per_side, square_side):
+    def DrawPieces(self, game, screen, light_color, dark_color, border_color, squares_per_side, square_side):
         # Draw pieces
         for x in range(squares_per_side):
             for y in range(squares_per_side):
@@ -188,9 +211,10 @@ class State:
                 y_position = (y + 0.5) * square_side
                 # Piece size should be smaller than square side
                 size = square_side / 4
-
-                piece.Draw(game, screen, color, x_position, y_position, size)
-
+                # Draw piece (border color)
+                piece.Draw(game, screen, border_color, x_position, y_position, size)
+                # Draw piece (primary color)
+                piece.Draw(game, screen, color, x_position, y_position, 0.75 * size)
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
@@ -229,7 +253,7 @@ class State:
     def MovePiece(self, position_from, position_to):
         x_from, y_from = position_from
         x_to, y_to     = position_to
-        # Get value of piece in "from" position
+        # Get piece in "from" position
         piece = self.GetPieceInPosition(position_from)
         
         # Set "from" position to None for empty
@@ -239,6 +263,18 @@ class State:
         self.piece_state[y_to][x_to] = piece
         piece.SetPosition(position_to)
 
+    # Check if at least one piece occupies a square between two positions
+    def PieceIsInBetween(self, position_1, position_2):
+        result = False
+        # Get in between squares
+        in_between_squares = self.board.GetInBetweenSquares(position_1, position_2)
+        for square in in_between_squares:
+            # Check if there is a piece on this square
+            piece = self.GetPieceInPosition(square)            
+            if piece:
+                result = True
+        return result
+    
     # Get name of piece based on value
     def GetPieceName(self, value):
         result = ""

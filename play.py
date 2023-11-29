@@ -3,7 +3,14 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Define allowed piece movement and captures
+# - Define check
+# - Define checkmate
+# - Define castling
+# - Define pawn promotion
+# - Define pawn en passant
+# - Get set of legal moves for current player
+# - Save all moves made in chess game
+# - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # DONE:
 # - Draw colored square when clicked
 # - Fix bug: use square location instead of click location
@@ -16,11 +23,20 @@
 # - Make piece class
 # - Draw pieces using piece classes
 # - Move some functions to board class
+# - Define player class
+# - Track current player turn in state class
+# - Switch between players
+# - Add black borders to chess pieces
+# - Do not let a player capture his own pieces
+# - Differentiate pawn movement and capture
+# - Do not let pieces jump other pieces (except for knights)
+# - Define allowed piece movement and captures
 
 # Import the pygame library
 import pygame
 from board import Board
 from state import State
+from player import Player
 
 # Run the game
 def run_game():
@@ -31,6 +47,7 @@ def run_game():
     BOARD_DARK_COLOR    = (119, 153, 84)
     PIECE_LIGHT_COLOR   = (248, 248, 248)
     PIECE_DARK_COLOR    = (85, 83, 82)
+    PIECE_BORDER_COLOR  = PURE_BLACK
     CLICK_COLOR_EMPTY   = (255, 113, 113)
     CLICK_COLOR_PIECE   = (91, 175, 255)
 
@@ -42,7 +59,6 @@ def run_game():
     SCREEN_HEIGHT       = 600
     SQUARE_SIDE         = 75
     SQUARES_PER_SIDE    = 8
-    BOARD_SIDE          = SQUARES_PER_SIDE * SQUARE_SIDE
     
     # Initialize pygame
     pygame.init()    
@@ -50,10 +66,15 @@ def run_game():
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
-    # Initialize the game state
-    state = State(board)
-    # Setup pieces
+    # Create players
+    white_player = Player("Bilbo", "white")
+    black_player = Player("Gollum", "black")    
+    # Setup the game state
+    state = State(board, white_player, black_player)
     state.SetInitialPieceState()
+    state.SetCurrentPlayer(white_player)
+    state.PrintCurrentPlayer()
+    current_player = state.GetCurrentPlayer()
     
     # Run until the user asks to quit
     running = True
@@ -115,17 +136,77 @@ def run_game():
                         position_from = [x, y]
                     else:
                         # Move piece
+                        current_player_color = current_player.GetColor()
+                        # Get piece to move and to capture
                         position_to = [x, y]
-                        # Check if move is valid for piece
-                        piece_to_move = state.GetPieceInPosition(position_from)
-                        #piece_to_move_value = piece_to_move.GetValue()
-                        #piece_to_move_name  = piece_to_move.GetName()
-                        #print("piece to move: piece: {0}, value: {1}, name: {2}".format(piece_to_move, piece_to_move_value, piece_to_move_name))
+                        piece_to_move       = state.GetPieceInPosition(position_from)
+                        piece_to_capture    = state.GetPieceInPosition(position_to)
+                        piece_to_move_name      = piece_to_move.GetName()
+                        piece_to_move_color     = piece_to_move.GetColor()
+                        piece_of_opposite_color = False
+                        move_is_valid           = False
+                        capture_is_valid        = False
+                        piece_is_in_between     = False
+                        
+                        # Only if piece to capture exists (not empty square)
+                        if piece_to_capture:
+                            piece_to_capture_name   = piece_to_capture.GetName()
+                            piece_to_capture_color  = piece_to_capture.GetColor()
+                            piece_of_opposite_color = (current_player_color != piece_to_capture_color)
+                            print("piece to move: {0}; piece to capture: {1}".format(piece_to_move_name, piece_to_capture_name))
+                        else:
+                            print("piece to move: {0}".format(piece_to_move_name))
+                        
+                        # Check if piece move is valid (for all pieces)
                         move_is_valid = piece_to_move.MoveIsValid(position_to)
-                        if move_is_valid:
+                        # Check if capture is valid (for pawns only)
+                        if "pawn" in piece_to_move_name:
+                            capture_is_valid = piece_to_move.CaptureIsValid(position_to)
+                        # Check if piece occupies a square in between two positions
+                        piece_is_in_between = state.PieceIsInBetween(position_from, position_to)
+
+                        # Determine if move is valid
+                        # - Player can only move his own pieces (player color must match the color of the piece being moved)
+                        # - Player cannot capture his own pieces (player color cannot match the color of the piece being captured)
+                        # - Player can move to empty squares
+                        # - Move must be valid for the piece being moved
+                        # - Pawns can move forward, but not capture forward
+                        # - Pawns cannot move diagonally, but can capture diagonally
+                        # - Pieces cannot jump other pieces (except for knights)
+                        
+                        all_systems_go = False
+
+                        if (current_player_color == piece_to_move_color):
+                            if "pawn" in piece_to_move_name:
+                                if move_is_valid and piece_name == "empty":
+                                    if not piece_is_in_between:
+                                        all_systems_go = True
+                                elif capture_is_valid and piece_of_opposite_color:
+                                    if not piece_is_in_between:
+                                        all_systems_go = True
+                            else:
+                                if move_is_valid:
+                                    if piece_name == "empty" or piece_of_opposite_color:
+                                        if "knight" in piece_to_move_name:
+                                            all_systems_go = True
+                                        else:
+                                            if not piece_is_in_between:
+                                                all_systems_go = True
+
+                        # Move the piece
+                        if all_systems_go:
+                            # Move piece
                             state.MovePiece(position_from, position_to)
+                            # Switch current player
+                            state.SwitchTurn()
+                            state.PrintCurrentPlayer()
+                            current_player = state.GetCurrentPlayer()
+                        
+                        # Reset clicked square and position from
+                        # Do this whether or not we moved a piece
                         clicked_square_exists = False
                         position_from = None
+                
                 else:
                     clicked_square_exists = True
                     position_from = [x, y]
@@ -156,7 +237,7 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
                     
         # Draw the pieces
-        state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+        state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 
         # Flip the display
         pygame.display.flip()

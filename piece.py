@@ -1,6 +1,7 @@
 # Piece class and subclasses
 
 # TODO:
+# - Add piece type variable
 # DONE:
 # - Create piece class (superclass or base class)
 # - Create subclass for each type of piece
@@ -63,6 +64,7 @@ class Piece:
         else:
             return False
 
+    # Get sign of piece based on color
     def GetSign(self):
         if self.color == "white":
             return 1
@@ -123,7 +125,15 @@ class Pawn(Piece):
         # pawn: small triangle
         points = [(x_position - size, y_position + size), (x_position + size, y_position + size), (x_position, y_position - size)]
         game.draw.polygon(screen, color, points, 0)
-    
+
+    # Determine if capturing to a position is valid (specific to pawns)
+    def CaptureIsValid(self, position_to):
+        captures = self.GetValidCaptures()
+        if position_to in captures:
+            return True
+        else:
+            return False
+
     # Get valid moves
     # - Constrained to an empty board
     # - Independent of other pieces (empty board)
@@ -156,6 +166,28 @@ class Pawn(Piece):
                     if y_diff == 2:
                         moves.append([piece_x, y])
         return moves
+    
+    # Get Valid Captures
+    def GetValidCaptures(self):
+        captures = []
+        color = self.GetColor()
+        position = self.GetPosition()
+        piece_x, piece_y = position
+        # Pawn captures
+        # Check all x, y positions on the board
+        for x in range(8):
+            for y in range(8):
+                x_diff = x - piece_x
+                y_diff = y - piece_y
+                # Assume white pawns capture up (decreasing y)
+                if color == "white":
+                    if y_diff == -1 and abs(x_diff) == 1:
+                        captures.append([x, y])
+                # Assume black pawns capture down (increasing y)
+                if color == "black":
+                    if y_diff == 1 and abs(x_diff) == 1:
+                        captures.append([x, y])
+        return captures
 
 class Knight(Piece):
     def __init__(self, color, position):
@@ -279,6 +311,8 @@ class King(Piece):
         self.SetupValueAndName(6)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
+        # Increase size parameter
+        size *= 1.25
         # king: square
         points = [(x_position - size, y_position - size), (x_position + size, y_position - size), (x_position + size, y_position + size), (x_position - size, y_position + size)]
         game.draw.polygon(screen, color, points, 0)
