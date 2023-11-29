@@ -3,7 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Differentiate pawn movement and capture
 # - Save all moves made in chess game
 # - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # - Define allowed piece movement and captures
@@ -31,6 +30,7 @@
 # - Switch between players
 # - Add black borders to chess pieces
 # - Do not let a player capture his own pieces
+# - Differentiate pawn movement and capture
 
 # Import the pygame library
 import pygame
@@ -144,6 +144,8 @@ def run_game():
                         piece_to_move_name      = piece_to_move.GetName()
                         piece_to_move_color     = piece_to_move.GetColor()
                         piece_of_opposite_color = False
+                        move_is_valid           = False
+                        capture_is_valid        = False
                         
                         # Only if piece to capture exists (not empty square)
                         if piece_to_capture:
@@ -154,24 +156,32 @@ def run_game():
                         else:
                             print("piece to move: {0}".format(piece_to_move_name))
                         
+                        # Check if piece move is valid (for all pieces)
                         move_is_valid = piece_to_move.MoveIsValid(position_to)
+                        # Check if capture is valid (for pawns only)
+                        if "pawn" in piece_to_move_name:
+                            capture_is_valid = piece_to_move.CaptureIsValid(position_to)
 
                         # Determine if move is valid
                         # - Player can only move his own pieces (player color must match the color of the piece being moved)
                         # - Player cannot capture his own pieces (player color cannot match the color of the piece being captured)
                         # - Player can move to empty squares
                         # - Move must be valid for the piece being moved
-                        # - Pawns cannot capture forward
-                        # TODO: allow pawns to capture diagonally
+                        # - Pawns can move forward, but not capture forward
+                        # - Pawns cannot move diagonally, but can capture diagonally
+                        
                         all_systems_go = False
-                        if (current_player_color == piece_to_move_color) and move_is_valid:
-                            # Either empty square or piece of opposite color
+
+                        if (current_player_color == piece_to_move_color):
                             if "pawn" in piece_to_move_name:
-                                if piece_name == "empty":
+                                if move_is_valid and piece_name == "empty":
+                                    all_systems_go = True
+                                elif capture_is_valid and piece_of_opposite_color:
                                     all_systems_go = True
                             else:
-                                if piece_name == "empty" or piece_of_opposite_color:
-                                    all_systems_go = True
+                                if move_is_valid:
+                                    if piece_name == "empty" or piece_of_opposite_color:
+                                        all_systems_go = True
                         
                         # Move the piece
                         if all_systems_go:

@@ -252,7 +252,7 @@ class State:
     def MovePiece(self, position_from, position_to):
         x_from, y_from = position_from
         x_to, y_to     = position_to
-        # Get value of piece in "from" position
+        # Get piece in "from" position
         piece = self.GetPieceInPosition(position_from)
         
         # Set "from" position to None for empty
