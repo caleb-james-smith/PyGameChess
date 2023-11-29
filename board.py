@@ -6,12 +6,23 @@
 # - Define valid x, y coordinates
 # - Define valid chess notation
 # - Fix bug: x, y coordinates (rows, columns) are inverted for notation!
-
+# - Write function to return squares that are in between two positions
 
 # Round using a base
 def round_using_base(number, base):
     result = number - (number % base)
     return result
+
+# Get integers between two integers
+def get_numbers_between_numbers(a, b):
+    numbers = []
+    if a == b:
+        return numbers
+    elif a < b:
+        numbers = [x for x in range(a + 1, b)]
+    elif a > b:
+        numbers = [x for x in range(b + 1, a)]
+    return numbers
 
 class Board:
     def __init__(self, game, screen, light_color, dark_color, squares_per_side, square_side):
@@ -155,6 +166,35 @@ class Board:
         
         return True
     
+    # Get squares that are in between two positions
+    # In between squares only exist for positions in the same column, row, or diagonal
+    def GetInBetweenSquares(self, position_1, position_2):
+        squares = []
+        if self.LocationIsValid(position_1) and self.LocationIsValid(position_2):
+            x_1, y_1 = position_1
+            x_2, y_2 = position_2
+            x_diff = x_2 - x_1
+            y_diff = y_2 - y_1
+            # If the positions are the same, there are no in between squares
+            if x_diff == 0 and y_diff == 0:
+                return squares
+            else:
+                # Get in between x and y values
+                x_values = get_numbers_between_numbers(x_1, x_2)
+                y_values = get_numbers_between_numbers(y_1, y_2)
+                # Positions are in the same column
+                if x_diff == 0:
+                    squares = [[x_1, y] for y in y_values]
+                # Positions are in the same row
+                elif y_diff == 0:
+                    squares = [[x, y_1] for x in x_values]
+                # Positions are in the same diagonal
+                elif abs(x_diff) == abs(y_diff):
+                    # Reverse y values for opposite diagonal cases
+                    if x_diff * y_diff < 0:
+                        y_values.reverse()
+                    squares = [[x_values[i], y_values[i]] for i in range(len(x_values))]
+        return squares
 
 def main():
     board = Board()

@@ -21,6 +21,7 @@
 # - Define numbers and names for chess pieces
 # - Create a class for the chess board
 # - Make function to set initial piece state
+# - Write function to determine if there are any pieces on squares between two positions
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -262,6 +263,18 @@ class State:
         self.piece_state[y_to][x_to] = piece
         piece.SetPosition(position_to)
 
+    # Check if at least one piece occupies a square between two positions
+    def PieceIsInBetween(self, position_1, position_2):
+        result = False
+        # Get in between squares
+        in_between_squares = self.board.GetInBetweenSquares(position_1, position_2)
+        for square in in_between_squares:
+            # Check if there is a piece on this square
+            piece = self.GetPieceInPosition(square)            
+            if piece:
+                result = True
+        return result
+    
     # Get name of piece based on value
     def GetPieceName(self, value):
         result = ""

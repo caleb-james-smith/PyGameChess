@@ -3,16 +3,14 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Save all moves made in chess game
-# - Information to save for each move: piece, position from, position to, and piece captured (or empty)
-# - Define allowed piece movement and captures
-# - Do not let pieces jump other pieces (except for knights)
 # - Define check
 # - Define checkmate
 # - Define castling
 # - Define pawn promotion
 # - Define pawn en passant
 # - Get set of legal moves for current player
+# - Save all moves made in chess game
+# - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # DONE:
 # - Draw colored square when clicked
 # - Fix bug: use square location instead of click location
@@ -31,6 +29,8 @@
 # - Add black borders to chess pieces
 # - Do not let a player capture his own pieces
 # - Differentiate pawn movement and capture
+# - Do not let pieces jump other pieces (except for knights)
+# - Define allowed piece movement and captures
 
 # Import the pygame library
 import pygame
@@ -146,6 +146,7 @@ def run_game():
                         piece_of_opposite_color = False
                         move_is_valid           = False
                         capture_is_valid        = False
+                        piece_is_in_between     = False
                         
                         # Only if piece to capture exists (not empty square)
                         if piece_to_capture:
@@ -161,6 +162,8 @@ def run_game():
                         # Check if capture is valid (for pawns only)
                         if "pawn" in piece_to_move_name:
                             capture_is_valid = piece_to_move.CaptureIsValid(position_to)
+                        # Check if piece occupies a square in between two positions
+                        piece_is_in_between = state.PieceIsInBetween(position_from, position_to)
 
                         # Determine if move is valid
                         # - Player can only move his own pieces (player color must match the color of the piece being moved)
@@ -169,20 +172,27 @@ def run_game():
                         # - Move must be valid for the piece being moved
                         # - Pawns can move forward, but not capture forward
                         # - Pawns cannot move diagonally, but can capture diagonally
+                        # - Pieces cannot jump other pieces (except for knights)
                         
                         all_systems_go = False
 
                         if (current_player_color == piece_to_move_color):
                             if "pawn" in piece_to_move_name:
                                 if move_is_valid and piece_name == "empty":
-                                    all_systems_go = True
+                                    if not piece_is_in_between:
+                                        all_systems_go = True
                                 elif capture_is_valid and piece_of_opposite_color:
-                                    all_systems_go = True
+                                    if not piece_is_in_between:
+                                        all_systems_go = True
                             else:
                                 if move_is_valid:
                                     if piece_name == "empty" or piece_of_opposite_color:
-                                        all_systems_go = True
-                        
+                                        if "knight" in piece_to_move_name:
+                                            all_systems_go = True
+                                        else:
+                                            if not piece_is_in_between:
+                                                all_systems_go = True
+
                         # Move the piece
                         if all_systems_go:
                             # Move piece
