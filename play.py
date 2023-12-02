@@ -200,6 +200,7 @@ def run_game():
                             state.MovePiece(position_from, position_to)
                             # Switch current player
                             state.SwitchTurn()
+                            state.PrintState()
                             state.PrintCurrentPlayer()
                             current_player = state.GetCurrentPlayer()
                         

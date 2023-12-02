@@ -13,7 +13,6 @@
 # - 6: king
 
 # TODO:
-# - After any move, update state based on piece state
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -22,6 +21,7 @@
 # - Make function to set initial piece state
 # - Write function to determine if there are any pieces on squares between two positions
 # - At the start of game, set state based on piece state
+# - After any move, update state based on piece state
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -268,6 +268,7 @@ class State:
     def MovePiece(self, position_from, position_to):
         x_from, y_from = position_from
         x_to, y_to     = position_to
+        
         # Get piece in "from" position
         piece = self.GetPieceInPosition(position_from)
         
@@ -277,6 +278,9 @@ class State:
         # Set "to" position to piece and update piece position
         self.piece_state[y_to][x_to] = piece
         piece.SetPosition(position_to)
+
+        # Update state based on piece state
+        self.SetStateFromPieceState()
 
     # Check if at least one piece occupies a square between two positions
     def PieceIsInBetween(self, position_1, position_2):
