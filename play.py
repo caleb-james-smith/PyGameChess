@@ -73,6 +73,7 @@ def run_game():
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
     state.SetCurrentPlayer(white_player)
+    state.PrintState()
     state.PrintCurrentPlayer()
     current_player = state.GetCurrentPlayer()
     

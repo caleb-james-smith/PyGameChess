@@ -13,8 +13,7 @@
 # - 6: king
 
 # TODO:
-# - Connect "state" and "piece_state"
-# - Eventually, only use "piece_state" (contains piece objects)
+# - After any move, update state based on piece state
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -22,6 +21,7 @@
 # - Create a class for the chess board
 # - Make function to set initial piece state
 # - Write function to determine if there are any pieces on squares between two positions
+# - At the start of game, set state based on piece state
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -106,6 +106,18 @@ class State:
         else:
             print(self.state)
 
+    # Set the state based on the piece state
+    def SetStateFromPieceState(self):
+        self.SetEmptyState()
+        for x in range(8):
+            for y in range(8):
+                piece = self.piece_state[y][x]
+                if piece:
+                    self.state[y][x] = piece.GetValue()
+                else:
+                    self.state[y][x] = 0
+
+    
     # Set state to an empty board (all entries are 0)
     def SetEmptyState(self):
         state = [[0 for x in range(8)] for y in range (8)]
@@ -184,6 +196,9 @@ class State:
         
         for piece in black_pieces:
             self.PlacePiece(piece)
+
+        # Set state based on piece state
+        self.SetStateFromPieceState()
 
     # Draw the pieces
     def DrawPieces(self, game, screen, light_color, dark_color, border_color, squares_per_side, square_side):
