@@ -13,6 +13,7 @@
 # - 6: king
 
 # TODO:
+# - Make a function to get a list of all a player's pieces
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -98,7 +99,7 @@ class State:
             print(line)
             for row in self.state:
                 # Fill with whitespace using string rjust()
-                # Forces positive and negative ints < 10 to use the same width
+                # Forces positive and negative integers < 10 to use the same width
                 row_formatted = [str(value).rjust(2) for value in row]
                 row_string = ",".join(row_formatted)
                 print(row_string)
@@ -117,7 +118,6 @@ class State:
                 else:
                     self.state[y][x] = 0
 
-    
     # Set state to an empty board (all entries are 0)
     def SetEmptyState(self):
         state = [[0 for x in range(8)] for y in range (8)]
@@ -294,17 +294,38 @@ class State:
                 result = True
         return result
     
-    # Get name of piece based on value
-    def GetPieceName(self, value):
+    # Get all possible moves for a player
+    def GetPossibleMoves(self, player):
+        moves = []
+        player_color = player.GetColor()
+        # loop over all pieces for a player
+        return moves
+
+    # Get piece type based on value
+    def GetPieceType(self, value):
         result = ""
-        
-        # Get name of piece based on value; use absolute value
+
         if self.PieceIsValid(value):
             abs_value = abs(value)
             result = self.pieces[abs_value]
         else:
             print("ERROR: The value {0} does not represent a valid piece.".format(value))
-            return result
+
+        return result
+
+    # Get full name of piece (color and type) based on value
+    def GetPieceName(self, value):
+        result = ""
+        
+        # # Get name of piece based on value; use absolute value
+        # if self.PieceIsValid(value):
+        #     abs_value = abs(value)
+        #     result = self.pieces[abs_value]
+        # else:
+        #     print("ERROR: The value {0} does not represent a valid piece.".format(value))
+        #     return result
+
+        result = self.GetPieceType(value)
         
         # Assign white or black based on sign
         if value > 0:

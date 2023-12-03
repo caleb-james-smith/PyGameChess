@@ -1,7 +1,8 @@
 # Piece class and subclasses
 
 # TODO:
-# - Add piece type variable
+# - Add piece type variable (pawn, knight, etc.)
+# - Consolidate redundant functions in state and piece classes
 # DONE:
 # - Create piece class (superclass or base class)
 # - Create subclass for each type of piece
@@ -12,6 +13,7 @@ class Piece:
     def __init__(self, color, position):
         self.color      = color
         self.position   = position
+        self.type       = None
         self.value      = None
         self.name       = None
         self.chess_pieces = {
@@ -36,6 +38,12 @@ class Piece:
     def SetPosition(self, position):
         self.position = position
     
+    def GetType(self):
+        return self.type
+    
+    def SetType(self, type):
+        self.type = type
+
     def GetValue(self):
         return self.value
     
@@ -74,18 +82,32 @@ class Piece:
             print("ERROR: The color '{0}' is not valid!".format(self.color))
             return None
     
-    # Get piece name based on value
-    def GetPieceName(self):
+    # Get piece type based on value
+    def GetPieceType(self):
         result = ""
-        
-        # Get name of piece based on value; use absolute value
+
         if self.PieceIsValid():
             abs_value = abs(self.value)
             result = self.chess_pieces[abs_value]
         else:
-            print("ERROR: The value {0} does not represent a valid chess piece.".format(self.value))
-            return result
+            print("ERROR: The value {0} does not represent a valid piece.".format(self.value))
+
+        return result
+    
+    # Get piece name based on value
+    def GetPieceName(self):
+        result = ""
         
+        # # Get name of piece based on value; use absolute value
+        # if self.PieceIsValid():
+        #     abs_value = abs(self.value)
+        #     result = self.chess_pieces[abs_value]
+        # else:
+        #     print("ERROR: The value {0} does not represent a valid chess piece.".format(self.value))
+        #     return result
+        
+        result = self.GetPieceType()
+
         # Assign white or black based on sign
         if self.value > 0:
             result = "white {0}".format(result)

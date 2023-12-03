@@ -3,12 +3,13 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Get legal moves for a given player
+# - Get all possible moves for a given player
 # - Define check
 # - Define checkmate
 # - Define castling
 # - Define pawn promotion
 # - Define pawn en passant
-# - Get set of legal moves for current player
 # - Save all moves made in chess game
 # - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # DONE:
