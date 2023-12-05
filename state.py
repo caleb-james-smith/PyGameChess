@@ -315,16 +315,7 @@ class State:
 
     # Get full name of piece (color and type) based on value
     def GetPieceName(self, value):
-        result = ""
-        
-        # # Get name of piece based on value; use absolute value
-        # if self.PieceIsValid(value):
-        #     abs_value = abs(value)
-        #     result = self.chess_pieces[abs_value]
-        # else:
-        #     print("ERROR: The value {0} does not represent a valid piece.".format(value))
-        #     return result
-
+        # Get piece type
         result = self.GetPieceType(value)
         
         # Assign white or black based on sign
@@ -351,9 +342,9 @@ class State:
         return piece_value
     
     # Get piece name in position
-    def GetPieceNameInPosition(self, position):
-        piece_value = self.GetPieceValueInPosition(position)
-        piece_name  = self.GetPieceName(piece_value)
+    def GetPieceNameInPosition(self, position):        
+        piece = self.GetPieceInPosition(position)
+        piece_name = piece.GetName()
         return piece_name
 
     # Print types of pieces
@@ -363,7 +354,7 @@ class State:
             print("{0}: {1}".format(i, self.GetPieceName(i)))
 
 def main():
-    state = State()
+    state = State(None, None, None)
     state.PrintState()
     state.SetInitialState()
     state.PrintState()

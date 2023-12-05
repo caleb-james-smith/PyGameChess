@@ -96,16 +96,7 @@ class Piece:
     
     # Get piece name based on value
     def GetPieceName(self):
-        result = ""
-        
-        # # Get name of piece based on value; use absolute value
-        # if self.PieceIsValid():
-        #     abs_value = abs(self.value)
-        #     result = self.chess_pieces[abs_value]
-        # else:
-        #     print("ERROR: The value {0} does not represent a valid chess piece.".format(self.value))
-        #     return result
-        
+        # Get piece type
         result = self.GetPieceType()
 
         # Assign white or black based on sign
