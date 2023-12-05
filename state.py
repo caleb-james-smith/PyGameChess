@@ -36,7 +36,7 @@ class State:
         self.black_player = black_player
         self.current_player = None
         # Chess pieces
-        self.pieces = {
+        self.chess_pieces = {
             0: "empty",
             1: "pawn",
             2: "knight",
@@ -77,7 +77,7 @@ class State:
     # Check if piece has a valid value
     def PieceIsValid(self, value):
         abs_value = abs(value)
-        if abs_value in self.pieces:
+        if abs_value in self.chess_pieces:
             return True
         else:
             return False
@@ -307,7 +307,7 @@ class State:
 
         if self.PieceIsValid(value):
             abs_value = abs(value)
-            result = self.pieces[abs_value]
+            result = self.chess_pieces[abs_value]
         else:
             print("ERROR: The value {0} does not represent a valid piece.".format(value))
 
@@ -320,7 +320,7 @@ class State:
         # # Get name of piece based on value; use absolute value
         # if self.PieceIsValid(value):
         #     abs_value = abs(value)
-        #     result = self.pieces[abs_value]
+        #     result = self.chess_pieces[abs_value]
         # else:
         #     print("ERROR: The value {0} does not represent a valid piece.".format(value))
         #     return result

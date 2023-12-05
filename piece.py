@@ -13,7 +13,7 @@ class Piece:
     def __init__(self, color, position):
         self.color      = color
         self.position   = position
-        self.type       = None
+        self.piece_type = None
         self.value      = None
         self.name       = None
         self.chess_pieces = {
@@ -39,10 +39,10 @@ class Piece:
         self.position = position
     
     def GetType(self):
-        return self.type
+        return self.piece_type
     
-    def SetType(self, type):
-        self.type = type
+    def SetType(self, piece_type):
+        self.piece_type = piece_type
 
     def GetValue(self):
         return self.value
@@ -116,12 +116,15 @@ class Piece:
         
         return result
     
-    # Set piece value and name
-    def SetupValueAndName(self, value):
-        # first, set value
+    # Set piece: set value, type, and name
+    def SetupPiece(self, value):
+        # First, set value; this should be done first.
         sign = self.GetSign()
         self.SetValue(sign * value)
-        # next, set name; value must already be set
+        # Next, set type; value must already be set.
+        piece_type = self.GetPieceType()
+        self.SetType(piece_type)
+        # Next, set name; value must already be set
         name = self.GetPieceName()
         self.SetName(name)
     
@@ -141,7 +144,7 @@ class Piece:
 class Pawn(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(1)
+        self.SetupPiece(1)
     
     def Draw(self, game, screen, color, x_position, y_position, size):
         # pawn: small triangle
@@ -214,7 +217,7 @@ class Pawn(Piece):
 class Knight(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(2)
+        self.SetupPiece(2)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # knight: triangle pointing left
@@ -243,7 +246,7 @@ class Knight(Piece):
 class Bishop(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(3)
+        self.SetupPiece(3)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # bishop: tall triangle
@@ -272,7 +275,7 @@ class Bishop(Piece):
 class Rook(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(4)
+        self.SetupPiece(4)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # rook: tall rectangle
@@ -301,7 +304,7 @@ class Rook(Piece):
 class Queen(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(5)
+        self.SetupPiece(5)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # queen: pentagon
@@ -330,7 +333,7 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(6)
+        self.SetupPiece(6)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # Increase size parameter
