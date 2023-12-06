@@ -82,6 +82,14 @@ class Board:
         y = square_y // self.square_side
         return [x, y]
     
+    # Get square position based on x, y coordinates (ints)
+    def GetSquarePosition(self, xy_position):
+        x = xy_position[0]
+        y = xy_position[1]
+        square_x = x * self.square_side
+        square_y = y * self.square_side
+        return [square_x, square_y]
+    
     # Get chess notation for given x, y coordinates
     # Example: input = [2, 3], output = "c5"
     def GetChessNotation(self, location):

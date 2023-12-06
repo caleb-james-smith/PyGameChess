@@ -295,13 +295,18 @@ class State:
         return result
     
     # TODO
-    # Draw possible moves for a piece
-    def DrawMovesForPiece(self, position):
-        #print("In DrawMovesForPiece(): position = {0}".format(position))
-        piece = self.GetPieceInPosition(position)
-        valid_moves = piece.GetValidMoves()
-        #for move in valid_moves:
-        #    print(move)
+    # FIXME: Include captures for pawns
+    # FIXME: Constraint based on not moving through pieces and not capturing your own pieces
+    # Draw possible moves for a piece based on its position; include captures
+    def DrawMovesForPiece(self, color, xy_position):
+        valid_moves = []
+        piece = self.GetPieceInPosition(xy_position)
+        if piece:
+            valid_moves = piece.GetValidMoves()
+        for move in valid_moves:
+            square_position = self.board.GetSquarePosition(move)
+            square_x, square_y = square_position
+            self.board.DrawSquare(color, square_x, square_y)
 
     # TODO
     # Get a list of all of a player's pieces
