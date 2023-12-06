@@ -61,6 +61,12 @@ class Board:
             side_length = self.square_side
         self.game.draw.rect(self.screen, color, [x_position, y_position, side_length, side_length], 0)
 
+    # Draw a solid circle
+    # x_position: x position measured from left edge
+    # y_position: y position measured from top edge
+    def DrawCircle(self, color, x_position, y_position, radius):
+        self.game.draw.circle(self.screen, color, [x_position, y_position], radius, 0)
+
     # Draw the board
     def DrawBoard(self):
         # Draw squares

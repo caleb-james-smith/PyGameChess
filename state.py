@@ -295,8 +295,6 @@ class State:
         return result
     
     # TODO
-    # FIXME: Try adding a border
-    # FIXME: Try drawing circles instead of squares
     # FIXME: Include captures for pawns
     # FIXME: Constraint based on not moving through pieces and not capturing your own pieces
     # Draw possible moves for a piece based on its position; include captures
@@ -308,14 +306,23 @@ class State:
         for move in valid_moves:
             square_position = self.board.GetSquarePosition(move)
             square_x, square_y = square_position
-            # Draw square (border color)
-            self.board.DrawSquare(border_color, square_x, square_y)
-            # Draw square (primary color)
+            
+            # Highlight moves using squares
+            # # Draw square (border color)
+            # self.board.DrawSquare(border_color, square_x, square_y)
+            # # Draw square (primary color)
+            # square_side = self.board.GetSquareSide()
+            # new_x = square_x + 0.05 * square_side
+            # new_y = square_y + 0.05 * square_side
+            # new_side = 0.90 * square_side
+            # self.board.DrawSquare(primary_color, new_x, new_y, new_side)
+            
+            # Highlight moves using circles
             square_side = self.board.GetSquareSide()
-            new_x = square_x + 0.05 * square_side
-            new_y = square_y + 0.05 * square_side
-            new_side = 0.90 * square_side
-            self.board.DrawSquare(primary_color, new_x, new_y, new_side)
+            center_x = square_x + 0.5 * square_side
+            center_y = square_y + 0.5 * square_side
+            radius = 0.40 * square_side
+            self.board.DrawCircle(primary_color, center_x, center_y, radius)
 
     # TODO
     # Get a list of all of a player's pieces
