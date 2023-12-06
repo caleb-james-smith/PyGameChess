@@ -3,8 +3,9 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Get legal moves for a given player
 # - Get all possible moves for a given player
+# - Get legal moves for a given player
+# - When you click on a piece, show its possible moves: gray squares or little circles
 # - Define check
 # - Define checkmate
 # - Define castling
@@ -145,6 +146,7 @@ def run_game():
                         piece_to_capture    = state.GetPieceInPosition(position_to)
                         piece_to_move_name      = piece_to_move.GetName()
                         piece_to_move_color     = piece_to_move.GetColor()
+                        piece_to_move_type      = piece_to_move.GetType()
                         piece_of_opposite_color = False
                         move_is_valid           = False
                         capture_is_valid        = False
@@ -154,6 +156,7 @@ def run_game():
                         if piece_to_capture:
                             piece_to_capture_name   = piece_to_capture.GetName()
                             piece_to_capture_color  = piece_to_capture.GetColor()
+                            piece_to_capture_type   = piece_to_capture.GetType()
                             piece_of_opposite_color = (current_player_color != piece_to_capture_color)
                             print("piece to move: {0}; piece to capture: {1}".format(piece_to_move_name, piece_to_capture_name))
                         else:
@@ -162,7 +165,7 @@ def run_game():
                         # Check if piece move is valid (for all pieces)
                         move_is_valid = piece_to_move.MoveIsValid(position_to)
                         # Check if capture is valid (for pawns only)
-                        if "pawn" in piece_to_move_name:
+                        if piece_to_move_type == "pawn":
                             capture_is_valid = piece_to_move.CaptureIsValid(position_to)
                         # Check if piece occupies a square in between two positions
                         piece_is_in_between = state.PieceIsInBetween(position_from, position_to)
@@ -179,7 +182,7 @@ def run_game():
                         all_systems_go = False
 
                         if (current_player_color == piece_to_move_color):
-                            if "pawn" in piece_to_move_name:
+                            if piece_to_move_type == "pawn":
                                 if move_is_valid and piece_name == "empty":
                                     if not piece_is_in_between:
                                         all_systems_go = True
@@ -189,7 +192,7 @@ def run_game():
                             else:
                                 if move_is_valid:
                                     if piece_name == "empty" or piece_of_opposite_color:
-                                        if "knight" in piece_to_move_name:
+                                        if piece_to_move_type == "knight":
                                             all_systems_go = True
                                         else:
                                             if not piece_is_in_between:
