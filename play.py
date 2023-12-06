@@ -51,9 +51,14 @@ def run_game():
     PIECE_DARK_COLOR    = (85, 83, 82)
     PIECE_BORDER_COLOR  = PURE_BLACK
     CLICK_COLOR_EMPTY   = (255, 113, 113)
-    CLICK_COLOR_PIECE   = (91, 175, 255)
-    #CLICK_COLOR_MOVES   = (91, 175, 255)
-    CLICK_COLOR_MOVES   = (23, 239, 23)
+    
+    #CLICK_COLOR_PIECE   = (91, 175, 255)
+    #CLICK_COLOR_MOVES   = (74, 126, 176)
+
+    CLICK_COLOR_PIECE   = (74, 126, 176)
+    CLICK_COLOR_MOVES   = (91, 175, 255)
+    
+    #CLICK_COLOR_MOVES   = (23, 239, 23)
 
     # Set up the drawing window (screen)
     #SCREEN_WIDTH        = 800

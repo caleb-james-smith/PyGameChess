@@ -297,6 +297,8 @@ class State:
     # TODO
     # FIXME: Include captures for pawns
     # FIXME: Constraint based on not moving through pieces and not capturing your own pieces
+    # FIXME: Try adding a border
+    # FIXME: Try drawing circles instead of squares
     # Draw possible moves for a piece based on its position; include captures
     def DrawMovesForPiece(self, color, xy_position):
         valid_moves = []
