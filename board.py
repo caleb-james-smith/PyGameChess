@@ -33,6 +33,14 @@ class Board:
         self.squares_per_side   = squares_per_side
         self.square_side        = square_side
 
+    # Get squares per side
+    def GetSquaresPerSide(self):
+        return self.squares_per_side
+    
+    # Get square side
+    def GetSquareSide(self):
+        return self.square_side
+    
     # Get square color based on x, y coordinate indices
     def GetSquareColor(self, x, y):
         # Use parity to determine square color
@@ -47,8 +55,11 @@ class Board:
     # Draw a solid square
     # x_position: x position measured from left edge
     # y_position: y position measured from top edge
-    def DrawSquare(self, color, x_position, y_position):
-        self.game.draw.rect(self.screen, color, [x_position, y_position, self.square_side, self.square_side], 0)
+    def DrawSquare(self, color, x_position, y_position, side_length=None):
+        # Default: if side length is not specified, use the standard square side length
+        if not side_length:
+            side_length = self.square_side
+        self.game.draw.rect(self.screen, color, [x_position, y_position, side_length, side_length], 0)
 
     # Draw the board
     def DrawBoard(self):

@@ -215,11 +215,11 @@ class State:
                 
                 # Determine color
                 piece_color = piece.GetColor()
-                color = None
+                primary_color = None
                 if piece_color == "white":
-                    color = light_color
+                    primary_color = light_color
                 if piece_color == "black":
-                    color = dark_color
+                    primary_color = dark_color
 
                 # Get piece position: note that this is different than the square position
                 x_position = (x + 0.5) * square_side
@@ -229,7 +229,7 @@ class State:
                 # Draw piece (border color)
                 piece.Draw(game, screen, border_color, x_position, y_position, size)
                 # Draw piece (primary color)
-                piece.Draw(game, screen, color, x_position, y_position, 0.75 * size)
+                piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
@@ -295,12 +295,12 @@ class State:
         return result
     
     # TODO
-    # FIXME: Include captures for pawns
-    # FIXME: Constraint based on not moving through pieces and not capturing your own pieces
     # FIXME: Try adding a border
     # FIXME: Try drawing circles instead of squares
+    # FIXME: Include captures for pawns
+    # FIXME: Constraint based on not moving through pieces and not capturing your own pieces
     # Draw possible moves for a piece based on its position; include captures
-    def DrawMovesForPiece(self, color, xy_position):
+    def DrawMovesForPiece(self, primary_color, border_color, xy_position):
         valid_moves = []
         piece = self.GetPieceInPosition(xy_position)
         if piece:
@@ -308,7 +308,14 @@ class State:
         for move in valid_moves:
             square_position = self.board.GetSquarePosition(move)
             square_x, square_y = square_position
-            self.board.DrawSquare(color, square_x, square_y)
+            # Draw square (border color)
+            self.board.DrawSquare(border_color, square_x, square_y)
+            # Draw square (primary color)
+            square_side = self.board.GetSquareSide()
+            new_x = square_x + 0.05 * square_side
+            new_y = square_y + 0.05 * square_side
+            new_side = 0.90 * square_side
+            self.board.DrawSquare(primary_color, new_x, new_y, new_side)
 
     # TODO
     # Get a list of all of a player's pieces
