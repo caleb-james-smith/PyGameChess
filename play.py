@@ -83,9 +83,11 @@ def run_game():
     running = True
     
     # Click position
-    click_position = None
-    position_from  = None
-    position_to    = None
+    click_position  = None
+    square_position = None
+    xy_position     = None
+    position_from   = None
+    position_to     = None
     clicked_square_exists   = False
     clicked_square_is_empty = False
 
@@ -233,7 +235,6 @@ def run_game():
 
         # If there was a click, draw the clicked square
         if click_position:
-            square_position = board.GetClickedSquare(click_position)
             square_x = square_position[0]
             square_y = square_position[1]
             # Use different colors based on whether square is empty or occupied
@@ -241,7 +242,8 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_EMPTY, square_x, square_y)
             else:
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
-                    
+                state.DrawMovesForPiece(xy_position)
+
         # Draw the pieces
         state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 

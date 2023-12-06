@@ -294,6 +294,21 @@ class State:
                 result = True
         return result
     
+    # TODO
+    # Draw possible moves for a piece
+    def DrawMovesForPiece(self, position):
+        #print("In DrawMovesForPiece(): position = {0}".format(position))
+        piece = self.GetPieceInPosition(position)
+        valid_moves = piece.GetValidMoves()
+        #for move in valid_moves:
+        #    print(move)
+
+    # TODO
+    # Get a list of all of a player's pieces
+    def GetPlayersPieces(self):
+        pass
+    
+    # TODO
     # Get all possible moves for a player
     def GetPossibleMoves(self, player):
         moves = []
