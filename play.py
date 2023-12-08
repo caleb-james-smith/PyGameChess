@@ -5,7 +5,6 @@
 # TODO:
 # - Get all possible moves for a given player
 # - Get legal moves for a given player
-# - When you click on a piece, show its possible moves: gray squares or little circles; use borders
 # - Define check
 # - Define checkmate
 # - Define castling
@@ -33,6 +32,7 @@
 # - Differentiate pawn movement and capture
 # - Do not let pieces jump other pieces (except for knights)
 # - Define allowed piece movement and captures
+# - When you click on a piece, show its possible moves: gray squares or little circles; use borders
 
 # Import the pygame library
 import pygame
@@ -85,6 +85,8 @@ def run_game():
     state.PrintState()
     state.PrintCurrentPlayer()
     current_player = state.GetCurrentPlayer()
+    possible_moves = state.GetPossibleMoves(current_player)
+    print("Possible moves: {0}".format(possible_moves))
     
     # Run until the user asks to quit
     running = True
@@ -216,6 +218,8 @@ def run_game():
                             state.PrintState()
                             state.PrintCurrentPlayer()
                             current_player = state.GetCurrentPlayer()
+                            possible_moves = state.GetPossibleMoves(current_player)
+                            print("Possible moves: {0}".format(possible_moves))
                         
                         # Reset clicked square and position from
                         # Do this whether or not we moved a piece

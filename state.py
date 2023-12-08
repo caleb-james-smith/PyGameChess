@@ -326,16 +326,32 @@ class State:
 
     # TODO
     # Get a list of all of a player's pieces
-    def GetPlayersPieces(self):
-        pass
+    def GetPlayersPieces(self, player_color):
+        pieces = []
+        for x in range(8):
+            for y in range(8):
+                piece = self.piece_state[y][x]
+                if piece:
+                    piece_color = piece.GetColor()
+                    # Check if piece color is the same as player color
+                    if piece_color == player_color:
+                        pieces.append(piece)
+        return pieces
     
     # TODO
     # Get all possible moves for a player
+    # Note: we need a way to keep track of which pieces can move where...
+    # Note: maybe a move should consist of both "from" and "to" locations instead of only "to"
+    # Format for move: "<from>_<to>"" using x, y or chess notation; for example, "46_44" or "e2_e4"
     def GetPossibleMoves(self, player):
-        moves = []
+        all_moves = []
         player_color = player.GetColor()
-        # loop over all pieces for a player
-        return moves
+        pieces = self.GetPlayersPieces(player_color)
+        # Loop over all pieces for a player
+        for piece in pieces:
+            moves = piece.GetValidMoves()
+            all_moves += moves
+        return all_moves
 
     # Get piece type based on value
     def GetPieceType(self, value):
