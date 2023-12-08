@@ -86,7 +86,9 @@ def run_game():
     state.PrintCurrentPlayer()
     current_player = state.GetCurrentPlayer()
     possible_moves = state.GetPossibleMoves(current_player)
-    print("Possible moves: {0}".format(possible_moves))
+    n_possible_moves = len(possible_moves)
+    #print("Possible moves: {0}".format(possible_moves))
+    print("Number of possible moves: {0}".format(n_possible_moves))
     
     # Run until the user asks to quit
     running = True
@@ -219,7 +221,9 @@ def run_game():
                             state.PrintCurrentPlayer()
                             current_player = state.GetCurrentPlayer()
                             possible_moves = state.GetPossibleMoves(current_player)
-                            print("Possible moves: {0}".format(possible_moves))
+                            n_possible_moves = len(possible_moves)
+                            #print("Possible moves: {0}".format(possible_moves))
+                            print("Number of possible moves: {0}".format(n_possible_moves))
                         
                         # Reset clicked square and position from
                         # Do this whether or not we moved a piece
