@@ -150,6 +150,15 @@ class Board:
 
         return [x, y]
     
+    # Given start and end (from and to) x, y positions, return move notation
+    # Move notation: "<from>_<to>", "x1y1_x2y2"
+    # For example, given [4, 6] and [4, 4], return "46_44"
+    def GetMoveNotation(self, position_from, position_to):
+        x1, y1 = position_from
+        x2, y2 = position_to
+        result = "{0}{1}_{2}{3}".format(x1, y1, x2, y2)
+        return result
+
     # Check if location coordinate (x, y) is valid
     def LocationIsValid(self, location):
         if not location:

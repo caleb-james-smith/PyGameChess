@@ -295,8 +295,8 @@ class State:
         return result
     
     # TODO
-    # FIXME: Include captures for pawns
-    # FIXME: Constraint based on not moving through pieces and not capturing your own pieces
+    # FIXME: Include pawn captures
+    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Draw possible moves for a piece based on its position; include captures
     def DrawMovesForPiece(self, primary_color, border_color, xy_position):
         valid_moves = []
@@ -339,18 +339,23 @@ class State:
         return pieces
     
     # TODO
+    # FIXME: Include pawn captures
+    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Get all possible moves for a player
     # Note: we need a way to keep track of which pieces can move where...
     # Note: maybe a move should consist of both "from" and "to" locations instead of only "to"
-    # Format for move: "<from>_<to>"" using x, y or chess notation; for example, "46_44" or "e2_e4"
+    # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
     def GetPossibleMoves(self, player):
         all_moves = []
         player_color = player.GetColor()
         pieces = self.GetPlayersPieces(player_color)
         # Loop over all pieces for a player
         for piece in pieces:
-            moves = piece.GetValidMoves()
-            all_moves += moves
+            position_from = piece.GetPosition()
+            piece_moves = piece.GetValidMoves()
+            for position_to in piece_moves:
+                move_notation = self.board.GetMoveNotation(position_from, position_to)
+                all_moves.append(move_notation)
         return all_moves
 
     # Get piece type based on value
