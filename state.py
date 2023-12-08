@@ -295,15 +295,21 @@ class State:
         return result
     
     # TODO
-    # FIXME: Include pawn captures
     # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Draw possible moves for a piece based on its position; include captures
     def DrawMovesForPiece(self, primary_color, border_color, xy_position):
-        valid_moves = []
+        valid_moves     = []
+        valid_captures  = []
         piece = self.GetPieceInPosition(xy_position)
         if piece:
             valid_moves = piece.GetValidMoves()
-        for move in valid_moves:
+            piece_type = piece.GetType()
+            # Include pawn captures
+            if piece_type == "pawn":
+                valid_captures = piece.GetValidCaptures()
+        # All moves: include valid moves and captures
+        all_moves = valid_moves + valid_captures
+        for move in all_moves:
             square_position = self.board.GetSquarePosition(move)
             square_x, square_y = square_position
             
