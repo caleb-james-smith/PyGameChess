@@ -3,12 +3,15 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Should we create a "Rules" class that knows the state and current player
+#   and enforces valid moves?
+# - Get all possible moves for a given player
+# - Get legal moves for a given player
 # - Define check
 # - Define checkmate
 # - Define castling
 # - Define pawn promotion
 # - Define pawn en passant
-# - Get set of legal moves for current player
 # - Save all moves made in chess game
 # - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # DONE:
@@ -31,6 +34,7 @@
 # - Differentiate pawn movement and capture
 # - Do not let pieces jump other pieces (except for knights)
 # - Define allowed piece movement and captures
+# - When you click on a piece, show its possible moves: gray squares or little circles; use borders
 
 # Import the pygame library
 import pygame
@@ -49,7 +53,8 @@ def run_game():
     PIECE_DARK_COLOR    = (85, 83, 82)
     PIECE_BORDER_COLOR  = PURE_BLACK
     CLICK_COLOR_EMPTY   = (255, 113, 113)
-    CLICK_COLOR_PIECE   = (91, 175, 255)
+    CLICK_COLOR_PIECE   = (74, 126, 176)
+    CLICK_COLOR_MOVES   = (91, 175, 255)
 
     # Set up the drawing window (screen)
     #SCREEN_WIDTH        = 800
@@ -73,16 +78,23 @@ def run_game():
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
     state.SetCurrentPlayer(white_player)
+    state.PrintState()
     state.PrintCurrentPlayer()
     current_player = state.GetCurrentPlayer()
+    possible_moves = state.GetPossibleMoves(current_player)
+    n_possible_moves = len(possible_moves)
+    #print("Possible moves: {0}".format(possible_moves))
+    print("Number of possible moves: {0}".format(n_possible_moves))
     
     # Run until the user asks to quit
     running = True
     
     # Click position
-    click_position = None
-    position_from  = None
-    position_to    = None
+    click_position  = None
+    square_position = None
+    xy_position     = None
+    position_from   = None
+    position_to     = None
     clicked_square_exists   = False
     clicked_square_is_empty = False
 
@@ -143,6 +155,7 @@ def run_game():
                         piece_to_capture    = state.GetPieceInPosition(position_to)
                         piece_to_move_name      = piece_to_move.GetName()
                         piece_to_move_color     = piece_to_move.GetColor()
+                        piece_to_move_type      = piece_to_move.GetType()
                         piece_of_opposite_color = False
                         move_is_valid           = False
                         capture_is_valid        = False
@@ -152,6 +165,7 @@ def run_game():
                         if piece_to_capture:
                             piece_to_capture_name   = piece_to_capture.GetName()
                             piece_to_capture_color  = piece_to_capture.GetColor()
+                            piece_to_capture_type   = piece_to_capture.GetType()
                             piece_of_opposite_color = (current_player_color != piece_to_capture_color)
                             print("piece to move: {0}; piece to capture: {1}".format(piece_to_move_name, piece_to_capture_name))
                         else:
@@ -160,7 +174,7 @@ def run_game():
                         # Check if piece move is valid (for all pieces)
                         move_is_valid = piece_to_move.MoveIsValid(position_to)
                         # Check if capture is valid (for pawns only)
-                        if "pawn" in piece_to_move_name:
+                        if piece_to_move_type == "pawn":
                             capture_is_valid = piece_to_move.CaptureIsValid(position_to)
                         # Check if piece occupies a square in between two positions
                         piece_is_in_between = state.PieceIsInBetween(position_from, position_to)
@@ -177,7 +191,7 @@ def run_game():
                         all_systems_go = False
 
                         if (current_player_color == piece_to_move_color):
-                            if "pawn" in piece_to_move_name:
+                            if piece_to_move_type == "pawn":
                                 if move_is_valid and piece_name == "empty":
                                     if not piece_is_in_between:
                                         all_systems_go = True
@@ -187,7 +201,7 @@ def run_game():
                             else:
                                 if move_is_valid:
                                     if piece_name == "empty" or piece_of_opposite_color:
-                                        if "knight" in piece_to_move_name:
+                                        if piece_to_move_type == "knight":
                                             all_systems_go = True
                                         else:
                                             if not piece_is_in_between:
@@ -199,8 +213,13 @@ def run_game():
                             state.MovePiece(position_from, position_to)
                             # Switch current player
                             state.SwitchTurn()
+                            state.PrintState()
                             state.PrintCurrentPlayer()
                             current_player = state.GetCurrentPlayer()
+                            possible_moves = state.GetPossibleMoves(current_player)
+                            n_possible_moves = len(possible_moves)
+                            #print("Possible moves: {0}".format(possible_moves))
+                            print("Number of possible moves: {0}".format(n_possible_moves))
                         
                         # Reset clicked square and position from
                         # Do this whether or not we moved a piece
@@ -227,7 +246,6 @@ def run_game():
 
         # If there was a click, draw the clicked square
         if click_position:
-            square_position = board.GetClickedSquare(click_position)
             square_x = square_position[0]
             square_y = square_position[1]
             # Use different colors based on whether square is empty or occupied
@@ -235,7 +253,8 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_EMPTY, square_x, square_y)
             else:
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
-                    
+                state.DrawMovesForPiece(CLICK_COLOR_MOVES, xy_position)
+
         # Draw the pieces
         state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
 

@@ -33,6 +33,14 @@ class Board:
         self.squares_per_side   = squares_per_side
         self.square_side        = square_side
 
+    # Get squares per side
+    def GetSquaresPerSide(self):
+        return self.squares_per_side
+    
+    # Get square side
+    def GetSquareSide(self):
+        return self.square_side
+    
     # Get square color based on x, y coordinate indices
     def GetSquareColor(self, x, y):
         # Use parity to determine square color
@@ -47,8 +55,17 @@ class Board:
     # Draw a solid square
     # x_position: x position measured from left edge
     # y_position: y position measured from top edge
-    def DrawSquare(self, color, x_position, y_position):
-        self.game.draw.rect(self.screen, color, [x_position, y_position, self.square_side, self.square_side], 0)
+    def DrawSquare(self, color, x_position, y_position, side_length=None):
+        # Default: if side length is not specified, use the standard square side length
+        if not side_length:
+            side_length = self.square_side
+        self.game.draw.rect(self.screen, color, [x_position, y_position, side_length, side_length], 0)
+
+    # Draw a solid circle
+    # x_position: x position measured from left edge
+    # y_position: y position measured from top edge
+    def DrawCircle(self, color, x_position, y_position, radius):
+        self.game.draw.circle(self.screen, color, [x_position, y_position], radius, 0)
 
     # Draw the board
     def DrawBoard(self):
@@ -81,6 +98,14 @@ class Board:
         x = square_x // self.square_side
         y = square_y // self.square_side
         return [x, y]
+    
+    # Get square position based on x, y coordinates (ints)
+    def GetSquarePosition(self, xy_position):
+        x = xy_position[0]
+        y = xy_position[1]
+        square_x = x * self.square_side
+        square_y = y * self.square_side
+        return [square_x, square_y]
     
     # Get chess notation for given x, y coordinates
     # Example: input = [2, 3], output = "c5"
@@ -125,6 +150,15 @@ class Board:
 
         return [x, y]
     
+    # Given start and end (from and to) x, y positions, return move notation
+    # Move notation: "<from>_<to>", "x1y1_x2y2"
+    # For example, given [4, 6] and [4, 4], return "46_44"
+    def GetMoveNotation(self, position_from, position_to):
+        x1, y1 = position_from
+        x2, y2 = position_to
+        result = "{0}{1}_{2}{3}".format(x1, y1, x2, y2)
+        return result
+
     # Check if location coordinate (x, y) is valid
     def LocationIsValid(self, location):
         if not location:

@@ -1,17 +1,19 @@
 # Piece class and subclasses
 
 # TODO:
-# - Add piece type variable
+# - Consolidate redundant functions in state and piece classes
 # DONE:
 # - Create piece class (superclass or base class)
 # - Create subclass for each type of piece
 # - Define how each type of piece is drawn
 # - Define how each piece can move
+# - Add piece type variable (pawn, knight, etc.)
 
 class Piece:
     def __init__(self, color, position):
         self.color      = color
         self.position   = position
+        self.piece_type = None
         self.value      = None
         self.name       = None
         self.chess_pieces = {
@@ -36,6 +38,12 @@ class Piece:
     def SetPosition(self, position):
         self.position = position
     
+    def GetType(self):
+        return self.piece_type
+    
+    def SetType(self, piece_type):
+        self.piece_type = piece_type
+
     def GetValue(self):
         return self.value
     
@@ -74,18 +82,23 @@ class Piece:
             print("ERROR: The color '{0}' is not valid!".format(self.color))
             return None
     
-    # Get piece name based on value
-    def GetPieceName(self):
+    # Get piece type based on value
+    def GetPieceType(self):
         result = ""
-        
-        # Get name of piece based on value; use absolute value
+
         if self.PieceIsValid():
             abs_value = abs(self.value)
             result = self.chess_pieces[abs_value]
         else:
-            print("ERROR: The value {0} does not represent a valid chess piece.".format(self.value))
-            return result
-        
+            print("ERROR: The value {0} does not represent a valid piece.".format(self.value))
+
+        return result
+    
+    # Get piece name based on value
+    def GetPieceName(self):
+        # Get piece type
+        result = self.GetPieceType()
+
         # Assign white or black based on sign
         if self.value > 0:
             result = "white {0}".format(result)
@@ -94,12 +107,15 @@ class Piece:
         
         return result
     
-    # Set piece value and name
-    def SetupValueAndName(self, value):
-        # first, set value
+    # Set piece: set value, type, and name
+    def SetupPiece(self, value):
+        # First, set value; this should be done first.
         sign = self.GetSign()
         self.SetValue(sign * value)
-        # next, set name; value must already be set
+        # Next, set type; value must already be set.
+        piece_type = self.GetPieceType()
+        self.SetType(piece_type)
+        # Next, set name; value must already be set
         name = self.GetPieceName()
         self.SetName(name)
     
@@ -119,7 +135,7 @@ class Piece:
 class Pawn(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(1)
+        self.SetupPiece(1)
     
     def Draw(self, game, screen, color, x_position, y_position, size):
         # pawn: small triangle
@@ -192,7 +208,7 @@ class Pawn(Piece):
 class Knight(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(2)
+        self.SetupPiece(2)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # knight: triangle pointing left
@@ -221,7 +237,7 @@ class Knight(Piece):
 class Bishop(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(3)
+        self.SetupPiece(3)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # bishop: tall triangle
@@ -250,7 +266,7 @@ class Bishop(Piece):
 class Rook(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(4)
+        self.SetupPiece(4)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # rook: tall rectangle
@@ -279,7 +295,7 @@ class Rook(Piece):
 class Queen(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(5)
+        self.SetupPiece(5)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # queen: pentagon
@@ -308,7 +324,7 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, color, position):
         super().__init__(color, position)
-        self.SetupValueAndName(6)
+        self.SetupPiece(6)
 
     def Draw(self, game, screen, color, x_position, y_position, size):
         # Increase size parameter

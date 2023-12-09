@@ -13,8 +13,7 @@
 # - 6: king
 
 # TODO:
-# - Connect "state" and "piece_state"
-# - Eventually, only use "piece_state" (contains piece objects)
+# - Make a function to get a list of all a player's pieces
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -22,6 +21,8 @@
 # - Create a class for the chess board
 # - Make function to set initial piece state
 # - Write function to determine if there are any pieces on squares between two positions
+# - At the start of game, set state based on piece state
+# - After any move, update state based on piece state
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -35,7 +36,7 @@ class State:
         self.black_player = black_player
         self.current_player = None
         # Chess pieces
-        self.pieces = {
+        self.chess_pieces = {
             0: "empty",
             1: "pawn",
             2: "knight",
@@ -76,7 +77,7 @@ class State:
     # Check if piece has a valid value
     def PieceIsValid(self, value):
         abs_value = abs(value)
-        if abs_value in self.pieces:
+        if abs_value in self.chess_pieces:
             return True
         else:
             return False
@@ -98,13 +99,24 @@ class State:
             print(line)
             for row in self.state:
                 # Fill with whitespace using string rjust()
-                # Forces positive and negative ints < 10 to use the same width
+                # Forces positive and negative integers < 10 to use the same width
                 row_formatted = [str(value).rjust(2) for value in row]
                 row_string = ",".join(row_formatted)
                 print(row_string)
             print(line)
         else:
             print(self.state)
+
+    # Set the state based on the piece state
+    def SetStateFromPieceState(self):
+        self.SetEmptyState()
+        for x in range(8):
+            for y in range(8):
+                piece = self.piece_state[y][x]
+                if piece:
+                    self.state[y][x] = piece.GetValue()
+                else:
+                    self.state[y][x] = 0
 
     # Set state to an empty board (all entries are 0)
     def SetEmptyState(self):
@@ -185,6 +197,9 @@ class State:
         for piece in black_pieces:
             self.PlacePiece(piece)
 
+        # Set state based on piece state
+        self.SetStateFromPieceState()
+
     # Draw the pieces
     def DrawPieces(self, game, screen, light_color, dark_color, border_color, squares_per_side, square_side):
         # Draw pieces
@@ -200,11 +215,11 @@ class State:
                 
                 # Determine color
                 piece_color = piece.GetColor()
-                color = None
+                primary_color = None
                 if piece_color == "white":
-                    color = light_color
+                    primary_color = light_color
                 if piece_color == "black":
-                    color = dark_color
+                    primary_color = dark_color
 
                 # Get piece position: note that this is different than the square position
                 x_position = (x + 0.5) * square_side
@@ -214,7 +229,7 @@ class State:
                 # Draw piece (border color)
                 piece.Draw(game, screen, border_color, x_position, y_position, size)
                 # Draw piece (primary color)
-                piece.Draw(game, screen, color, x_position, y_position, 0.75 * size)
+                piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
@@ -253,6 +268,7 @@ class State:
     def MovePiece(self, position_from, position_to):
         x_from, y_from = position_from
         x_to, y_to     = position_to
+        
         # Get piece in "from" position
         piece = self.GetPieceInPosition(position_from)
         
@@ -262,6 +278,9 @@ class State:
         # Set "to" position to piece and update piece position
         self.piece_state[y_to][x_to] = piece
         piece.SetPosition(position_to)
+
+        # Update state based on piece state
+        self.SetStateFromPieceState()
 
     # Check if at least one piece occupies a square between two positions
     def PieceIsInBetween(self, position_1, position_2):
@@ -275,17 +294,82 @@ class State:
                 result = True
         return result
     
-    # Get name of piece based on value
-    def GetPieceName(self, value):
+    # TODO
+    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
+    # Draw possible moves for a piece based on its position; include captures
+    def DrawMovesForPiece(self, primary_color, xy_position):
+        valid_moves     = []
+        valid_captures  = []
+        piece = self.GetPieceInPosition(xy_position)
+        if piece:
+            valid_moves = piece.GetValidMoves()
+            piece_type = piece.GetType()
+            # Include pawn captures
+            if piece_type == "pawn":
+                valid_captures = piece.GetValidCaptures()
+        # All moves: include valid moves and captures
+        all_moves = valid_moves + valid_captures
+        for move in all_moves:
+            square_position = self.board.GetSquarePosition(move)
+            square_x, square_y = square_position
+            
+            # Highlight moves using circles
+            square_side = self.board.GetSquareSide()
+            center_x = square_x + 0.5 * square_side
+            center_y = square_y + 0.5 * square_side
+            radius = 0.40 * square_side
+            self.board.DrawCircle(primary_color, center_x, center_y, radius)
+
+    # TODO
+    # Get a list of all of a player's pieces
+    def GetPlayersPieces(self, player_color):
+        pieces = []
+        for x in range(8):
+            for y in range(8):
+                piece = self.piece_state[y][x]
+                if piece:
+                    piece_color = piece.GetColor()
+                    # Check if piece color is the same as player color
+                    if piece_color == player_color:
+                        pieces.append(piece)
+        return pieces
+    
+    # TODO
+    # FIXME: Include pawn captures
+    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
+    # Get all possible moves for a player
+    # Note: we need a way to keep track of which pieces can move where...
+    # Note: maybe a move should consist of both "from" and "to" locations instead of only "to"
+    # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
+    def GetPossibleMoves(self, player):
+        all_moves = []
+        player_color = player.GetColor()
+        pieces = self.GetPlayersPieces(player_color)
+        # Loop over all pieces for a player
+        for piece in pieces:
+            position_from = piece.GetPosition()
+            piece_moves = piece.GetValidMoves()
+            for position_to in piece_moves:
+                move_notation = self.board.GetMoveNotation(position_from, position_to)
+                all_moves.append(move_notation)
+        return all_moves
+
+    # Get piece type based on value
+    def GetPieceType(self, value):
         result = ""
-        
-        # Get name of piece based on value; use absolute value
+
         if self.PieceIsValid(value):
             abs_value = abs(value)
-            result = self.pieces[abs_value]
+            result = self.chess_pieces[abs_value]
         else:
             print("ERROR: The value {0} does not represent a valid piece.".format(value))
-            return result
+
+        return result
+
+    # Get full name of piece (color and type) based on value
+    def GetPieceName(self, value):
+        # Get piece type
+        result = self.GetPieceType(value)
         
         # Assign white or black based on sign
         if value > 0:
@@ -311,9 +395,9 @@ class State:
         return piece_value
     
     # Get piece name in position
-    def GetPieceNameInPosition(self, position):
-        piece_value = self.GetPieceValueInPosition(position)
-        piece_name  = self.GetPieceName(piece_value)
+    def GetPieceNameInPosition(self, position):        
+        piece = self.GetPieceInPosition(position)
+        piece_name = piece.GetName()
         return piece_name
 
     # Print types of pieces
@@ -323,7 +407,7 @@ class State:
             print("{0}: {1}".format(i, self.GetPieceName(i)))
 
 def main():
-    state = State()
+    state = State(None, None, None)
     state.PrintState()
     state.SetInitialState()
     state.PrintState()
