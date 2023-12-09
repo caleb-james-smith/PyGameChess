@@ -13,7 +13,8 @@
 # - 6: king
 
 # TODO:
-# - Make a function to get a list of all a player's pieces
+# - Make a function to get possible moves for a piece with constraints:
+#   no jumping, no capturing own pieces, pawn movement and captures.
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -23,6 +24,8 @@
 # - Write function to determine if there are any pieces on squares between two positions
 # - At the start of game, set state based on piece state
 # - After any move, update state based on piece state
+# - Make a function to get a list of all a player's pieces
+
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -295,21 +298,30 @@ class State:
         return result
     
     # TODO
-    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
-    # Draw possible moves for a piece based on its position; include captures
-    def DrawMovesForPiece(self, primary_color, xy_position):
+    # Get possible moves for a piece
+    def GetPiecePossibleMoves(self, piece):
+        all_moves       = []
         valid_moves     = []
         valid_captures  = []
-        piece = self.GetPieceInPosition(xy_position)
+
         if piece:
+            piece_type  = piece.GetType()
             valid_moves = piece.GetValidMoves()
-            piece_type = piece.GetType()
             # Include pawn captures
             if piece_type == "pawn":
                 valid_captures = piece.GetValidCaptures()
+
         # All moves: include valid moves and captures
         all_moves = valid_moves + valid_captures
-        for move in all_moves:
+        return all_moves
+    
+    # TODO
+    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
+    # Draw possible moves for a piece based on its position; include captures
+    def DrawMovesForPiece(self, primary_color, xy_position):        
+        piece = self.GetPieceInPosition(xy_position)
+        piece_moves = self.GetPiecePossibleMoves(piece)
+        for move in piece_moves:
             square_position = self.board.GetSquarePosition(move)
             square_x, square_y = square_position
             
@@ -337,24 +349,16 @@ class State:
     # TODO
     # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Get all possible moves for a player
-    # Note: we need a way to keep track of which pieces can move where...
-    # Note: maybe a move should consist of both "from" and "to" locations instead of only "to"
+    # Move contains both "from" and "to" locations
     # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
-    def GetPossibleMoves(self, player):
+    def GetPlayersPossibleMoves(self, player):
         all_moves = []
         player_color = player.GetColor()
         pieces = self.GetPlayersPieces(player_color)
         # Loop over all pieces for a player
-        for piece in pieces:
-            valid_moves     = []
-            valid_captures  = []
-            piece_type      = piece.GetType()
-            position_from   = piece.GetPosition()
-            valid_moves     = piece.GetValidMoves()
-            # Include pawn captures
-            if piece_type == "pawn":
-                valid_captures = piece.GetValidCaptures()
-            piece_moves = valid_moves + valid_captures
+        for piece in pieces:            
+            position_from = piece.GetPosition()
+            piece_moves = self.GetPiecePossibleMoves(piece)
             for position_to in piece_moves:
                 move_notation = self.board.GetMoveNotation(position_from, position_to)
                 all_moves.append(move_notation)
