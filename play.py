@@ -3,6 +3,7 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Use GetPiecePossibleMoves() to determine if move is valid
 # - Should we create a "Rules" class that knows the state and current player
 #   and enforces valid moves?
 # - Get all possible moves for a given player
@@ -176,7 +177,7 @@ def run_game():
                         # Check if capture is valid (for pawns only)
                         if piece_to_move_type == "pawn":
                             capture_is_valid = piece_to_move.CaptureIsValid(position_to)
-                        # Check if piece occupies a square in between two positions
+                        # Check if a piece occupies a square in between two positions
                         piece_is_in_between = state.PieceIsInBetween(position_from, position_to)
 
                         # Determine if move is valid

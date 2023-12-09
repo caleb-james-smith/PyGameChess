@@ -297,26 +297,64 @@ class State:
                 result = True
         return result
     
-    # TODO
     # Get possible moves for a piece
     def GetPiecePossibleMoves(self, piece):
         all_moves       = []
         valid_moves     = []
         valid_captures  = []
 
+        position_from = piece.GetPosition()
+        
+        # Only check for moves if the piece exists
         if piece:
+            piece_color = piece.GetColor()
             piece_type  = piece.GetType()
             valid_moves = piece.GetValidMoves()
+
+            for position_to in valid_moves:
+                piece_of_opposite_color = False
+                square_is_empty         = False
+                # Piece to capture
+                piece_to_capture = self.GetPieceInPosition(position_to)
+                if piece_to_capture:
+                    piece_to_capture_color  = piece_to_capture.GetColor()
+                    piece_of_opposite_color = (piece_color != piece_to_capture_color)
+                else:
+                    square_is_empty = True
+                # Check if a piece occupies a square in between two positions
+                piece_is_in_between = self.PieceIsInBetween(position_from, position_to)
+                
+                if square_is_empty or piece_of_opposite_color:
+                    # Pawn movement: pawns can only move to empty squares
+                    if piece_type == "pawn":
+                        if square_is_empty and not piece_is_in_between:
+                            all_moves.append(position_to)
+                    # Knights can jump over pieces
+                    elif piece_type == "knight":
+                        all_moves.append(position_to)
+                    # Other piece cannot jump over pieces
+                    else:
+                        if not piece_is_in_between:
+                            all_moves.append(position_to)
+            
             # Include pawn captures
             if piece_type == "pawn":
                 valid_captures = piece.GetValidCaptures()
-
-        # All moves: include valid moves and captures
-        all_moves = valid_moves + valid_captures
+                for position_to in valid_captures:
+                    piece_of_opposite_color = False
+                    # Piece to capture
+                    piece_to_capture = self.GetPieceInPosition(position_to)
+                    # Check if a piece occupies a square in between two positions
+                    piece_is_in_between = self.PieceIsInBetween(position_from, position_to)
+                    if piece_to_capture:
+                        piece_to_capture_color  = piece_to_capture.GetColor()
+                        piece_of_opposite_color = (piece_color != piece_to_capture_color)
+                        # Pawn capture: pawns can only capture pieces of opposite color
+                        if piece_of_opposite_color and not piece_is_in_between:
+                            all_moves.append(position_to)
+        
         return all_moves
     
-    # TODO
-    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Draw possible moves for a piece based on its position; include captures
     def DrawMovesForPiece(self, primary_color, xy_position):        
         piece = self.GetPieceInPosition(xy_position)
@@ -332,7 +370,6 @@ class State:
             radius = 0.40 * square_side
             self.board.DrawCircle(primary_color, center_x, center_y, radius)
 
-    # TODO
     # Get a list of all of a player's pieces
     def GetPlayersPieces(self, player_color):
         pieces = []
@@ -346,8 +383,6 @@ class State:
                         pieces.append(piece)
         return pieces
     
-    # TODO
-    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Get all possible moves for a player
     # Move contains both "from" and "to" locations
     # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
