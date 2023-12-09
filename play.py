@@ -3,6 +3,8 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Should we create a "Rules" class that knows the state and current player
+#   and enforces valid moves?
 # - Get all possible moves for a given player
 # - Get legal moves for a given player
 # - Define check
@@ -51,14 +53,8 @@ def run_game():
     PIECE_DARK_COLOR    = (85, 83, 82)
     PIECE_BORDER_COLOR  = PURE_BLACK
     CLICK_COLOR_EMPTY   = (255, 113, 113)
-    SQUARE_BORDER_COLOR = (83, 95, 105)
     CLICK_COLOR_PIECE   = (74, 126, 176)
     CLICK_COLOR_MOVES   = (91, 175, 255)
-
-    #CLICK_COLOR_PIECE   = (91, 175, 255)
-    #CLICK_COLOR_MOVES   = (74, 126, 176)
-
-    #CLICK_COLOR_MOVES   = (23, 239, 23)
 
     # Set up the drawing window (screen)
     #SCREEN_WIDTH        = 800
@@ -257,7 +253,7 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_EMPTY, square_x, square_y)
             else:
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
-                state.DrawMovesForPiece(CLICK_COLOR_MOVES, SQUARE_BORDER_COLOR, xy_position)
+                state.DrawMovesForPiece(CLICK_COLOR_MOVES, xy_position)
 
         # Draw the pieces
         state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
