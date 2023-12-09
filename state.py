@@ -335,7 +335,6 @@ class State:
         return pieces
     
     # TODO
-    # FIXME: Include pawn captures
     # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Get all possible moves for a player
     # Note: we need a way to keep track of which pieces can move where...
@@ -347,8 +346,15 @@ class State:
         pieces = self.GetPlayersPieces(player_color)
         # Loop over all pieces for a player
         for piece in pieces:
-            position_from = piece.GetPosition()
-            piece_moves = piece.GetValidMoves()
+            valid_moves     = []
+            valid_captures  = []
+            piece_type      = piece.GetType()
+            position_from   = piece.GetPosition()
+            valid_moves     = piece.GetValidMoves()
+            # Include pawn captures
+            if piece_type == "pawn":
+                valid_captures = piece.GetValidCaptures()
+            piece_moves = valid_moves + valid_captures
             for position_to in piece_moves:
                 move_notation = self.board.GetMoveNotation(position_from, position_to)
                 all_moves.append(move_notation)
