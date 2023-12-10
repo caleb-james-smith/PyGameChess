@@ -13,8 +13,6 @@
 # - 6: king
 
 # TODO:
-# - Make a function to get possible moves for a piece with constraints:
-#   no jumping, no capturing own pieces, pawn movement and captures.
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -25,7 +23,8 @@
 # - At the start of game, set state based on piece state
 # - After any move, update state based on piece state
 # - Make a function to get a list of all a player's pieces
-
+# - Make a function to get possible moves for a piece with constraints:
+#   no jumping, no capturing own pieces, pawn movement and captures.
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -296,6 +295,16 @@ class State:
             if piece:
                 result = True
         return result
+    
+    # Determine if move is valid
+    # - A player can only move his own pieces
+    # - A player can move to empty squares
+    # - A player can capture an opponent's piece
+    # - A player cannot capture one of his own pieces
+    # - Move must be valid for the piece being moved
+    # - Pieces (except for knights) cannot jump other pieces (knights are allowed to jump)
+    # - Pawns can move forward, but not capture forward
+    # - Pawns cannot move diagonally, but can capture diagonally
     
     # Get possible moves for a piece
     def GetPiecePossibleMoves(self, piece):

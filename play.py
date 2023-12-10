@@ -148,37 +148,52 @@ def run_game():
                         clicked_square_exists = True
                         position_from = [x, y]
                     else:
-                        # Move piece
-                        current_player_color = current_player.GetColor()
-                        # Get piece to move and to capture
+                        # Use GetPiecePossibleMoves(); replace current logic!
+                        # FIXME: Player can only move his own pieces.
+                        all_systems_go = False
                         position_to = [x, y]
-                        piece_to_move       = state.GetPieceInPosition(position_from)
-                        piece_to_capture    = state.GetPieceInPosition(position_to)
-                        piece_to_move_name      = piece_to_move.GetName()
-                        piece_to_move_color     = piece_to_move.GetColor()
-                        piece_to_move_type      = piece_to_move.GetType()
-                        piece_of_opposite_color = False
-                        move_is_valid           = False
-                        capture_is_valid        = False
-                        piece_is_in_between     = False
-                        
-                        # Only if piece to capture exists (not empty square)
-                        if piece_to_capture:
-                            piece_to_capture_name   = piece_to_capture.GetName()
-                            piece_to_capture_color  = piece_to_capture.GetColor()
-                            piece_to_capture_type   = piece_to_capture.GetType()
-                            piece_of_opposite_color = (current_player_color != piece_to_capture_color)
-                            print("piece to move: {0}; piece to capture: {1}".format(piece_to_move_name, piece_to_capture_name))
-                        else:
-                            print("piece to move: {0}".format(piece_to_move_name))
-                        
-                        # Check if piece move is valid (for all pieces)
-                        move_is_valid = piece_to_move.MoveIsValid(position_to)
-                        # Check if capture is valid (for pawns only)
-                        if piece_to_move_type == "pawn":
-                            capture_is_valid = piece_to_move.CaptureIsValid(position_to)
-                        # Check if a piece occupies a square in between two positions
-                        piece_is_in_between = state.PieceIsInBetween(position_from, position_to)
+                        current_player_color = current_player.GetColor()
+                        piece_to_move = state.GetPieceInPosition(position_from)
+                        piece_to_move_color = piece_to_move.GetColor()
+                        piece_moves = state.GetPiecePossibleMoves(piece_to_move)
+                        # A player can only move his own piece
+                        if current_player_color == piece_to_move_color:
+                            # Check if move is a possible move for the piece
+                            if position_to in piece_moves:
+                                all_systems_go = True
+
+                        # # Move piece
+                        # current_player_color = current_player.GetColor()
+# 
+                        # # Get piece to move and to capture
+                        # position_to = [x, y]
+                        # piece_to_move       = state.GetPieceInPosition(position_from)
+                        # piece_to_capture    = state.GetPieceInPosition(position_to)
+                        # piece_to_move_name      = piece_to_move.GetName()
+                        # piece_to_move_color     = piece_to_move.GetColor()
+                        # piece_to_move_type      = piece_to_move.GetType()
+                        # piece_of_opposite_color = False
+                        # move_is_valid           = False
+                        # capture_is_valid        = False
+                        # piece_is_in_between     = False
+                        # 
+                        # # Only if piece to capture exists (not empty square)
+                        # if piece_to_capture:
+                        #     piece_to_capture_name   = piece_to_capture.GetName()
+                        #     piece_to_capture_color  = piece_to_capture.GetColor()
+                        #     piece_to_capture_type   = piece_to_capture.GetType()
+                        #     piece_of_opposite_color = (current_player_color != piece_to_capture_color)
+                        #     print("piece to move: {0}; piece to capture: {1}".format(piece_to_move_name, piece_to_capture_name))
+                        # else:
+                        #     print("piece to move: {0}".format(piece_to_move_name))
+                        # 
+                        # # Check if piece move is valid (for all pieces)
+                        # move_is_valid = piece_to_move.MoveIsValid(position_to)
+                        # # Check if capture is valid (for pawns only)
+                        # if piece_to_move_type == "pawn":
+                        #     capture_is_valid = piece_to_move.CaptureIsValid(position_to)
+                        # # Check if a piece occupies a square in between two positions
+                        # piece_is_in_between = state.PieceIsInBetween(position_from, position_to)
 
                         # Determine if move is valid
                         # - Player can only move his own pieces (player color must match the color of the piece being moved)
@@ -189,24 +204,24 @@ def run_game():
                         # - Pawns cannot move diagonally, but can capture diagonally
                         # - Pieces cannot jump other pieces (except for knights)
                         
-                        all_systems_go = False
-
-                        if (current_player_color == piece_to_move_color):
-                            if piece_to_move_type == "pawn":
-                                if move_is_valid and piece_name == "empty":
-                                    if not piece_is_in_between:
-                                        all_systems_go = True
-                                elif capture_is_valid and piece_of_opposite_color:
-                                    if not piece_is_in_between:
-                                        all_systems_go = True
-                            else:
-                                if move_is_valid:
-                                    if piece_name == "empty" or piece_of_opposite_color:
-                                        if piece_to_move_type == "knight":
-                                            all_systems_go = True
-                                        else:
-                                            if not piece_is_in_between:
-                                                all_systems_go = True
+                        # all_systems_go = False
+# 
+                        # if (current_player_color == piece_to_move_color):
+                        #     if piece_to_move_type == "pawn":
+                        #         if move_is_valid and piece_name == "empty":
+                        #             if not piece_is_in_between:
+                        #                 all_systems_go = True
+                        #         elif capture_is_valid and piece_of_opposite_color:
+                        #             if not piece_is_in_between:
+                        #                 all_systems_go = True
+                        #     else:
+                        #         if move_is_valid:
+                        #             if piece_name == "empty" or piece_of_opposite_color:
+                        #                 if piece_to_move_type == "knight":
+                        #                     all_systems_go = True
+                        #                 else:
+                        #                     if not piece_is_in_between:
+                        #                         all_systems_go = True
 
                         # Move the piece
                         if all_systems_go:
