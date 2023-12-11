@@ -3,11 +3,11 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Define check
 # - Should we create a "Rules" class that knows the state and current player
 #   and enforces valid moves?
 # - Get all possible moves for a given player
 # - Get legal moves for a given player
-# - Define check
 # - Define checkmate
 # - Define castling
 # - Define pawn promotion
@@ -79,9 +79,13 @@ def run_game():
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
     state.SetCurrentPlayer(white_player)
+    state.SetOpposingPlayer(black_player)
     state.PrintState()
     state.PrintCurrentPlayer()
     current_player = state.GetCurrentPlayer()
+    opposing_player = state.GetOpposingPlayer()
+    player_is_in_check = state.PlayerIsInCheck(current_player, opposing_player)
+    print("Current player is in check: {0}".format(player_is_in_check))
     possible_moves = state.GetPlayersPossibleMoves(current_player)
     n_possible_moves = len(possible_moves)
     #print("Possible moves: {0}".format(possible_moves))
@@ -170,6 +174,9 @@ def run_game():
                             state.PrintState()
                             state.PrintCurrentPlayer()
                             current_player = state.GetCurrentPlayer()
+                            opposing_player = state.GetOpposingPlayer()
+                            player_is_in_check = state.PlayerIsInCheck(current_player, opposing_player)
+                            print("Current player is in check: {0}".format(player_is_in_check))
                             possible_moves = state.GetPlayersPossibleMoves(current_player)
                             n_possible_moves = len(possible_moves)
                             #print("Possible moves: {0}".format(possible_moves))

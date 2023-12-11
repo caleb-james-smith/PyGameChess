@@ -13,6 +13,7 @@
 # - 6: king
 
 # TODO:
+# - Track opposing player
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -37,6 +38,7 @@ class State:
         self.white_player = white_player
         self.black_player = black_player
         self.current_player = None
+        self.opposing_player = None
         # Chess pieces
         self.chess_pieces = {
             0: "empty",
@@ -69,12 +71,20 @@ class State:
     def SetCurrentPlayer(self, current_player):
         self.current_player = current_player
 
-    # Switch current player to opposite player
+    def GetOpposingPlayer(self):
+        return self.opposing_player
+    
+    def SetOpposingPlayer(self, opposing_player):
+        self.opposing_player = opposing_player
+
+    # Switch current and opposing players
     def SwitchTurn(self):
         if self.current_player == self.white_player:
             self.current_player = self.black_player
+            self.opposing_player = self.white_player
         elif self.current_player == self.black_player:
             self.current_player = self.white_player
+            self.opposing_player = self.black_player
     
     # Check if piece has a valid value
     def PieceIsValid(self, value):
@@ -407,6 +417,29 @@ class State:
                 move_notation = self.board.GetMoveNotation(position_from, position_to)
                 all_moves.append(move_notation)
         return all_moves
+
+    # TODO: What we have all been waiting for... define check!
+    def PlayerIsInCheck(self, player, opponent):
+        result = False
+        opponent_possible_moves = self.GetPlayersPossibleMoves(opponent)
+        player_color = player.GetColor()
+        player_pieces = self.GetPlayersPieces(player_color)
+        for piece in player_pieces:
+            piece_type = piece.GetType()
+            # Check position of player's king
+            if piece_type == "king":
+                # TOOD: make function to convert [x, y] position to "xy" string
+                king_position = piece.GetPosition()
+                king_x, king_y = king_position
+                king_position_string = "{0}{1}".format(king_x, king_y)
+                #FIXME: need to use move notation
+                for move in opponent_possible_moves:
+                    split_move = move.split("_")
+                    move_start, move_end = split_move
+                    if move_end == king_position_string:
+                        result = True
+
+        return result
 
     # Get piece type based on value
     def GetPieceType(self, value):
