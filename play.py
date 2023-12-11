@@ -3,15 +3,17 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Define check
-# - Should we create a "Rules" class that knows the state and current player
-#   and enforces valid moves?
-# - Get all possible moves for a given player
 # - Get legal moves for a given player
+# - Legal moves: constrain moves based on check
 # - Define checkmate
-# - Define castling
 # - Define pawn promotion
 # - Define pawn en passant
+# - Define castling
+# - Highlighting possible moves:
+#   Try green square for piece-to-move location
+#   Try alternating shades of blue (light/dark based on board) for move locations
+# - Should we create a "Rules" class that knows the state and current player
+#   and enforces valid moves?
 # - Save all moves made in chess game
 # - Information to save for each move: piece, position from, position to, and piece captured (or empty)
 # DONE:
@@ -36,6 +38,8 @@
 # - Define allowed piece movement and captures
 # - When you click on a piece, show its possible moves: gray squares or little circles; use borders
 # - Use GetPiecePossibleMoves() to determine if move is valid
+# - Define check
+# - Get all possible moves for a given player
 
 # Import the pygame library
 import pygame

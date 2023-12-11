@@ -151,12 +151,22 @@ class Board:
         return [x, y]
     
     # Given start and end (from and to) x, y positions, return move notation
+    # Input: position from [x1, y1] and position to [x2, y2]
+    # Output: string representing move "x1y1_x2y2"
     # Move notation: "<from>_<to>", "x1y1_x2y2"
     # For example, given [4, 6] and [4, 4], return "46_44"
     def GetMoveNotation(self, position_from, position_to):
         x1, y1 = position_from
         x2, y2 = position_to
         result = "{0}{1}_{2}{3}".format(x1, y1, x2, y2)
+        return result
+    
+    # Get position string
+    # Input: position as list [x, y]
+    # Output: position as string "xy"
+    def GetPositionString(self, position):
+        x, y = position
+        result = "{0}{1}".format(x, y)
         return result
 
     # Check if location coordinate (x, y) is valid

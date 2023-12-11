@@ -13,7 +13,6 @@
 # - 6: king
 
 # TODO:
-# - Track opposing player
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -26,6 +25,9 @@
 # - Make a function to get a list of all a player's pieces
 # - Make a function to get possible moves for a piece with constraints:
 #   no jumping, no capturing own pieces, pawn movement and captures.
+# - Track opposing player
+# - Make function to convert [x, y] position to "xy" string
+# - Make function to get the position of a player's king
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -418,26 +420,36 @@ class State:
                 all_moves.append(move_notation)
         return all_moves
 
-    # TODO: What we have all been waiting for... define check!
-    def PlayerIsInCheck(self, player, opponent):
-        result = False
-        opponent_possible_moves = self.GetPlayersPossibleMoves(opponent)
-        player_color = player.GetColor()
-        player_pieces = self.GetPlayersPieces(player_color)
+    # Get position of player's king
+    def GetPlayersKingPosition(self, player):
+        king_position = []
+        player_color    = player.GetColor()
+        player_pieces   = self.GetPlayersPieces(player_color)
         for piece in player_pieces:
             piece_type = piece.GetType()
-            # Check position of player's king
             if piece_type == "king":
-                # TOOD: make function to convert [x, y] position to "xy" string
                 king_position = piece.GetPosition()
-                king_x, king_y = king_position
-                king_position_string = "{0}{1}".format(king_x, king_y)
-                #FIXME: need to use move notation
-                for move in opponent_possible_moves:
-                    split_move = move.split("_")
-                    move_start, move_end = split_move
-                    if move_end == king_position_string:
-                        result = True
+                # Return now to speed up
+                return king_position
+        
+        return king_position
+
+    # Define check!
+    def PlayerIsInCheck(self, player, opponent):
+        result = False        
+        king_position = self.GetPlayersKingPosition(player)
+        king_position_string = self.board.GetPositionString(king_position)
+        opponent_possible_moves = self.GetPlayersPossibleMoves(opponent)
+
+        # Loop over opponent's possible moves and captures
+        for move in opponent_possible_moves:
+            split_move = move.split("_")
+            move_start, move_end = split_move
+            # Determine if opponent can capture the player's king
+            if move_end == king_position_string:
+                result = True
+                # Return now to speed up
+                return result
 
         return result
 
