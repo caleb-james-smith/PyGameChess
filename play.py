@@ -3,8 +3,10 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
+# - Fix bug: program crashes when MoveResultsInCheck() is used
 # - Get legal moves for a given player
 # - Legal moves: constrain moves based on check
+# - Determine if a move would put a player in check
 # - Define checkmate
 # - Define pawn promotion
 # - Define pawn en passant
@@ -159,20 +161,29 @@ def run_game():
                         # Determine if move is valid
                         all_systems_go = False
                         position_to = [x, y]
+                        move_notation = board.GetMoveNotation(position_from, position_to)
                         current_player_color = current_player.GetColor()
                         piece_to_move = state.GetPieceInPosition(position_from)
                         piece_to_move_color = piece_to_move.GetColor()
                         piece_moves = state.GetPiecePossibleMoves(piece_to_move)
+
+                        # Determine if a player's move would put himself in check
+                        # FIXME: Fix bug: program crashes when MoveResultsInCheck() is used
+                        #move_results_in_check = state.MoveResultsInCheck(current_player, opposing_player, move_notation)
+                        move_results_in_check = False
+
                         # A player can only move his own piece
                         if current_player_color == piece_to_move_color:
-                            # Check if move is a possible move for the piece
+                            # Determine if move is possible for the piece
                             if position_to in piece_moves:
-                                all_systems_go = True
+                                # Enforce that move does not result in check for the current player
+                                if not move_results_in_check:
+                                    all_systems_go = True
 
                         # All systems go: move the piece!
                         if all_systems_go:
                             # Move piece
-                            state.MovePiece(position_from, position_to)
+                            state.MovePiece(move_notation)
                             # Switch current player
                             state.SwitchTurn()
                             state.PrintState()

@@ -161,6 +161,21 @@ class Board:
         result = "{0}{1}_{2}{3}".format(x1, y1, x2, y2)
         return result
     
+    # Given move notation, return start and end (from and to) x, y positions
+    # Input: string representing move "x1y1_x2y2"
+    # Output: position from [x1, y1] and position to [x2, y2]
+    def GetMovePositions(self, move_notation):
+        split_move = move_notation.split("_")
+        move_start  = split_move[0]
+        move_end    = split_move[1]
+        x1 = int(move_start[0])
+        y1 = int(move_start[1])
+        x2 = int(move_end[0])
+        y2 = int(move_end[1])
+        position_from   = [x1, y1]
+        position_to     = [x2, y2]
+        return position_from, position_to
+    
     # Get position string
     # Input: position as list [x, y]
     # Output: position as string "xy"

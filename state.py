@@ -279,9 +279,12 @@ class State:
         return
 
     # Move piece from one position to another
-    def MovePiece(self, position_from, position_to):
+    def MovePiece(self, move_notation):
+        position_from, position_to = self.board.GetMovePositions(move_notation)
         x_from, y_from = position_from
         x_to, y_to     = position_to
+        print("In MovePiece(): move_notation: {0}".format(move_notation))
+        print("In MovePiece(): position_from: {0}, position_to: {1}".format(position_from, position_to))
         
         # Get piece in "from" position
         piece = self.GetPieceInPosition(position_from)
@@ -436,7 +439,7 @@ class State:
 
     # Define check!
     def PlayerIsInCheck(self, player, opponent):
-        result = False        
+        result = False
         king_position = self.GetPlayersKingPosition(player)
         king_position_string = self.board.GetPositionString(king_position)
         opponent_possible_moves = self.GetPlayersPossibleMoves(opponent)
@@ -451,6 +454,31 @@ class State:
                 # Return now to speed up
                 return result
 
+        return result
+    
+    # TODO
+    # FIXME: Fix bug: program crashes when MoveResultsInCheck() is used
+    # - Could be from not resetting piece object position!
+    # - Could be if original piece state points to the original object or is a copy.
+    # Determine if a player's move would put himself in check
+    def MoveResultsInCheck(self, player, opponent, move_notation):
+        result = False
+        
+        # Save a copy of the original piece state
+        original_piece_state = self.GetPieceState()
+        
+        # Move piece to test new game state
+        self.MovePiece(move_notation)
+        
+        # Determine if player is now in check after move
+        result = self.PlayerIsInCheck(player, opponent)
+        
+        # Revert to original piece state
+        self.SetPieceState(original_piece_state)
+        
+        # Update state based on piece state
+        self.SetStateFromPieceState()
+        
         return result
 
     # Get piece type based on value
