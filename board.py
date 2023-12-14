@@ -180,8 +180,11 @@ class Board:
     # Input: position as list [x, y]
     # Output: position as string "xy"
     def GetPositionString(self, position):
-        x, y = position
-        result = "{0}{1}".format(x, y)
+        result = ""
+        # Ensure that position is not an empty list
+        if position:
+            x, y = position
+            result = "{0}{1}".format(x, y)
         return result
 
     # Check if location coordinate (x, y) is valid

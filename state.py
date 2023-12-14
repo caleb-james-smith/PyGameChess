@@ -460,6 +460,10 @@ class State:
     # FIXME: Fix bug: program crashes when MoveResultsInCheck() is used
     # - Could be from not resetting piece object position!
     # - Could be if original piece state points to the original object or is a copy.
+    # - One solution to revert (undo) a move:
+    #   Record captured piece (if any) and put it back.
+    #   Move the moved piece back to the original position.
+    #   Test to make sure that piece state, state, piece positions were reverted.
     # Determine if a player's move would put himself in check
     def MoveResultsInCheck(self, player, opponent, move_notation):
         result = False

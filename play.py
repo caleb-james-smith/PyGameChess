@@ -42,6 +42,7 @@
 # - Use GetPiecePossibleMoves() to determine if move is valid
 # - Define check
 # - Get all possible moves for a given player
+# - Fix bug: program crashes when a king is captured when PlayerIsInCheck() is used
 
 # Import the pygame library
 import pygame
