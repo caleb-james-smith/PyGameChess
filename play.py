@@ -4,6 +4,7 @@
 
 # TODO:
 # - Define checkmate
+# - Define stalemate
 # - Define pawn promotion
 # - Define pawn en passant
 # - Define castling

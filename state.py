@@ -123,16 +123,23 @@ class State:
 
     # Print a detailed game state
     def PrintGameState(self):
-        current_player_is_in_check = self.PlayerIsInCheck(self.current_player, self.opposing_player)
+        current_player_is_in_check      = self.PlayerIsInCheck(self.current_player, self.opposing_player)
+        current_player_is_in_checkmate  = self.PlayerIsInCheckmate()
+        current_player_is_in_stalemate  = self.PlayerIsInStalemate()
         legal_moves = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
         n_legal_moves = len(legal_moves)
         
         # Print game state information
         self.PrintState()
-        self.PrintCurrentPlayer()
-        print(" - Current player is in check: {0}".format(current_player_is_in_check))
-        print(" - Number of legal moves: {0}".format(n_legal_moves))
+        print("------------------------------------------")
+        print("Current player: {0} - {1}".format(self.current_player.GetName(), self.current_player.GetColor()))
+        print("------------------------------------------")
+        print(" - Current player is in check:       {0}".format(current_player_is_in_check))
+        print(" - Current player is in checkmate:   {0}".format(current_player_is_in_checkmate))
+        print(" - Current player is in stalemate:   {0}".format(current_player_is_in_stalemate))
+        print(" - Number of legal moves:            {0}".format(n_legal_moves))
         print(" - Legal moves: {0}".format(legal_moves))
+        print("------------------------------------------")
 
     # Set the state based on the piece state
     def SetStateFromPieceState(self):
@@ -482,6 +489,8 @@ class State:
         return king_position
 
     # Define check!
+    # - The player's king is under attack
+    # - Pinned pieces (pinned to a king) can still deliver check
     def PlayerIsInCheck(self, player, opponent):
         result = False
         king_position = self.GetPlayersKingPosition(player)
@@ -501,6 +510,21 @@ class State:
 
         return result
     
+    # Define checkmate!!
+    # - Player is in check
+    # - Player has no legal moves
+    def PlayerIsInCheckmate(self):
+        result = False
+        return result
+    
+    # Define stalemate... preliminary version.
+    # - Player is not in check
+    # - Player has not legal moves
+    # - Does not include other stalemates (insufficient material, threefold repetition)
+    def PlayerIsInStalemate(self):
+        result = False
+        return result
+
     # Determine if a player's move would put himself in check
     # - Get piece to capture (if any).
     # - Move piece (updates state and piece state).
