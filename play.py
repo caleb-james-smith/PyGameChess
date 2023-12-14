@@ -4,6 +4,7 @@
 
 # TODO:
 # - Fix bug: program crashes when MoveResultsInCheck() is used
+# - Fix bug: program crashes when capture results in check; we need to put back the piece to capture!
 # - Get legal moves for a given player
 # - Legal moves: constrain moves based on check
 # - Determine if a move would put a player in check
@@ -170,8 +171,8 @@ def run_game():
 
                         # Determine if a player's move would put himself in check
                         # FIXME: Fix bug: program crashes when MoveResultsInCheck() is used
-                        #move_results_in_check = state.MoveResultsInCheck(current_player, opposing_player, move_notation)
-                        move_results_in_check = False
+                        move_results_in_check = state.MoveResultsInCheck(current_player, opposing_player, move_notation)
+                        #move_results_in_check = False
 
                         # A player can only move his own piece
                         if current_player_color == piece_to_move_color:

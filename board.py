@@ -176,6 +176,17 @@ class Board:
         position_to     = [x2, y2]
         return position_from, position_to
     
+    # Reverse move using move notation
+    # Input: string representing move "x1y1_x2y2"
+    # Output: reversed move "x2y2_x1y1"
+    def GetReverseMove(self, move_notation):
+        reverse_move = ""
+        split_move = move_notation.split("_")
+        move_start  = split_move[0]
+        move_end    = split_move[1]
+        reverse_move = "{0}_{1}".format(move_end, move_start)
+        return reverse_move
+
     # Get position string
     # Input: position as list [x, y]
     # Output: position as string "xy"

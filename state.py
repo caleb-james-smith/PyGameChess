@@ -467,22 +467,42 @@ class State:
     # Determine if a player's move would put himself in check
     def MoveResultsInCheck(self, player, opponent, move_notation):
         result = False
+
+        reverse_move = self.board.GetReverseMove(move_notation)
+        position_from, position_to = self.board.GetMovePositions(move_notation)
         
         # Save a copy of the original piece state
-        original_piece_state = self.GetPieceState()
+        #original_piece_state = self.GetPieceState()
+
+        # Piece to capture
+        piece_to_capture = self.GetPieceInPosition(position_to)
+        if piece_to_capture:
+            print("In MoveResultsInCheck(): piece_to_capture position: {0}".format(piece_to_capture.GetPosition()))
         
         # Move piece to test new game state
         self.MovePiece(move_notation)
         
         # Determine if player is now in check after move
         result = self.PlayerIsInCheck(player, opponent)
+
+        # Reverse move
+        self.MovePiece(reverse_move)
+        # If there was a piece to capture, put it back
+        if piece_to_capture:
+            self.PlacePiece(piece_to_capture)
+            self.SetStateFromPieceState()
         
         # Revert to original piece state
-        self.SetPieceState(original_piece_state)
+        #self.SetPieceState(original_piece_state)
         
         # Update state based on piece state
-        self.SetStateFromPieceState()
-        
+        #self.SetStateFromPieceState()
+
+        # Piece to move
+        piece_to_move = self.GetPieceInPosition(position_from)
+        if piece_to_move:
+            print("In MoveResultsInCheck(): piece_to_move position: {0}".format(piece_to_move.GetPosition()))
+
         return result
 
     # Get piece type based on value
