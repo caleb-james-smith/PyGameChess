@@ -5,7 +5,6 @@
 # TODO:
 # - Get legal moves for a given player
 # - Legal moves: constrain moves based on check
-# - Determine if a move would put a player in check
 # - Define checkmate
 # - Define pawn promotion
 # - Define pawn en passant
@@ -44,6 +43,7 @@
 # - Fix bug: program crashes when a king is captured when PlayerIsInCheck() is used
 # - Fix bug: program crashes when MoveResultsInCheck() is used
 # - Fix bug: program crashes when capture results in check; we need to put back the piece to capture!
+# - Determine if a move would put a player in check
 
 # Import the pygame library
 import pygame

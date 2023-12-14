@@ -456,28 +456,19 @@ class State:
 
         return result
     
-    # TODO
-    # - Could be from not resetting piece object position!
-    # - Could be if original piece state points to the original object or is a copy.
-    # - One solution to revert (undo) a move:
-    #   Record captured piece (if any) and put it back.
-    #   Move the moved piece back to the original position.
-    #   Test to make sure that piece state, state, piece positions were reverted.
     # Determine if a player's move would put himself in check
+    # - Get piece to capture (if any).
+    # - Move piece (updates state and piece state).
+    # - After move, check if player is in check.
+    # - Move piece back to original position (updates state and piece state).
+    # - If there was a piece to capture for this move, put it back and update state.
     def MoveResultsInCheck(self, player, opponent, move_notation):
         result = False
         reverse_move = self.board.GetReverseMove(move_notation)
         position_from, position_to = self.board.GetMovePositions(move_notation)
 
-        # Piece to move
-        piece_to_move = self.GetPieceInPosition(position_from)
-        if piece_to_move:
-            print("In MoveResultsInCheck(): piece_to_move position: {0}".format(piece_to_move.GetPosition()))
-
         # Piece to capture
         piece_to_capture = self.GetPieceInPosition(position_to)
-        if piece_to_capture:
-            print("In MoveResultsInCheck(): piece_to_capture position: {0}".format(piece_to_capture.GetPosition()))
         
         # Move piece to test new game state
         self.MovePiece(move_notation)
@@ -492,16 +483,6 @@ class State:
             self.PlacePiece(piece_to_capture)
             self.SetStateFromPieceState()
         
-        # Piece to move
-        piece_to_move = self.GetPieceInPosition(position_from)
-        if piece_to_move:
-            print("In MoveResultsInCheck(): piece_to_move position: {0}".format(piece_to_move.GetPosition()))
-
-        # Piece to capture
-        piece_to_capture = self.GetPieceInPosition(position_to)
-        if piece_to_capture:
-            print("In MoveResultsInCheck(): piece_to_capture position: {0}".format(piece_to_capture.GetPosition()))
-
         return result
 
     # Get piece type based on value
