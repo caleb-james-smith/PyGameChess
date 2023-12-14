@@ -283,8 +283,8 @@ class State:
         position_from, position_to = self.board.GetMovePositions(move_notation)
         x_from, y_from = position_from
         x_to, y_to     = position_to
-        print("In MovePiece(): move_notation: {0}".format(move_notation))
-        print("In MovePiece(): position_from: {0}, position_to: {1}".format(position_from, position_to))
+        #print("In MovePiece(): move_notation: {0}".format(move_notation))
+        #print("In MovePiece(): position_from: {0}, position_to: {1}".format(position_from, position_to))
         
         # Get piece in "from" position
         piece = self.GetPieceInPosition(position_from)
@@ -457,7 +457,6 @@ class State:
         return result
     
     # TODO
-    # FIXME: Fix bug: program crashes when MoveResultsInCheck() is used
     # - Could be from not resetting piece object position!
     # - Could be if original piece state points to the original object or is a copy.
     # - One solution to revert (undo) a move:
@@ -467,12 +466,13 @@ class State:
     # Determine if a player's move would put himself in check
     def MoveResultsInCheck(self, player, opponent, move_notation):
         result = False
-
         reverse_move = self.board.GetReverseMove(move_notation)
         position_from, position_to = self.board.GetMovePositions(move_notation)
-        
-        # Save a copy of the original piece state
-        #original_piece_state = self.GetPieceState()
+
+        # Piece to move
+        piece_to_move = self.GetPieceInPosition(position_from)
+        if piece_to_move:
+            print("In MoveResultsInCheck(): piece_to_move position: {0}".format(piece_to_move.GetPosition()))
 
         # Piece to capture
         piece_to_capture = self.GetPieceInPosition(position_to)
@@ -492,16 +492,15 @@ class State:
             self.PlacePiece(piece_to_capture)
             self.SetStateFromPieceState()
         
-        # Revert to original piece state
-        #self.SetPieceState(original_piece_state)
-        
-        # Update state based on piece state
-        #self.SetStateFromPieceState()
-
         # Piece to move
         piece_to_move = self.GetPieceInPosition(position_from)
         if piece_to_move:
             print("In MoveResultsInCheck(): piece_to_move position: {0}".format(piece_to_move.GetPosition()))
+
+        # Piece to capture
+        piece_to_capture = self.GetPieceInPosition(position_to)
+        if piece_to_capture:
+            print("In MoveResultsInCheck(): piece_to_capture position: {0}".format(piece_to_capture.GetPosition()))
 
         return result
 

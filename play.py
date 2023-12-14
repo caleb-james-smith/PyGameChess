@@ -3,8 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Fix bug: program crashes when MoveResultsInCheck() is used
-# - Fix bug: program crashes when capture results in check; we need to put back the piece to capture!
 # - Get legal moves for a given player
 # - Legal moves: constrain moves based on check
 # - Determine if a move would put a player in check
@@ -44,6 +42,8 @@
 # - Define check
 # - Get all possible moves for a given player
 # - Fix bug: program crashes when a king is captured when PlayerIsInCheck() is used
+# - Fix bug: program crashes when MoveResultsInCheck() is used
+# - Fix bug: program crashes when capture results in check; we need to put back the piece to capture!
 
 # Import the pygame library
 import pygame
@@ -170,9 +170,7 @@ def run_game():
                         piece_moves = state.GetPiecePossibleMoves(piece_to_move)
 
                         # Determine if a player's move would put himself in check
-                        # FIXME: Fix bug: program crashes when MoveResultsInCheck() is used
                         move_results_in_check = state.MoveResultsInCheck(current_player, opposing_player, move_notation)
-                        #move_results_in_check = False
 
                         # A player can only move his own piece
                         if current_player_color == piece_to_move_color:
