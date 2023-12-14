@@ -3,8 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Get legal moves for a given player
-# - Legal moves: constrain moves based on check
 # - Define checkmate
 # - Define pawn promotion
 # - Define pawn en passant
@@ -44,6 +42,8 @@
 # - Fix bug: program crashes when MoveResultsInCheck() is used
 # - Fix bug: program crashes when capture results in check; we need to put back the piece to capture!
 # - Determine if a move would put a player in check
+# - Get legal moves for a given player
+# - Legal moves: constrain moves based on check
 
 # Import the pygame library
 import pygame
@@ -94,10 +94,17 @@ def run_game():
     opposing_player = state.GetOpposingPlayer()
     player_is_in_check = state.PlayerIsInCheck(current_player, opposing_player)
     print("Current player is in check: {0}".format(player_is_in_check))
-    possible_moves = state.GetPlayersPossibleMoves(current_player)
-    n_possible_moves = len(possible_moves)
+    
+    #possible_moves = state.GetPlayersPossibleMoves(current_player)
+    #n_possible_moves = len(possible_moves)
     #print("Possible moves: {0}".format(possible_moves))
-    print("Number of possible moves: {0}".format(n_possible_moves))
+    #print("Number of possible moves: {0}".format(n_possible_moves))
+    
+    legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
+    n_legal_moves = len(legal_moves)
+    print("Legal moves: {0}".format(legal_moves))
+    print("Number of legal moves: {0}".format(n_legal_moves))
+
     
     # Run until the user asks to quit
     running = True
@@ -192,10 +199,16 @@ def run_game():
                             opposing_player = state.GetOpposingPlayer()
                             player_is_in_check = state.PlayerIsInCheck(current_player, opposing_player)
                             print("Current player is in check: {0}".format(player_is_in_check))
-                            possible_moves = state.GetPlayersPossibleMoves(current_player)
-                            n_possible_moves = len(possible_moves)
+                            
+                            #possible_moves = state.GetPlayersPossibleMoves(current_player)
+                            #n_possible_moves = len(possible_moves)
                             #print("Possible moves: {0}".format(possible_moves))
-                            print("Number of possible moves: {0}".format(n_possible_moves))
+                            #print("Number of possible moves: {0}".format(n_possible_moves))
+
+                            legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
+                            n_legal_moves = len(legal_moves)
+                            print("Legal moves: {0}".format(legal_moves))
+                            print("Number of legal moves: {0}".format(n_legal_moves))
                         
                         # Reset clicked square and position from
                         # Do this whether or not we moved a piece
@@ -229,7 +242,7 @@ def run_game():
                 board.DrawSquare(CLICK_COLOR_EMPTY, square_x, square_y)
             else:
                 board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
-                state.DrawMovesForPiece(CLICK_COLOR_MOVES, xy_position)
+                state.DrawMovesForPiece(CLICK_COLOR_MOVES, xy_position, current_player, opposing_player)
 
         # Draw the pieces
         state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)

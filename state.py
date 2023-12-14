@@ -379,10 +379,23 @@ class State:
         
         return all_moves
     
-    # Draw possible moves for a piece based on its position; include captures
-    def DrawMovesForPiece(self, primary_color, xy_position):        
+    # Get legal moves for a piece
+    def GetPieceLegalMoves(self, piece, player, opponent):
+        legal_moves = []
+        position_from = piece.GetPosition()
+        possible_moves = self.GetPiecePossibleMoves(piece)
+        for position_to in possible_moves:
+            move_notation = self.board.GetMoveNotation(position_from, position_to)
+            # Determine if a player's move would put himself in check
+            move_results_in_check = self.MoveResultsInCheck(player, opponent, move_notation)
+            if not move_results_in_check:
+                legal_moves.append(position_to)
+        return legal_moves
+
+    # Draw legal moves for a piece based on its position; include captures
+    def DrawMovesForPiece(self, primary_color, xy_position, player, opponent):
         piece = self.GetPieceInPosition(xy_position)
-        piece_moves = self.GetPiecePossibleMoves(piece)
+        piece_moves = self.GetPieceLegalMoves(piece, player, opponent)
         for move in piece_moves:
             square_position = self.board.GetSquarePosition(move)
             square_x, square_y = square_position
@@ -411,17 +424,35 @@ class State:
     # Move contains both "from" and "to" locations
     # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
     def GetPlayersPossibleMoves(self, player):
-        all_moves = []
+        player_moves = []
         player_color = player.GetColor()
         pieces = self.GetPlayersPieces(player_color)
         # Loop over all pieces for a player
         for piece in pieces:            
             position_from = piece.GetPosition()
+            # Get possible moves for piece
             piece_moves = self.GetPiecePossibleMoves(piece)
             for position_to in piece_moves:
                 move_notation = self.board.GetMoveNotation(position_from, position_to)
-                all_moves.append(move_notation)
-        return all_moves
+                player_moves.append(move_notation)
+        return player_moves
+    
+    # Get all legal moves for a player
+    # Move contains both "from" and "to" locations
+    # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
+    def GetPlayersLegalMoves(self, player, opponent):
+        player_moves = []
+        player_color = player.GetColor()
+        pieces = self.GetPlayersPieces(player_color)
+        # Loop over all pieces for a player
+        for piece in pieces:            
+            position_from = piece.GetPosition()
+            # Get legal moves for piece
+            piece_moves = self.GetPieceLegalMoves(piece, player, opponent)
+            for position_to in piece_moves:
+                move_notation = self.board.GetMoveNotation(position_from, position_to)
+                player_moves.append(move_notation)
+        return player_moves
 
     # Get position of player's king
     def GetPlayersKingPosition(self, player):
@@ -442,6 +473,7 @@ class State:
         result = False
         king_position = self.GetPlayersKingPosition(player)
         king_position_string = self.board.GetPositionString(king_position)
+        # Get opponent's possible moves (not legal moves); pinned pieces still apply check!
         opponent_possible_moves = self.GetPlayersPossibleMoves(opponent)
 
         # Loop over opponent's possible moves and captures
