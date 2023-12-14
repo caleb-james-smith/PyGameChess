@@ -121,6 +121,19 @@ class State:
         else:
             print(self.state)
 
+    # Print a detailed game state
+    def PrintGameState(self):
+        current_player_is_in_check = self.PlayerIsInCheck(self.current_player, self.opposing_player)
+        legal_moves = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
+        n_legal_moves = len(legal_moves)
+        
+        # Print game state information
+        self.PrintState()
+        self.PrintCurrentPlayer()
+        print(" - Current player is in check: {0}".format(current_player_is_in_check))
+        print(" - Number of legal moves: {0}".format(n_legal_moves))
+        print(" - Legal moves: {0}".format(legal_moves))
+
     # Set the state based on the piece state
     def SetStateFromPieceState(self):
         self.SetEmptyState()

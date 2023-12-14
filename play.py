@@ -86,25 +86,13 @@ def run_game():
     # Setup the game state
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
+    # Set current and opposing players
     state.SetCurrentPlayer(white_player)
     state.SetOpposingPlayer(black_player)
-    state.PrintState()
-    state.PrintCurrentPlayer()
     current_player = state.GetCurrentPlayer()
     opposing_player = state.GetOpposingPlayer()
-    player_is_in_check = state.PlayerIsInCheck(current_player, opposing_player)
-    print("Current player is in check: {0}".format(player_is_in_check))
-    
-    #possible_moves = state.GetPlayersPossibleMoves(current_player)
-    #n_possible_moves = len(possible_moves)
-    #print("Possible moves: {0}".format(possible_moves))
-    #print("Number of possible moves: {0}".format(n_possible_moves))
-    
-    legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
-    n_legal_moves = len(legal_moves)
-    print("Legal moves: {0}".format(legal_moves))
-    print("Number of legal moves: {0}".format(n_legal_moves))
-
+    # Print detailed game state
+    state.PrintGameState()
     
     # Run until the user asks to quit
     running = True
@@ -191,25 +179,13 @@ def run_game():
                         if all_systems_go:
                             # Move piece
                             state.MovePiece(move_notation)
-                            # Switch current player
+                            # Switch current and opposing players
                             state.SwitchTurn()
-                            state.PrintState()
-                            state.PrintCurrentPlayer()
                             current_player = state.GetCurrentPlayer()
                             opposing_player = state.GetOpposingPlayer()
-                            player_is_in_check = state.PlayerIsInCheck(current_player, opposing_player)
-                            print("Current player is in check: {0}".format(player_is_in_check))
-                            
-                            #possible_moves = state.GetPlayersPossibleMoves(current_player)
-                            #n_possible_moves = len(possible_moves)
-                            #print("Possible moves: {0}".format(possible_moves))
-                            #print("Number of possible moves: {0}".format(n_possible_moves))
-
-                            legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
-                            n_legal_moves = len(legal_moves)
-                            print("Legal moves: {0}".format(legal_moves))
-                            print("Number of legal moves: {0}".format(n_legal_moves))
-                        
+                            # Print detailed game state
+                            state.PrintGameState()
+                                                    
                         # Reset clicked square and position from
                         # Do this whether or not we moved a piece
                         clicked_square_exists = False
