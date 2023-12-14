@@ -13,7 +13,6 @@
 # - 6: king
 
 # TODO:
-# - Make a function to get a list of all a player's pieces
 # - Make function to get "state" (values) from "piece_state" (objects)
 # DONE:
 # - Create a class for the game state
@@ -23,6 +22,12 @@
 # - Write function to determine if there are any pieces on squares between two positions
 # - At the start of game, set state based on piece state
 # - After any move, update state based on piece state
+# - Make a function to get a list of all a player's pieces
+# - Make a function to get possible moves for a piece with constraints:
+#   no jumping, no capturing own pieces, pawn movement and captures.
+# - Track opposing player
+# - Make function to convert [x, y] position to "xy" string
+# - Make function to get the position of a player's king
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -35,6 +40,7 @@ class State:
         self.white_player = white_player
         self.black_player = black_player
         self.current_player = None
+        self.opposing_player = None
         # Chess pieces
         self.chess_pieces = {
             0: "empty",
@@ -67,12 +73,20 @@ class State:
     def SetCurrentPlayer(self, current_player):
         self.current_player = current_player
 
-    # Switch current player to opposite player
+    def GetOpposingPlayer(self):
+        return self.opposing_player
+    
+    def SetOpposingPlayer(self, opposing_player):
+        self.opposing_player = opposing_player
+
+    # Switch current and opposing players
     def SwitchTurn(self):
         if self.current_player == self.white_player:
             self.current_player = self.black_player
+            self.opposing_player = self.white_player
         elif self.current_player == self.black_player:
             self.current_player = self.white_player
+            self.opposing_player = self.black_player
     
     # Check if piece has a valid value
     def PieceIsValid(self, value):
@@ -106,6 +120,26 @@ class State:
             print(line)
         else:
             print(self.state)
+
+    # Print a detailed game state
+    def PrintGameState(self):
+        current_player_is_in_check      = self.PlayerIsInCheck(self.current_player, self.opposing_player)
+        current_player_is_in_checkmate  = self.PlayerIsInCheckmate(self.current_player, self.opposing_player)
+        current_player_is_in_stalemate  = self.PlayerIsInStalemate(self.current_player, self.opposing_player)
+        legal_moves                     = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
+        n_legal_moves                   = len(legal_moves)
+        
+        # Print game state information
+        self.PrintState()
+        print("------------------------------------------")
+        print("Current player: {0} - {1}".format(self.current_player.GetName(), self.current_player.GetColor()))
+        print("------------------------------------------")
+        print(" - Current player is in check:       {0}".format(current_player_is_in_check))
+        print(" - Current player is in checkmate:   {0}".format(current_player_is_in_checkmate))
+        print(" - Current player is in stalemate:   {0}".format(current_player_is_in_stalemate))
+        print(" - Number of legal moves:            {0}".format(n_legal_moves))
+        print(" - Legal moves: {0}".format(legal_moves))
+        print("------------------------------------------")
 
     # Set the state based on the piece state
     def SetStateFromPieceState(self):
@@ -265,9 +299,12 @@ class State:
         return
 
     # Move piece from one position to another
-    def MovePiece(self, position_from, position_to):
+    def MovePiece(self, move_notation):
+        position_from, position_to = self.board.GetMovePositions(move_notation)
         x_from, y_from = position_from
         x_to, y_to     = position_to
+        #print("In MovePiece(): move_notation: {0}".format(move_notation))
+        #print("In MovePiece(): position_from: {0}, position_to: {1}".format(position_from, position_to))
         
         # Get piece in "from" position
         piece = self.GetPieceInPosition(position_from)
@@ -294,22 +331,92 @@ class State:
                 result = True
         return result
     
-    # TODO
-    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
-    # Draw possible moves for a piece based on its position; include captures
-    def DrawMovesForPiece(self, primary_color, xy_position):
+    # Determine if move is valid
+    # - A player can only move his own pieces
+    # - A player can move to empty squares
+    # - A player can capture an opponent's piece
+    # - A player cannot capture one of his own pieces
+    # - Move must be valid for the piece being moved
+    # - Pieces (except for knights) cannot jump other pieces (knights are allowed to jump)
+    # - Pawns can move forward, but not capture forward
+    # - Pawns cannot move diagonally, but can capture diagonally
+    
+    # Get possible moves for a piece
+    def GetPiecePossibleMoves(self, piece):
+        all_moves       = []
         valid_moves     = []
         valid_captures  = []
-        piece = self.GetPieceInPosition(xy_position)
+
+        position_from = piece.GetPosition()
+        
+        # Only check for moves if the piece exists
         if piece:
+            piece_color = piece.GetColor()
+            piece_type  = piece.GetType()
             valid_moves = piece.GetValidMoves()
-            piece_type = piece.GetType()
+
+            for position_to in valid_moves:
+                piece_of_opposite_color = False
+                square_is_empty         = False
+                # Piece to capture
+                piece_to_capture = self.GetPieceInPosition(position_to)
+                if piece_to_capture:
+                    piece_to_capture_color  = piece_to_capture.GetColor()
+                    piece_of_opposite_color = (piece_color != piece_to_capture_color)
+                else:
+                    square_is_empty = True
+                # Check if a piece occupies a square in between two positions
+                piece_is_in_between = self.PieceIsInBetween(position_from, position_to)
+                
+                if square_is_empty or piece_of_opposite_color:
+                    # Pawn movement: pawns can only move to empty squares
+                    if piece_type == "pawn":
+                        if square_is_empty and not piece_is_in_between:
+                            all_moves.append(position_to)
+                    # Knights can jump over pieces
+                    elif piece_type == "knight":
+                        all_moves.append(position_to)
+                    # Other piece cannot jump over pieces
+                    else:
+                        if not piece_is_in_between:
+                            all_moves.append(position_to)
+            
             # Include pawn captures
             if piece_type == "pawn":
                 valid_captures = piece.GetValidCaptures()
-        # All moves: include valid moves and captures
-        all_moves = valid_moves + valid_captures
-        for move in all_moves:
+                for position_to in valid_captures:
+                    piece_of_opposite_color = False
+                    # Piece to capture
+                    piece_to_capture = self.GetPieceInPosition(position_to)
+                    # Check if a piece occupies a square in between two positions
+                    piece_is_in_between = self.PieceIsInBetween(position_from, position_to)
+                    if piece_to_capture:
+                        piece_to_capture_color  = piece_to_capture.GetColor()
+                        piece_of_opposite_color = (piece_color != piece_to_capture_color)
+                        # Pawn capture: pawns can only capture pieces of opposite color
+                        if piece_of_opposite_color and not piece_is_in_between:
+                            all_moves.append(position_to)
+        
+        return all_moves
+    
+    # Get legal moves for a piece
+    def GetPieceLegalMoves(self, piece, player, opponent):
+        legal_moves = []
+        position_from = piece.GetPosition()
+        possible_moves = self.GetPiecePossibleMoves(piece)
+        for position_to in possible_moves:
+            move_notation = self.board.GetMoveNotation(position_from, position_to)
+            # Determine if a player's move would put himself in check
+            move_results_in_check = self.MoveResultsInCheck(player, opponent, move_notation)
+            if not move_results_in_check:
+                legal_moves.append(position_to)
+        return legal_moves
+
+    # Draw legal moves for a piece based on its position; include captures
+    def DrawMovesForPiece(self, primary_color, xy_position, player, opponent):
+        piece = self.GetPieceInPosition(xy_position)
+        piece_moves = self.GetPieceLegalMoves(piece, player, opponent)
+        for move in piece_moves:
             square_position = self.board.GetSquarePosition(move)
             square_x, square_y = square_position
             
@@ -320,7 +427,6 @@ class State:
             radius = 0.40 * square_side
             self.board.DrawCircle(primary_color, center_x, center_y, radius)
 
-    # TODO
     # Get a list of all of a player's pieces
     def GetPlayersPieces(self, player_color):
         pieces = []
@@ -334,25 +440,134 @@ class State:
                         pieces.append(piece)
         return pieces
     
-    # TODO
-    # FIXME: Include pawn captures
-    # FIXME: Constrain based on not moving through pieces and not capturing your own pieces
     # Get all possible moves for a player
-    # Note: we need a way to keep track of which pieces can move where...
-    # Note: maybe a move should consist of both "from" and "to" locations instead of only "to"
+    # Move contains both "from" and "to" locations
     # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
-    def GetPossibleMoves(self, player):
-        all_moves = []
+    def GetPlayersPossibleMoves(self, player):
+        player_moves = []
         player_color = player.GetColor()
         pieces = self.GetPlayersPieces(player_color)
         # Loop over all pieces for a player
-        for piece in pieces:
+        for piece in pieces:            
             position_from = piece.GetPosition()
-            piece_moves = piece.GetValidMoves()
+            # Get possible moves for piece
+            piece_moves = self.GetPiecePossibleMoves(piece)
             for position_to in piece_moves:
                 move_notation = self.board.GetMoveNotation(position_from, position_to)
-                all_moves.append(move_notation)
-        return all_moves
+                player_moves.append(move_notation)
+        return player_moves
+    
+    # Get all legal moves for a player
+    # Move contains both "from" and "to" locations
+    # Format for move: "<from>_<to>" using x, y or chess notation; for example, "46_44" or "e2_e4"
+    def GetPlayersLegalMoves(self, player, opponent):
+        player_moves = []
+        player_color = player.GetColor()
+        pieces = self.GetPlayersPieces(player_color)
+        # Loop over all pieces for a player
+        for piece in pieces:            
+            position_from = piece.GetPosition()
+            # Get legal moves for piece
+            piece_moves = self.GetPieceLegalMoves(piece, player, opponent)
+            for position_to in piece_moves:
+                move_notation = self.board.GetMoveNotation(position_from, position_to)
+                player_moves.append(move_notation)
+        return player_moves
+
+    # Get position of player's king
+    def GetPlayersKingPosition(self, player):
+        king_position = []
+        player_color    = player.GetColor()
+        player_pieces   = self.GetPlayersPieces(player_color)
+        for piece in player_pieces:
+            piece_type = piece.GetType()
+            if piece_type == "king":
+                king_position = piece.GetPosition()
+                # Return now to speed up
+                return king_position
+        
+        return king_position
+
+    # Define check!
+    # - The player's king is under attack
+    # - Pinned pieces (pinned to a king) can still deliver check
+    def PlayerIsInCheck(self, player, opponent):
+        result = False
+        king_position = self.GetPlayersKingPosition(player)
+        king_position_string = self.board.GetPositionString(king_position)
+        # Get opponent's possible moves (not legal moves); pinned pieces still apply check!
+        opponent_possible_moves = self.GetPlayersPossibleMoves(opponent)
+
+        # Loop over opponent's possible moves and captures
+        for move in opponent_possible_moves:
+            split_move = move.split("_")
+            move_start, move_end = split_move
+            # Determine if opponent can capture the player's king
+            if move_end == king_position_string:
+                result = True
+                # Return now to speed up
+                return result
+
+        return result
+    
+    # Define checkmate!!
+    # - Player is in check
+    # - Player has no legal moves
+    def PlayerIsInCheckmate(self, player, opponent):
+        result = False
+        
+        player_is_in_check = self.PlayerIsInCheck(player, opponent)
+        legal_moves = self.GetPlayersLegalMoves(player, opponent)
+        n_legal_moves = len(legal_moves)
+        
+        if player_is_in_check and n_legal_moves == 0:
+            result = True
+        
+        return result
+    
+    # Define stalemate...
+    # - Player is not in check
+    # - Player has not legal moves
+    def PlayerIsInStalemate(self, player, opponent):
+        result = False
+
+        player_is_in_check = self.PlayerIsInCheck(player, opponent)
+        legal_moves = self.GetPlayersLegalMoves(player, opponent)
+        n_legal_moves = len(legal_moves)
+
+        if not player_is_in_check and n_legal_moves == 0:
+            result = True
+
+        return result
+
+    # Determine if a player's move would put himself in check
+    # - Get piece to capture (if any).
+    # - Move piece (updates state and piece state).
+    # - After move, check if player is in check.
+    # - Move piece back to original position (updates state and piece state).
+    # - If there was a piece to capture for this move, put it back and update state.
+    def MoveResultsInCheck(self, player, opponent, move_notation):
+        result = False
+        reverse_move = self.board.GetReverseMove(move_notation)
+        position_from, position_to = self.board.GetMovePositions(move_notation)
+
+        # Piece to capture
+        piece_to_capture = self.GetPieceInPosition(position_to)
+        
+        # Move piece to test new game state
+        self.MovePiece(move_notation)
+        
+        # Determine if player is now in check after move
+        result = self.PlayerIsInCheck(player, opponent)
+
+        # Reverse move
+        self.MovePiece(reverse_move)
+        # If there was a piece to capture, put it back
+        if piece_to_capture:
+            self.PlacePiece(piece_to_capture)
+            self.SetStateFromPieceState()
+        
+        return result
 
     # Get piece type based on value
     def GetPieceType(self, value):
