@@ -124,10 +124,10 @@ class State:
     # Print a detailed game state
     def PrintGameState(self):
         current_player_is_in_check      = self.PlayerIsInCheck(self.current_player, self.opposing_player)
-        current_player_is_in_checkmate  = self.PlayerIsInCheckmate()
-        current_player_is_in_stalemate  = self.PlayerIsInStalemate()
-        legal_moves = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
-        n_legal_moves = len(legal_moves)
+        current_player_is_in_checkmate  = self.PlayerIsInCheckmate(self.current_player, self.opposing_player)
+        current_player_is_in_stalemate  = self.PlayerIsInStalemate(self.current_player, self.opposing_player)
+        legal_moves                     = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
+        n_legal_moves                   = len(legal_moves)
         
         # Print game state information
         self.PrintState()
@@ -513,16 +513,31 @@ class State:
     # Define checkmate!!
     # - Player is in check
     # - Player has no legal moves
-    def PlayerIsInCheckmate(self):
+    def PlayerIsInCheckmate(self, player, opponent):
         result = False
+        
+        player_is_in_check = self.PlayerIsInCheck(player, opponent)
+        legal_moves = self.GetPlayersLegalMoves(player, opponent)
+        n_legal_moves = len(legal_moves)
+        
+        if player_is_in_check and n_legal_moves == 0:
+            result = True
+        
         return result
     
-    # Define stalemate... preliminary version.
+    # Define stalemate...
     # - Player is not in check
     # - Player has not legal moves
-    # - Does not include other stalemates (insufficient material, threefold repetition)
-    def PlayerIsInStalemate(self):
+    def PlayerIsInStalemate(self, player, opponent):
         result = False
+
+        player_is_in_check = self.PlayerIsInCheck(player, opponent)
+        legal_moves = self.GetPlayersLegalMoves(player, opponent)
+        n_legal_moves = len(legal_moves)
+
+        if not player_is_in_check and n_legal_moves == 0:
+            result = True
+
         return result
 
     # Determine if a player's move would put himself in check

@@ -3,11 +3,12 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Define checkmate
-# - Define stalemate
 # - Define pawn promotion
 # - Define pawn en passant
 # - Define castling
+# - Define draw: insufficient material
+# - Define draw: threefold repetition
+# - Define draw: fifty-move rule
 # - Highlighting possible moves:
 #   Try green square for piece-to-move location
 #   Try alternating shades of blue (light/dark based on board) for move locations
@@ -45,6 +46,8 @@
 # - Determine if a move would put a player in check
 # - Get legal moves for a given player
 # - Legal moves: constrain moves based on check
+# - Define checkmate: in check, no legal moves
+# - Define stalemate: not in check, no legal moves
 
 # Import the pygame library
 import pygame
