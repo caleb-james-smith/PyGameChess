@@ -183,6 +183,7 @@ def run_game():
                         if all_systems_go:
                             # Move piece
                             state.MovePiece(move_notation)
+                            state.PromotePawn(piece_to_move)
                             # Switch current and opposing players
                             state.SwitchTurn()
                             current_player = state.GetCurrentPlayer()

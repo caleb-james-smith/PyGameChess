@@ -187,6 +187,7 @@ class State:
         
         # Initial state: chess starting position
         
+        # White pieces
         white_pieces = [
             Rook("white",   [0, 7]),
             Knight("white", [1, 7]),
@@ -206,6 +207,7 @@ class State:
             Pawn("white",   [7, 6]),
         ]
         
+        # Black pieces
         black_pieces = [
             Rook("black",   [0, 0]),
             Knight("black", [1, 0]),
@@ -319,6 +321,26 @@ class State:
         # Update state based on piece state
         self.SetStateFromPieceState()
 
+    # Pawn promotion
+    def PromotePawn(self, piece):
+        piece_name      = piece.GetName()
+        piece_color     = piece.GetColor()
+        piece_type      = piece.GetType()
+        piece_position  = piece.GetPosition()
+        x, y = piece_position
+        if piece_type == "pawn":
+            print("{0} found at {1}...".format(piece_name, piece_position))
+            if piece_color == "white" and y == 0:
+                print("Promoting {0} at {1}!".format(piece_name, piece_position))
+                new_piece = Queen(piece_color, piece_position)
+                self.PlacePiece(new_piece)
+                self.SetStateFromPieceState()
+            elif piece_color == "black" and y == 7:
+                print("Promoting {0} at {1}!".format(piece_name, piece_position))
+                new_piece = Queen(piece_color, piece_position)
+                self.PlacePiece(new_piece)
+                self.SetStateFromPieceState()
+            
     # Check if at least one piece occupies a square between two positions
     def PieceIsInBetween(self, position_1, position_2):
         result = False
