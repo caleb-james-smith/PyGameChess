@@ -3,7 +3,6 @@
 # - Date: Project started on November 10, 2023
 
 # TODO:
-# - Define pawn promotion
 # - Define pawn en passant
 # - Define castling
 # - Define draw: insufficient material
@@ -48,6 +47,7 @@
 # - Legal moves: constrain moves based on check
 # - Define checkmate: in check, no legal moves
 # - Define stalemate: not in check, no legal moves
+# - Define pawn promotion
 
 # Import the pygame library
 import pygame
@@ -183,6 +183,7 @@ def run_game():
                         if all_systems_go:
                             # Move piece
                             state.MovePiece(move_notation)
+                            # Promote pawn if necessary
                             state.PromotePawn(piece_to_move)
                             # Switch current and opposing players
                             state.SwitchTurn()

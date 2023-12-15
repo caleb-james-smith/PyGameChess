@@ -322,21 +322,23 @@ class State:
         self.SetStateFromPieceState()
 
     # Pawn promotion
+    # - For now, always promote pawns to queens
     def PromotePawn(self, piece):
         piece_name      = piece.GetName()
         piece_color     = piece.GetColor()
         piece_type      = piece.GetType()
         piece_position  = piece.GetPosition()
         x, y = piece_position
+        
+        # The final row is based on the color
+        final_row = {"white": 0, "black": 7}
+        
+        # Check if the piece is a pawn
         if piece_type == "pawn":
             print("{0} found at {1}...".format(piece_name, piece_position))
-            if piece_color == "white" and y == 0:
-                print("Promoting {0} at {1}!".format(piece_name, piece_position))
-                new_piece = Queen(piece_color, piece_position)
-                self.PlacePiece(new_piece)
-                self.SetStateFromPieceState()
-            elif piece_color == "black" and y == 7:
-                print("Promoting {0} at {1}!".format(piece_name, piece_position))
+            # Check if the pawn is on the final row
+            if y == final_row[piece_color]:
+                print("Promoting the {0} at {1} to a queen!".format(piece_name, piece_position))
                 new_piece = Queen(piece_color, piece_position)
                 self.PlacePiece(new_piece)
                 self.SetStateFromPieceState()
