@@ -1,8 +1,14 @@
+# Play chess
+# - Two human players on one computer.
+
+# -------------------------------------------- #
 # Chess using the pygame library.
 # - Author: Caleb Smith
 # - Date: Project started on November 10, 2023
+# -------------------------------------------- #
 
 # TODO:
+# - Create a chess agent!
 # - Define pawn en passant
 # - Define castling
 # - Define draw: insufficient material
@@ -98,9 +104,6 @@ def run_game():
     # Print detailed game state
     state.PrintGameState()
     
-    # Run until the user asks to quit
-    running = True
-    
     # Click position
     click_position  = None
     square_position = None
@@ -111,6 +114,9 @@ def run_game():
     clicked_square_is_empty = False
 
     # Game running condition
+    running = True
+
+    # Run until the user asks to quit
     while running:
         # Game event loop
         for event in pygame.event.get():
