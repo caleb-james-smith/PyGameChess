@@ -80,14 +80,20 @@ def run_game():
         # Choose a legal move
         legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
         chosen_move = white_agent.ChooseMove(legal_moves)
+        # FIXME: stalemate prints forever (infinite loop)
+        print("Chosen move: {0}".format(chosen_move))
         
         # Check that the move is not empty
         if chosen_move:
+            # Get move positions
+            position_from, position_to = state.board.GetMovePositions(chosen_move)
+            print("position_from: {0}, position_to: {1}".format(position_from, position_to))
+            # Get piece to move!
+            piece_to_move = state.GetPieceInPosition(position_from)
             # Move piece
             state.MovePiece(chosen_move)
-            # FIXME: get the piece to move!
             # Promote pawn if necessary
-            #state.PromotePawn(piece_to_move)
+            state.PromotePawn(piece_to_move)
             # Switch current and opposing players
             state.SwitchTurn()
             current_player = state.GetCurrentPlayer()
