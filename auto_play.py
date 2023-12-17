@@ -79,8 +79,9 @@ def run_game():
         
         # Choose a legal move
         current_agent = current_player.GetAgent()
-        legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
-        chosen_move = current_agent.ChooseMove(legal_moves)
+        #legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
+        chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
+        
         # FIXME: stalemate prints forever (infinite loop)
         print("Chosen move: {0}".format(chosen_move))
         

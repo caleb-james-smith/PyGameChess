@@ -6,7 +6,8 @@ class Agent:
         return
 
     # Choose move from a list of legal moves
-    def ChooseMove(self, legal_moves):
+    def ChooseMove(self, state, current_player, opposing_player):
+        legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
         result = ""
         # Check that there is at least one legal move
         if legal_moves:
