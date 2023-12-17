@@ -38,11 +38,12 @@ def run_game():
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+    # Create agents
+    white_agent = Agent()
+    black_agent = Agent()
     # Create players
-    white_player = Player("Merry", "white")
-    black_player = Player("Pippin", "black")
-    white_agent = Agent(white_player)
-    black_agent = Agent(black_player)
+    white_player = Player("Merry", "white", white_agent)
+    black_player = Player("Pippin", "black", black_agent)
     # Setup the game state
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
@@ -76,10 +77,10 @@ def run_game():
             if event.type == pygame.QUIT:
                 running = False
         
-        # FIXME: use two independent agents
         # Choose a legal move
+        current_agent = current_player.GetAgent()
         legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
-        chosen_move = white_agent.ChooseMove(legal_moves)
+        chosen_move = current_agent.ChooseMove(legal_moves)
         # FIXME: stalemate prints forever (infinite loop)
         print("Chosen move: {0}".format(chosen_move))
         

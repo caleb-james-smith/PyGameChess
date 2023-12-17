@@ -1,9 +1,10 @@
 # Player class
 
 class Player:
-    def __init__(self, name, color):
+    def __init__(self, name, color, agent=None):
         self.name = name
         self.color = color
+        self.agent = agent
     
     def GetName(self):
         return self.name
@@ -16,3 +17,9 @@ class Player:
     
     def SetColor(self, color):
         self.color = color
+
+    def GetAgent(self):
+        return self.agent
+    
+    def SetAgent(self, agent):
+        self.agent = agent
