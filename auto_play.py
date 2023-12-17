@@ -6,6 +6,8 @@ import pygame
 from board import Board
 from state import State
 from player import Player
+from agent import Agent
+import time
 
 # Run the game
 def run_game():
@@ -37,8 +39,10 @@ def run_game():
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
     # Create players
-    white_player = Player("Bilbo", "white")
-    black_player = Player("Gollum", "black")    
+    white_player = Player("Merry", "white")
+    black_player = Player("Pippin", "black")
+    white_agent = Agent(white_player)
+    black_agent = Agent(black_player)
     # Setup the game state
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
@@ -50,8 +54,19 @@ def run_game():
     # Print detailed game state
     state.PrintGameState()
     
+    # Fill the background with white
+    screen.fill(PURE_WHITE)
+    # Draw the board
+    board.DrawBoard()
+    # Draw the pieces
+    state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+    # Flip the display
+    pygame.display.flip()
+    
     # Game running condition
     running = True
+    # Add a time delay... take a breathe. :)
+    time.sleep(0.5)
     
     # Run until the user asks to quit
     while running:
@@ -61,15 +76,33 @@ def run_game():
             if event.type == pygame.QUIT:
                 running = False
         
+        # FIXME: use two independent agents
+        # Choose a legal move
+        legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
+        chosen_move = white_agent.ChooseMove(legal_moves)
+        
+        # Check that the move is not empty
+        if chosen_move:
+            # Move piece
+            state.MovePiece(chosen_move)
+            # FIXME: get the piece to move!
+            # Promote pawn if necessary
+            #state.PromotePawn(piece_to_move)
+            # Switch current and opposing players
+            state.SwitchTurn()
+            current_player = state.GetCurrentPlayer()
+            opposing_player = state.GetOpposingPlayer()
+            # Print detailed game state
+            state.PrintGameState()
+            # Add a time delay... take a breathe. :)
+            time.sleep(0.5)
+        
         # Fill the background with white
         screen.fill(PURE_WHITE)
-
         # Draw the board
         board.DrawBoard()
-
         # Draw the pieces
         state.DrawPieces(pygame, screen, PIECE_LIGHT_COLOR, PIECE_DARK_COLOR, PIECE_BORDER_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
-
         # Flip the display
         pygame.display.flip()
     

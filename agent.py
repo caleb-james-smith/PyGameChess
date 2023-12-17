@@ -5,6 +5,12 @@ class Agent:
     def __init__(self, player):
         self.player = player
 
+    def GetPlayer(self):
+        return self.player
+    
+    def SetPlayer(self, player):
+        self.player = player
+
     # Choose move from a list of legal moves
     def ChooseMove(self, legal_moves):
         result = ""
