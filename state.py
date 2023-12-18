@@ -14,6 +14,9 @@
 
 # TODO:
 # - Make function to get "state" (values) from "piece_state" (objects)
+# - Make function to get legal captures (subset of legal moves)
+# - Make function to get legal checks (subset of legal moves)
+# - Make function to get legal checkmates (subset of legal moves)
 # DONE:
 # - Create a class for the game state
 # - Define numbers and names for chess pieces
@@ -497,6 +500,18 @@ class State:
                 move_notation = self.board.GetMoveNotation(position_from, position_to)
                 player_moves.append(move_notation)
         return player_moves
+    
+    # Get all legal captures for a player (subset of legal moves)
+    def GetPlayersLegalCaptures(self, player, opponent):
+        captures = []
+        moves = self.GetPlayersLegalMoves(player, opponent)
+        for move in moves:
+            position_from, position_to = self.board.GetMovePositions(move)
+            piece_to_capture = self.GetPieceInPosition(position_to)
+            # Check if there is a piece to capture
+            if piece_to_capture:
+                captures.append(move)
+        return captures
 
     # Get position of player's king
     def GetPlayersKingPosition(self, player):

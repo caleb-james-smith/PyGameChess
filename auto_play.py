@@ -6,7 +6,7 @@ import pygame
 from board import Board
 from state import State
 from player import Player
-from agent import Agent
+from agent import AgentRandom, AgentCapture
 import time
 
 # Run the game
@@ -39,8 +39,10 @@ def run_game():
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
     # Create agents
-    white_agent = Agent()
-    black_agent = Agent()
+    #white_agent = AgentRandom()
+    #black_agent = AgentRandom()
+    white_agent = AgentCapture()
+    black_agent = AgentCapture()
     # Create players
     white_player = Player("Merry", "white", white_agent)
     black_player = Player("Pippin", "black", black_agent)
@@ -82,11 +84,9 @@ def run_game():
         #legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
         chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
         
-        # FIXME: stalemate prints forever (infinite loop)
-        print("Chosen move: {0}".format(chosen_move))
-        
         # Check that the move is not empty
         if chosen_move:
+            print("Chosen move: {0}".format(chosen_move))
             # Get move positions
             position_from, position_to = state.board.GetMovePositions(chosen_move)
             print("position_from: {0}, position_to: {1}".format(position_from, position_to))
