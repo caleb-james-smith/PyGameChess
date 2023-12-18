@@ -1,9 +1,13 @@
+# Play chess
+# - Two human players on one computer.
+
+# -------------------------------------------- #
 # Chess using the pygame library.
 # - Author: Caleb Smith
 # - Date: Project started on November 10, 2023
+# -------------------------------------------- #
 
 # TODO:
-# - Define pawn promotion
 # - Define pawn en passant
 # - Define castling
 # - Define draw: insufficient material
@@ -48,6 +52,8 @@
 # - Legal moves: constrain moves based on check
 # - Define checkmate: in check, no legal moves
 # - Define stalemate: not in check, no legal moves
+# - Define pawn promotion
+# - Create a chess agent!
 
 # Import the pygame library
 import pygame
@@ -93,13 +99,10 @@ def run_game():
     # Set current and opposing players
     state.SetCurrentPlayer(white_player)
     state.SetOpposingPlayer(black_player)
-    current_player = state.GetCurrentPlayer()
+    current_player  = state.GetCurrentPlayer()
     opposing_player = state.GetOpposingPlayer()
     # Print detailed game state
     state.PrintGameState()
-    
-    # Run until the user asks to quit
-    running = True
     
     # Click position
     click_position  = None
@@ -111,6 +114,9 @@ def run_game():
     clicked_square_is_empty = False
 
     # Game running condition
+    running = True
+
+    # Run until the user asks to quit
     while running:
         # Game event loop
         for event in pygame.event.get():
@@ -183,9 +189,11 @@ def run_game():
                         if all_systems_go:
                             # Move piece
                             state.MovePiece(move_notation)
+                            # Promote pawn if necessary
+                            state.PromotePawn(piece_to_move)
                             # Switch current and opposing players
                             state.SwitchTurn()
-                            current_player = state.GetCurrentPlayer()
+                            current_player  = state.GetCurrentPlayer()
                             opposing_player = state.GetOpposingPlayer()
                             # Print detailed game state
                             state.PrintGameState()

@@ -14,6 +14,8 @@
 
 # TODO:
 # - Make function to get "state" (values) from "piece_state" (objects)
+# - Make function to get legal checks (subset of legal moves)
+# - Make function to get legal checkmates (subset of legal moves)
 # DONE:
 # - Create a class for the game state
 # - Define numbers and names for chess pieces
@@ -28,6 +30,7 @@
 # - Track opposing player
 # - Make function to convert [x, y] position to "xy" string
 # - Make function to get the position of a player's king
+# - Make function to get legal captures (subset of legal moves)
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
@@ -187,6 +190,7 @@ class State:
         
         # Initial state: chess starting position
         
+        # White pieces
         white_pieces = [
             Rook("white",   [0, 7]),
             Knight("white", [1, 7]),
@@ -206,6 +210,7 @@ class State:
             Pawn("white",   [7, 6]),
         ]
         
+        # Black pieces
         black_pieces = [
             Rook("black",   [0, 0]),
             Knight("black", [1, 0]),
@@ -319,6 +324,28 @@ class State:
         # Update state based on piece state
         self.SetStateFromPieceState()
 
+    # Pawn promotion
+    # - For now, always promote pawns to queens
+    def PromotePawn(self, piece):
+        piece_name      = piece.GetName()
+        piece_color     = piece.GetColor()
+        piece_type      = piece.GetType()
+        piece_position  = piece.GetPosition()
+        x, y = piece_position
+        
+        # The final row is based on the color
+        final_row = {"white": 0, "black": 7}
+        
+        # Check if the piece is a pawn
+        if piece_type == "pawn":
+            print("{0} found at {1}...".format(piece_name, piece_position))
+            # Check if the pawn is on the final row
+            if y == final_row[piece_color]:
+                print("Promoting the {0} at {1} to a queen!".format(piece_name, piece_position))
+                new_piece = Queen(piece_color, piece_position)
+                self.PlacePiece(new_piece)
+                self.SetStateFromPieceState()
+            
     # Check if at least one piece occupies a square between two positions
     def PieceIsInBetween(self, position_1, position_2):
         result = False
@@ -473,6 +500,18 @@ class State:
                 move_notation = self.board.GetMoveNotation(position_from, position_to)
                 player_moves.append(move_notation)
         return player_moves
+    
+    # Get all legal captures for a player (subset of legal moves)
+    def GetPlayersLegalCaptures(self, player, opponent):
+        captures = []
+        moves = self.GetPlayersLegalMoves(player, opponent)
+        for move in moves:
+            position_from, position_to = self.board.GetMovePositions(move)
+            piece_to_capture = self.GetPieceInPosition(position_to)
+            # Check if there is a piece to capture
+            if piece_to_capture:
+                captures.append(move)
+        return captures
 
     # Get position of player's king
     def GetPlayersKingPosition(self, player):
