@@ -8,7 +8,6 @@
 # -------------------------------------------- #
 
 # TODO:
-# - Create a chess agent!
 # - Define pawn en passant
 # - Define castling
 # - Define draw: insufficient material
@@ -54,6 +53,7 @@
 # - Define checkmate: in check, no legal moves
 # - Define stalemate: not in check, no legal moves
 # - Define pawn promotion
+# - Create a chess agent!
 
 # Import the pygame library
 import pygame
@@ -99,7 +99,7 @@ def run_game():
     # Set current and opposing players
     state.SetCurrentPlayer(white_player)
     state.SetOpposingPlayer(black_player)
-    current_player = state.GetCurrentPlayer()
+    current_player  = state.GetCurrentPlayer()
     opposing_player = state.GetOpposingPlayer()
     # Print detailed game state
     state.PrintGameState()
@@ -193,7 +193,7 @@ def run_game():
                             state.PromotePawn(piece_to_move)
                             # Switch current and opposing players
                             state.SwitchTurn()
-                            current_player = state.GetCurrentPlayer()
+                            current_player  = state.GetCurrentPlayer()
                             opposing_player = state.GetOpposingPlayer()
                             # Print detailed game state
                             state.PrintGameState()

@@ -52,7 +52,7 @@ def run_game():
     # Set current and opposing players
     state.SetCurrentPlayer(white_player)
     state.SetOpposingPlayer(black_player)
-    current_player = state.GetCurrentPlayer()
+    current_player  = state.GetCurrentPlayer()
     opposing_player = state.GetOpposingPlayer()
     # Print detailed game state
     state.PrintGameState()
@@ -81,7 +81,6 @@ def run_game():
         
         # Choose a legal move
         current_agent = current_player.GetAgent()
-        #legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
         chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
         
         # Check that the move is not empty
@@ -98,7 +97,7 @@ def run_game():
             state.PromotePawn(piece_to_move)
             # Switch current and opposing players
             state.SwitchTurn()
-            current_player = state.GetCurrentPlayer()
+            current_player  = state.GetCurrentPlayer()
             opposing_player = state.GetOpposingPlayer()
             # Print detailed game state
             state.PrintGameState()
