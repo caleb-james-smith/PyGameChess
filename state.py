@@ -14,7 +14,6 @@
 
 # TODO:
 # - Make function to get "state" (values) from "piece_state" (objects)
-# - Make function to get legal captures (subset of legal moves)
 # - Make function to get legal checks (subset of legal moves)
 # - Make function to get legal checkmates (subset of legal moves)
 # DONE:
@@ -31,6 +30,7 @@
 # - Track opposing player
 # - Make function to convert [x, y] position to "xy" string
 # - Make function to get the position of a player's king
+# - Make function to get legal captures (subset of legal moves)
 
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
