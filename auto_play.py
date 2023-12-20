@@ -3,11 +3,11 @@
 
 # Import the pygame library
 import pygame
+import time
 from board import Board
 from state import State
 from player import Player
 from agent import AgentRandom, AgentCapture
-import time
 
 # Run the game
 def run_game():
@@ -44,7 +44,7 @@ def run_game():
     white_agent = AgentCapture()
     black_agent = AgentCapture()
     # Create players
-    white_player = Player("Merry", "white", white_agent)
+    white_player = Player("Merry",  "white", white_agent)
     black_player = Player("Pippin", "black", black_agent)
     # Setup the game state
     state = State(board, white_player, black_player)
@@ -81,7 +81,7 @@ def run_game():
         
         # Choose a legal move
         current_agent = current_player.GetAgent()
-        chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
+        chosen_move   = current_agent.ChooseMove(state, current_player, opposing_player)
         
         # Check that the move is not empty
         if chosen_move:

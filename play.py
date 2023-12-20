@@ -91,7 +91,7 @@ def run_game():
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
     # Create players
-    white_player = Player("Bilbo", "white")
+    white_player = Player("Bilbo",  "white")
     black_player = Player("Gollum", "black")    
     # Setup the game state
     state = State(board, white_player, black_player)

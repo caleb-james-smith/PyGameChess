@@ -1,65 +1,13 @@
 # Play chess
-# - Two human players on one computer.
-
-# -------------------------------------------- #
-# Chess using the pygame library.
-# - Author: Caleb Smith
-# - Date: Project started on November 10, 2023
-# -------------------------------------------- #
-
-# TODO:
-# - Define pawn en passant
-# - Define castling
-# - Define draw: insufficient material
-# - Define draw: threefold repetition
-# - Define draw: fifty-move rule
-# - Highlighting possible moves:
-#   Try green square for piece-to-move location
-#   Try alternating shades of blue (light/dark based on board) for move locations
-# - Should we create a "Rules" class that knows the state and current player
-#   and enforces valid moves?
-# - Save all moves made in chess game
-# - Information to save for each move: piece, position from, position to, and piece captured (or empty)
-# DONE:
-# - Draw colored square when clicked
-# - Fix bug: use square location instead of click location
-# - When a square is clicked, print out the x, y and chess notation coordinates
-# - For clicked square, print number and name of piece in square (or empty).
-# - Draw different shapes for all chess pieces
-# - Move board parameters and drawing functions to board class
-# - Change click color depending on whether square is empty or occupied
-# - Make it possible to move pieces
-# - Make piece class
-# - Draw pieces using piece classes
-# - Move some functions to board class
-# - Define player class
-# - Track current player turn in state class
-# - Switch between players
-# - Add black borders to chess pieces
-# - Do not let a player capture his own pieces
-# - Differentiate pawn movement and capture
-# - Do not let pieces jump other pieces (except for knights)
-# - Define allowed piece movement and captures
-# - When you click on a piece, show its possible moves: gray squares or little circles; use borders
-# - Use GetPiecePossibleMoves() to determine if move is valid
-# - Define check
-# - Get all possible moves for a given player
-# - Fix bug: program crashes when a king is captured when PlayerIsInCheck() is used
-# - Fix bug: program crashes when MoveResultsInCheck() is used
-# - Fix bug: program crashes when capture results in check; we need to put back the piece to capture!
-# - Determine if a move would put a player in check
-# - Get legal moves for a given player
-# - Legal moves: constrain moves based on check
-# - Define checkmate: in check, no legal moves
-# - Define stalemate: not in check, no legal moves
-# - Define pawn promotion
-# - Create a chess agent!
+# - One human player against one computer player on one computer.
 
 # Import the pygame library
 import pygame
+import time
 from board import Board
 from state import State
 from player import Player
+from agent import AgentRandom, AgentCapture
 
 # Run the game
 def run_game():
@@ -90,9 +38,12 @@ def run_game():
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+    # Create agents
+    black_agent = AgentRandom()
+    #black_agent = AgentCapture()
     # Create players
-    white_player = Player("Bilbo", "white")
-    black_player = Player("Gollum", "black")    
+    white_player = Player("Bilbo",  "white")
+    black_player = Player("Gollum", "black", black_agent)
     # Setup the game state
     state = State(board, white_player, black_player)
     state.SetInitialPieceState()
@@ -123,8 +74,36 @@ def run_game():
             # If the user clicks the window close button, stop running.
             if event.type == pygame.QUIT:
                 running = False
-            # Get position of click
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            
+            # Get the current agent
+            current_agent = current_player.GetAgent()
+            
+            # For computer player (with agent), choose a move
+            if current_agent:
+                chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
+                # Check that the move is not empty
+                if chosen_move:
+                    print("Chosen move: {0}".format(chosen_move))
+                    # Get move positions
+                    position_from, position_to = state.board.GetMovePositions(chosen_move)
+                    print("position_from: {0}, position_to: {1}".format(position_from, position_to))
+                    # Get piece to move!
+                    piece_to_move = state.GetPieceInPosition(position_from)
+                    # Move piece
+                    state.MovePiece(chosen_move)
+                    # Promote pawn if necessary
+                    state.PromotePawn(piece_to_move)
+                    # Switch current and opposing players
+                    state.SwitchTurn()
+                    current_player  = state.GetCurrentPlayer()
+                    opposing_player = state.GetOpposingPlayer()
+                    # Print detailed game state
+                    state.PrintGameState()
+                    # Add a time delay... take a breathe. :)
+                    time.sleep(0.5)
+            
+            # For human player (without agent), get position of click
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 # click position
                 click_position = pygame.mouse.get_pos()
                 click_x = click_position[0]
