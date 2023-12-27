@@ -63,6 +63,7 @@ def run_game():
     position_to     = None
     clicked_square_exists   = False
     clicked_square_is_empty = False
+    agent_move_position = None
 
     # Game running condition
     running = True
@@ -86,6 +87,7 @@ def run_game():
                     print("Chosen move: {0}".format(chosen_move))
                     # Get move positions
                     position_from, position_to = state.board.GetMovePositions(chosen_move)
+                    agent_move_position = position_to
                     print("position_from: {0}, position_to: {1}".format(position_from, position_to))
                     # Get piece to move!
                     piece_to_move = state.GetPieceInPosition(position_from)
@@ -199,6 +201,13 @@ def run_game():
         
         # Draw the board
         board.DrawBoard()
+
+        # Draw the agent move
+        if agent_move_position:
+            agent_square_position = board.GetSquarePosition(agent_move_position)
+            square_x = agent_square_position[0]
+            square_y = agent_square_position[1]
+            board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
 
         # If there was a click, draw the clicked square
         if click_position:

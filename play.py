@@ -8,6 +8,7 @@
 # -------------------------------------------- #
 
 # TODO:
+# - Color the square for the computer's latest move
 # - Define pawn en passant
 # - Define castling
 # - Define draw: insufficient material
