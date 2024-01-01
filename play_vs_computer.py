@@ -7,6 +7,7 @@ import time
 from board import Board
 from state import State
 from player import Player
+from evaluate import EvaluateMaterial
 from agent import AgentRandom, AgentCapture
 
 # Run the game
@@ -38,6 +39,8 @@ def run_game():
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
+    # Create evaluators
+    evaluator = EvaluateMaterial()
     # Create agents
     black_agent = AgentRandom()
     #black_agent = AgentCapture()
@@ -53,7 +56,7 @@ def run_game():
     current_player  = state.GetCurrentPlayer()
     opposing_player = state.GetOpposingPlayer()
     # Print detailed game state
-    state.PrintGameState()
+    state.PrintGameState(evaluator)
     
     # Click position
     click_position  = None
@@ -100,7 +103,7 @@ def run_game():
                     current_player  = state.GetCurrentPlayer()
                     opposing_player = state.GetOpposingPlayer()
                     # Print detailed game state
-                    state.PrintGameState()
+                    state.PrintGameState(evaluator)
                     # Add a time delay... take a breathe. :)
                     time.sleep(0.5)
             
@@ -177,7 +180,7 @@ def run_game():
                             current_player  = state.GetCurrentPlayer()
                             opposing_player = state.GetOpposingPlayer()
                             # Print detailed game state
-                            state.PrintGameState()
+                            state.PrintGameState(evaluator)
                                                     
                         # Reset clicked square and position from
                         # Do this whether or not we moved a piece

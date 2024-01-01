@@ -125,15 +125,18 @@ class State:
             print(self.state)
 
     # Print a detailed game state
-    def PrintGameState(self):
+    def PrintGameState(self, evaluator=None):
         current_player_is_in_check      = self.PlayerIsInCheck(self.current_player, self.opposing_player)
         current_player_is_in_checkmate  = self.PlayerIsInCheckmate(self.current_player, self.opposing_player)
         current_player_is_in_stalemate  = self.PlayerIsInStalemate(self.current_player, self.opposing_player)
         legal_moves                     = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
         n_legal_moves                   = len(legal_moves)
-        
+        if evaluator:
+            current_player_piece_value  = evaluator.GetTotalPieceValue(self, self.current_player)
+            opposing_player_piece_value = evaluator.GetTotalPieceValue(self, self.opposing_player)
+            evaluation = evaluator.Evaluate(self, self.current_player, self.opposing_player)
         # Print game state information
-        self.PrintState()
+        #self.PrintState()
         print("------------------------------------------")
         print("Current player: {0} - {1}".format(self.current_player.GetName(), self.current_player.GetColor()))
         print("------------------------------------------")
@@ -141,7 +144,11 @@ class State:
         print(" - Current player is in checkmate:   {0}".format(current_player_is_in_checkmate))
         print(" - Current player is in stalemate:   {0}".format(current_player_is_in_stalemate))
         print(" - Number of legal moves:            {0}".format(n_legal_moves))
-        print(" - Legal moves: {0}".format(legal_moves))
+        #print(" - Legal moves:                      {0}".format(legal_moves))
+        if evaluator:
+            print(" - Current player piece value:       {0}".format(current_player_piece_value))
+            print(" - Opposing player piece value:      {0}".format(opposing_player_piece_value))
+            print(" - Evaluation:                       {0}".format(evaluation))
         print("------------------------------------------")
 
     # Set the state based on the piece state

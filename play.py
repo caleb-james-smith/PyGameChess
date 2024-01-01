@@ -8,7 +8,13 @@
 # -------------------------------------------- #
 
 # TODO:
+# - Evaluate current position - initially based on sum of piece values
+# - Create search to find best move based on evaluating positions
+# - Write legal moves using chess notation
+# - Use standard chess piece images
 # - Color the square for the computer's latest move
+# - For moves, color to and from squares yellow (shade based on light/dark square)
+# - For possible moves, use blue squares (shade based on light/dark square)
 # - Define pawn en passant
 # - Define castling
 # - Define draw: insufficient material

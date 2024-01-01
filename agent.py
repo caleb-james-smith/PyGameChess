@@ -1,4 +1,5 @@
-# Agent class
+# Agent classes
+
 import random
 
 # Agent that chooses moves randomly.
