@@ -23,8 +23,11 @@ class EvaluateMaterial:
         return total_piece_value
 
     # Evaluation position: return difference in total piece values
-    def Evaluate(self, state, current_player, opposing_player):
-        current_player_piece_value  = self.GetTotalPieceValue(state, current_player)
-        opposing_player_piece_value = self.GetTotalPieceValue(state, opposing_player)
-        evaluation = current_player_piece_value - opposing_player_piece_value
+    # - positive evaluation: good for white
+    # - negative evaluation: good for black
+    def Evaluate(self, state):
+        white_piece_value = self.GetTotalPieceValue(state, state.white_player)
+        black_piece_value = self.GetTotalPieceValue(state, state.black_player)
+        evaluation = white_piece_value - black_piece_value
         return evaluation
+    

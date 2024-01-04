@@ -131,10 +131,11 @@ class State:
         current_player_is_in_stalemate  = self.PlayerIsInStalemate(self.current_player, self.opposing_player)
         legal_moves                     = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
         n_legal_moves                   = len(legal_moves)
-        if evaluator:
-            current_player_piece_value  = evaluator.GetTotalPieceValue(self, self.current_player)
-            opposing_player_piece_value = evaluator.GetTotalPieceValue(self, self.opposing_player)
-            evaluation = evaluator.Evaluate(self, self.current_player, self.opposing_player)
+        if evaluator:            
+            white_piece_value = evaluator.GetTotalPieceValue(self, self.white_player)
+            black_piece_value = evaluator.GetTotalPieceValue(self, self.black_player)
+            evaluation = evaluator.Evaluate(self)
+        
         # Print game state information
         #self.PrintState()
         print("------------------------------------------")
@@ -146,8 +147,8 @@ class State:
         print(" - Number of legal moves:            {0}".format(n_legal_moves))
         #print(" - Legal moves:                      {0}".format(legal_moves))
         if evaluator:
-            print(" - Current player piece value:       {0}".format(current_player_piece_value))
-            print(" - Opposing player piece value:      {0}".format(opposing_player_piece_value))
+            print(" - White piece value:                {0}".format(white_piece_value))
+            print(" - Black piece value:                {0}".format(black_piece_value))
             print(" - Evaluation:                       {0}".format(evaluation))
         print("------------------------------------------")
 

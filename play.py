@@ -9,6 +9,7 @@
 
 # TODO:
 # - Evaluate current position - initially based on sum of piece values
+# - Create undo move function, including restoring captured piece (if any)
 # - Create search to find best move based on evaluating positions
 # - Write legal moves using chess notation
 # - Use standard chess piece images
