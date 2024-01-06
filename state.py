@@ -82,13 +82,22 @@ class State:
     def SetOpposingPlayer(self, opposing_player):
         self.opposing_player = opposing_player
 
+    # Determine if it is white to move
+    def WhiteToMove(self):
+        return self.current_player == self.white_player
+    
+    # Determine if it is white to move
+    def BlackToMove(self):
+        return self.current_player == self.black_player 
+
     # Switch current and opposing players
     def SwitchTurn(self):
-        if self.current_player == self.white_player:
-            self.current_player = self.black_player
+        if self.WhiteToMove():
+            self.current_player  = self.black_player
             self.opposing_player = self.white_player
-        elif self.current_player == self.black_player:
-            self.current_player = self.white_player
+        # Note: else or elif is required; if alone does not work!
+        elif self.BlackToMove():
+            self.current_player  = self.white_player
             self.opposing_player = self.black_player
     
     # Check if piece has a valid value
