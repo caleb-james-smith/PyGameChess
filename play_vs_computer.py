@@ -42,7 +42,8 @@ def run_game():
     # Create evaluators
     evaluator = EvaluateMaterial()
     # Create agents
-    max_depth = 0
+    time_delay  = 0.0
+    max_depth   = 1
     #black_agent = AgentRandom()
     #black_agent = AgentCapture()
     black_agent = AgentMinimax(evaluator, max_depth)
@@ -103,7 +104,8 @@ def run_game():
                     # Print detailed game state
                     state.PrintGameState(evaluator)
                     # Add a time delay... take a breathe. :)
-                    time.sleep(0.5)
+                    if time_delay:
+                        time.sleep(time_delay)
             
             # For human player (without agent), get position of click
             elif event.type == pygame.MOUSEBUTTONDOWN:

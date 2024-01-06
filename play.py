@@ -9,11 +9,9 @@
 
 # TODO:
 # - Determine how many moves and positions (nodes) are evaluated in total by Minimax()
-# - Define game is over
+# - Determine how much time computer takes to calculate best move
 # - Define winner and loser or draw
 # - Consider putting SetStateFromPieceState() at the end of PlacePiece()
-# - Create undo move function, including undoing pawn promotion (if applicable), restoring captured piece (if any), and switching players
-# - Create search to find best move based on evaluating positions
 # - Write legal moves using chess notation
 # - Use standard chess piece images
 # - Color the square for the computer's latest move
@@ -67,6 +65,9 @@
 # - Create a chess agent!
 # - Evaluate current position - initially based on sum of piece values
 # - Create a make move function that moves the piece, handles pawn promotion, and switches the current player
+# - Create undo move function, including undoing pawn promotion (if applicable), restoring captured piece (if any), and switching players
+# - Define game is over
+# - Create search to find best move based on evaluating positions
 
 # Import the pygame library
 import pygame

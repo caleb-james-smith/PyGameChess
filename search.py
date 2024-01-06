@@ -1,28 +1,28 @@
 # Search classes
 
 # TODO:
+# - Use alpha/beta pruning
+# DONE:
 # - Create and use game over function
-# - When moving, we probably need to switch current/opposing players
-# - Each call if Minimax() is for a certain player; need to switch current/opposing players
-# - Need to include pawn promotion in search
 # - Create and use an undo move function
 # - Undoing move: update pieces, state, piece to move and capture
 # - Undo pawn promotion
-# DONE:
+# - When moving, we probably need to switch current/opposing players
+# - Each call of Minimax() is for a certain player; need to switch current/opposing players
+# - Need to include pawn promotion in search
 
 class Search:
     def __init__(self, evaluator, max_depth):
         self.evaluator = evaluator
         self.max_depth = max_depth
     
-    # THe minimax algorithm
+    # The minimax algorithm
     def Minimax(self, state, depth, isMaximizingPlayer):
         # Get players from the state
         current_player  = state.GetCurrentPlayer()
         opposing_player = state.GetOpposingPlayer()        
         
         # if depth is 0 or the game is over, return the current evaluation
-        # FIXME: add game over condition!!!
         if depth == 0 or state.GameIsOver(current_player, opposing_player):
             return self.evaluator.Evaluate(state)
         
@@ -35,12 +35,8 @@ class Search:
                 position_from, position_to = state.board.GetMovePositions(move)
                 piece_to_move       = state.GetPieceInPosition(position_from)
                 piece_to_capture    = state.GetPieceInPosition(position_to)
-                # FIXME: promote pawn
-                # FIXME: switch turn
-                #state.MovePiece(move)
                 state.MakeMove(move)
                 eval = self.Minimax(state, depth - 1, False)
-                # FIXME: undo move
                 state.UndoMove(move, piece_to_move, piece_to_capture)
                 max_eval = max(max_eval, eval)
             return max_eval
@@ -50,12 +46,8 @@ class Search:
                 position_from, position_to = state.board.GetMovePositions(move)
                 piece_to_move       = state.GetPieceInPosition(position_from)
                 piece_to_capture    = state.GetPieceInPosition(position_to)
-                # FIXME: promote pawn
-                # FIXME: switch turn
-                #state.MovePiece(move)
                 state.MakeMove(move)
                 eval = self.Minimax(state, depth - 1, True)
-                # FIXME: undo move
                 state.UndoMove(move, piece_to_move, piece_to_capture)
                 min_eval = min(min_eval, eval)
             return min_eval
@@ -86,12 +78,8 @@ class Search:
             position_from, position_to = state.board.GetMovePositions(move)
             piece_to_move       = state.GetPieceInPosition(position_from)
             piece_to_capture    = state.GetPieceInPosition(position_to)
-            # FIXME: promote pawn
-            # FIXME: switch turn
-            #state.MovePiece(move)
             state.MakeMove(move)
             eval = self.Minimax(state, self.max_depth, opposingPlayerIsMaximizing)
-            # FIXME: undo move
             state.UndoMove(move, piece_to_move, piece_to_capture)
 
             if currentPlayerIsMaximizing:
@@ -105,4 +93,3 @@ class Search:
 
         return best_move
     
-
