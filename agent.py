@@ -46,5 +46,3 @@ class AgentMinimax:
         result = ""
         result = self.search.GetBestMove(state, current_player, opposing_player)
         return result
-
-    

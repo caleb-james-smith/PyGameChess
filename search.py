@@ -22,9 +22,8 @@ class Search:
         opposing_player = state.GetOpposingPlayer()        
         
         # if depth is 0 or the game is over, return the current evaluation
-        # FIXME: add game over condition
-        #if depth == 0 or state.gameIsOver():
-        if depth == 0:
+        # FIXME: add game over condition!!!
+        if depth == 0 or state.GameIsOver(current_player, opposing_player):
             return self.evaluator.Evaluate(state)
         
         # Get legal moves
@@ -33,21 +32,31 @@ class Search:
         if isMaximizingPlayer:
             max_eval = float('-inf')
             for move in legal_moves:
-                state.MovePiece(move)
+                position_from, position_to = state.board.GetMovePositions(move)
+                piece_to_move       = state.GetPieceInPosition(position_from)
+                piece_to_capture    = state.GetPieceInPosition(position_to)
                 # FIXME: promote pawn
                 # FIXME: switch turn
+                #state.MovePiece(move)
+                state.MakeMove(move)
                 eval = self.Minimax(state, depth - 1, False)
                 # FIXME: undo move
+                state.UndoMove(move, piece_to_move, piece_to_capture)
                 max_eval = max(max_eval, eval)
             return max_eval
         else:
             min_eval = float('inf')
             for move in legal_moves:
-                state.MovePiece(move)
+                position_from, position_to = state.board.GetMovePositions(move)
+                piece_to_move       = state.GetPieceInPosition(position_from)
+                piece_to_capture    = state.GetPieceInPosition(position_to)
                 # FIXME: promote pawn
                 # FIXME: switch turn
+                #state.MovePiece(move)
+                state.MakeMove(move)
                 eval = self.Minimax(state, depth - 1, True)
                 # FIXME: undo move
+                state.UndoMove(move, piece_to_move, piece_to_capture)
                 min_eval = min(min_eval, eval)
             return min_eval
 
@@ -74,11 +83,16 @@ class Search:
         
         # Check each legal move
         for move in legal_moves:
-            state.MovePiece(move)
+            position_from, position_to = state.board.GetMovePositions(move)
+            piece_to_move       = state.GetPieceInPosition(position_from)
+            piece_to_capture    = state.GetPieceInPosition(position_to)
             # FIXME: promote pawn
             # FIXME: switch turn
+            #state.MovePiece(move)
+            state.MakeMove(move)
             eval = self.Minimax(state, self.max_depth, opposingPlayerIsMaximizing)
             # FIXME: undo move
+            state.UndoMove(move, piece_to_move, piece_to_capture)
 
             if currentPlayerIsMaximizing:
                 if eval > best_eval:

@@ -138,6 +138,7 @@ class State:
         current_player_is_in_check      = self.PlayerIsInCheck(self.current_player, self.opposing_player)
         current_player_is_in_checkmate  = self.PlayerIsInCheckmate(self.current_player, self.opposing_player)
         current_player_is_in_stalemate  = self.PlayerIsInStalemate(self.current_player, self.opposing_player)
+        game_is_over                    = self.GameIsOver(self.current_player, self.opposing_player)
         legal_moves                     = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
         n_legal_moves                   = len(legal_moves)
         if evaluator:            
@@ -153,6 +154,7 @@ class State:
         print(" - Current player is in check:       {0}".format(current_player_is_in_check))
         print(" - Current player is in checkmate:   {0}".format(current_player_is_in_checkmate))
         print(" - Current player is in stalemate:   {0}".format(current_player_is_in_stalemate))
+        print(" - Game is over:                     {0}".format(game_is_over))
         print(" - Number of legal moves:            {0}".format(n_legal_moves))
         #print(" - Legal moves:                      {0}".format(legal_moves))
         if evaluator:
@@ -376,6 +378,27 @@ class State:
         self.MovePiece(move)
         # Promote pawn if applicable
         self.PromotePawn(piece_to_move)
+        # Switch current and opposing players
+        self.SwitchTurn()
+    
+    # Undo move
+    # - Place original piece to move (to undo pawn promotion)
+    # - Reverse move
+    # - Place piece to capture
+    # - Update state
+    # - Switch current and opposing players
+    def UndoMove(self, move, piece_to_move, piece_to_capture):
+        # Get reverse move
+        reverse_move = self.board.GetReverseMove(move)
+        # Place original piece to move (to undo pawn promotion)
+        self.PlacePiece(piece_to_move)
+        self.SetStateFromPieceState()
+        # Reverse move
+        self.MovePiece(reverse_move)
+        # If there was a piece to capture, put it back
+        if piece_to_capture:
+            self.PlacePiece(piece_to_capture)
+            self.SetStateFromPieceState()
         # Switch current and opposing players
         self.SwitchTurn()
 
@@ -611,6 +634,18 @@ class State:
             result = True
 
         return result
+    
+    # Define game over conditions.
+    def GameIsOver(self, player, opponent):
+        result = False
+        
+        if self.PlayerIsInCheckmate(player, opponent):
+            result = True
+        
+        if self.PlayerIsInStalemate(player, opponent):
+            result = True
+        
+        return result
 
     # Determine if a player's move would put himself in check
     # - Get piece to capture (if any).
@@ -619,6 +654,7 @@ class State:
     # - Move piece back to original position (updates state and piece state).
     # - If there was a piece to capture for this move, put it back and update state.
     # - Does not apply pawn promotion; this should be ok...
+    # FIXME: update with MakeMove and UndoMove functions
     def MoveResultsInCheck(self, player, opponent, move_notation):
         result = False
         reverse_move = self.board.GetReverseMove(move_notation)

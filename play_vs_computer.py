@@ -8,7 +8,7 @@ from board import Board
 from state import State
 from player import Player
 from evaluate import EvaluateMaterial
-from agent import AgentRandom, AgentCapture
+from agent import AgentRandom, AgentCapture, AgentMinimax
 
 # Run the game
 def run_game():
@@ -42,8 +42,10 @@ def run_game():
     # Create evaluators
     evaluator = EvaluateMaterial()
     # Create agents
-    black_agent = AgentRandom()
+    max_depth = 0
+    #black_agent = AgentRandom()
     #black_agent = AgentCapture()
+    black_agent = AgentMinimax(evaluator, max_depth)
     # Create players
     white_player = Player("Bilbo",  "white")
     black_player = Player("Gollum", "black", black_agent)

@@ -8,6 +8,10 @@
 # -------------------------------------------- #
 
 # TODO:
+# - Determine how many moves and positions (nodes) are evaluated in total by Minimax()
+# - Define game is over
+# - Define winner and loser or draw
+# - Consider putting SetStateFromPieceState() at the end of PlacePiece()
 # - Create undo move function, including undoing pawn promotion (if applicable), restoring captured piece (if any), and switching players
 # - Create search to find best move based on evaluating positions
 # - Write legal moves using chess notation
