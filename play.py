@@ -8,8 +8,7 @@
 # -------------------------------------------- #
 
 # TODO:
-# - Evaluate current position - initially based on sum of piece values
-# - Create undo move function, including restoring captured piece (if any)
+# - Create undo move function, including undoing pawn promotion (if applicable), restoring captured piece (if any), and switching players
 # - Create search to find best move based on evaluating positions
 # - Write legal moves using chess notation
 # - Use standard chess piece images
@@ -62,6 +61,8 @@
 # - Define stalemate: not in check, no legal moves
 # - Define pawn promotion
 # - Create a chess agent!
+# - Evaluate current position - initially based on sum of piece values
+# - Create a make move function that moves the piece, handles pawn promotion, and switches the current player
 
 # Import the pygame library
 import pygame

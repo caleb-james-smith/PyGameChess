@@ -92,14 +92,10 @@ def run_game():
                     position_from, position_to = state.board.GetMovePositions(chosen_move)
                     agent_move_position = position_to
                     print("position_from: {0}, position_to: {1}".format(position_from, position_to))
-                    # Get piece to move!
-                    piece_to_move = state.GetPieceInPosition(position_from)
-                    # Move piece
-                    state.MovePiece(chosen_move)
-                    # Promote pawn if necessary
-                    state.PromotePawn(piece_to_move)
+                                        
+                    # Make move
+                    state.MakeMove(chosen_move)
                     # Switch current and opposing players
-                    state.SwitchTurn()
                     current_player  = state.GetCurrentPlayer()
                     opposing_player = state.GetOpposingPlayer()
                     # Print detailed game state
@@ -170,13 +166,10 @@ def run_game():
                                     all_systems_go = True
 
                         # All systems go: move the piece!
-                        if all_systems_go:
-                            # Move piece
-                            state.MovePiece(move_notation)
-                            # Promote pawn if necessary
-                            state.PromotePawn(piece_to_move)
+                        if all_systems_go:                            
+                            # Make move
+                            state.MakeMove(move_notation)
                             # Switch current and opposing players
-                            state.SwitchTurn()
                             current_player  = state.GetCurrentPlayer()
                             opposing_player = state.GetOpposingPlayer()
                             # Print detailed game state

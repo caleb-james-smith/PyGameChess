@@ -355,14 +355,30 @@ class State:
         
         # Check if the piece is a pawn
         if piece_type == "pawn":
-            print("{0} found at {1}...".format(piece_name, piece_position))
+            #print("{0} found at {1}...".format(piece_name, piece_position))
             # Check if the pawn is on the final row
             if y == final_row[piece_color]:
                 print("Promoting the {0} at {1} to a queen!".format(piece_name, piece_position))
                 new_piece = Queen(piece_color, piece_position)
                 self.PlacePiece(new_piece)
                 self.SetStateFromPieceState()
-            
+
+    # Make move
+    # - Move piece
+    # - Promote pawn if applicable
+    # - Switch current and opposing players
+    def MakeMove(self, move):
+        # Get move positions
+        position_from, position_to = self.board.GetMovePositions(move)
+        # Get piece to move
+        piece_to_move = self.GetPieceInPosition(position_from)
+        # Move piece
+        self.MovePiece(move)
+        # Promote pawn if applicable
+        self.PromotePawn(piece_to_move)
+        # Switch current and opposing players
+        self.SwitchTurn()
+
     # Check if at least one piece occupies a square between two positions
     def PieceIsInBetween(self, position_1, position_2):
         result = False
@@ -602,6 +618,7 @@ class State:
     # - After move, check if player is in check.
     # - Move piece back to original position (updates state and piece state).
     # - If there was a piece to capture for this move, put it back and update state.
+    # - Does not apply pawn promotion; this should be ok...
     def MoveResultsInCheck(self, player, opponent, move_notation):
         result = False
         reverse_move = self.board.GetReverseMove(move_notation)

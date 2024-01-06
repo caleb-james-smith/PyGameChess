@@ -1,5 +1,7 @@
 # Evaluate classes
 
+# TODO:
+# - Add evaluations for checkmate and stalemate
 class EvaluateMaterial:
     def __init__(self):
         self.piece_values = {
