@@ -43,7 +43,7 @@ def run_game():
     evaluator = EvaluateMaterial()
     # Create agents
     time_delay  = 0.0
-    max_depth   = 1
+    max_depth   = 2
     #black_agent = AgentRandom()
     #black_agent = AgentCapture()
     black_agent = AgentMinimax(evaluator, max_depth)
@@ -87,14 +87,18 @@ def run_game():
             
             # For computer player (with agent), choose a move
             if current_agent:
+                start_time = time.time()
                 chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
+                end_time = time.time()
+                calc_time = end_time - start_time
                 # Check that the move is not empty
                 if chosen_move:
                     print("Chosen move: {0}".format(chosen_move))
+                    print("Calculation time: {0:.3f} seconds".format(calc_time))
                     # Get move positions
                     position_from, position_to = state.board.GetMovePositions(chosen_move)
                     agent_move_position = position_to
-                    print("position_from: {0}, position_to: {1}".format(position_from, position_to))
+                    #print("position_from: {0}, position_to: {1}".format(position_from, position_to))
                                         
                     # Make move
                     state.MakeMove(chosen_move)

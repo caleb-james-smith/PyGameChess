@@ -39,10 +39,15 @@ class AgentCapture:
 
 class AgentMinimax:
     def __init__(self, evaluator, max_depth):
-        self.search = Search(evaluator, max_depth)
+        self.evaluator  = evaluator
+        self.max_depth  = max_depth
+        self.search = Search(self.evaluator, self.max_depth)
 
     # Choose move
     def ChooseMove(self, state, current_player, opposing_player):
         result = ""
-        result = self.search.GetBestMove(state, current_player, opposing_player)
+        self.evaluator.ResetCounter()
+        result  = self.search.GetBestMove(state, current_player, opposing_player)
+        counter = self.evaluator.GetCounter()
+        print("Number of evaluations: {0}".format(counter))
         return result

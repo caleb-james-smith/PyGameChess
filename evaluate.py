@@ -13,6 +13,19 @@ class EvaluateMaterial:
             "queen"     : 9,
             "king"      : 0
         }
+        self.counter = 0
+    
+    def GetCounter(self):
+        return self.counter
+    
+    def SetCounter(self, counter):
+        self.counter = counter
+
+    def ResetCounter(self):
+        self.counter = 0
+    
+    def IncrementCounter(self):
+        self.counter += 1
     
     # Get total piece value: sum of piece values for a player
     def GetTotalPieceValue(self, state, player):
@@ -32,5 +45,6 @@ class EvaluateMaterial:
         white_piece_value = self.GetTotalPieceValue(state, state.white_player)
         black_piece_value = self.GetTotalPieceValue(state, state.black_player)
         evaluation = white_piece_value - black_piece_value
+        self.IncrementCounter()
         return evaluation
     
