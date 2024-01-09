@@ -54,7 +54,7 @@ class Search:
             return min_eval
 
     # The minimax algorithm with alpha-beta pruning
-    def Minimax(self, state, depth, alpha, beta, isMaximizingPlayer):
+    def MinimaxAlphaBeta(self, state, depth, alpha, beta, isMaximizingPlayer):
         # Get players from the state
         current_player  = state.GetCurrentPlayer()
         opposing_player = state.GetOpposingPlayer()
@@ -73,7 +73,7 @@ class Search:
                 piece_to_move       = state.GetPieceInPosition(position_from)
                 piece_to_capture    = state.GetPieceInPosition(position_to)
                 state.MakeMove(move)
-                eval = self.Minimax(state, depth - 1, alpha, beta, False)
+                eval = self.MinimaxAlphaBeta(state, depth - 1, alpha, beta, False)
                 state.UndoMove(move, piece_to_move, piece_to_capture)
                 max_eval = max(max_eval, eval)
                 alpha = max(alpha, eval)
@@ -87,7 +87,7 @@ class Search:
                 piece_to_move       = state.GetPieceInPosition(position_from)
                 piece_to_capture    = state.GetPieceInPosition(position_to)
                 state.MakeMove(move)
-                eval = self.Minimax(state, depth - 1, alpha, beta, True)
+                eval = self.MinimaxAlphaBeta(state, depth - 1, alpha, beta, True)
                 state.UndoMove(move, piece_to_move, piece_to_capture)
                 min_eval = min(min_eval, eval)
                 beta = min(beta, eval)
@@ -146,6 +146,7 @@ class Search:
         
         # Get legal moves
         legal_moves = state.GetPlayersLegalMoves(current_player, opposing_player)
+        ordered_moves = self.OrderMoves(state, legal_moves)
 
         # Determine if the current player is the maximizing player
         # Define white as the maximizing player
@@ -158,13 +159,13 @@ class Search:
         else:
             best_eval = float('inf')
         
-        # Check each legal move
-        for move in legal_moves:
+        # Loop over ordered moves
+        for move in ordered_moves:
             position_from, position_to = state.board.GetMovePositions(move)
             piece_to_move       = state.GetPieceInPosition(position_from)
             piece_to_capture    = state.GetPieceInPosition(position_to)
             state.MakeMove(move)
-            eval = self.Minimax(state, self.max_depth, float('-inf'), float('inf'), opposingPlayerIsMaximizing)
+            eval = self.MinimaxAlphaBeta(state, self.max_depth, float('-inf'), float('inf'), opposingPlayerIsMaximizing)
             state.UndoMove(move, piece_to_move, piece_to_capture)
 
             if currentPlayerIsMaximizing:
@@ -180,3 +181,35 @@ class Search:
         print("Best move: {0}".format(best_move))
         
         return best_move
+    
+    # Order moves to improve the efficiency of alpha-beta pruning
+    def OrderMoves(self, state, moves):
+        # pawn promotions (includes captures and checks)
+        promotion_moves = []
+        # captures (includes checks)
+        capture_moves = []
+        # checks (not promotions or captures)
+        check_moves = []
+        # other moves
+        other_moves = []
+        for move in moves:
+            if state.IsPromotion(move):
+                promotion_moves.append(move)
+            elif state.IsCapture(move):
+                capture_moves.append(move)
+            elif state.IsCheck(move):
+                check_moves.append(move)
+            else:
+                other_moves.append(move)
+
+        result = capture_moves + check_moves + other_moves
+        
+        n_result    = len(result)
+        n_moves     = len(moves)
+        
+        # Check that the number of results is equal to the number of moves.
+        if n_result != n_moves:
+            print("ERROR: The number of results {0} is not equal to the number of moves {1}.".format(n_result, n_moves))
+
+        return result
+

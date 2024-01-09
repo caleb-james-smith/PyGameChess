@@ -562,12 +562,55 @@ class State:
         captures = []
         moves = self.GetPlayersLegalMoves(player, opponent)
         for move in moves:
-            position_from, position_to = self.board.GetMovePositions(move)
-            piece_to_capture = self.GetPieceInPosition(position_to)
-            # Check if there is a piece to capture
-            if piece_to_capture:
+            # position_from, position_to = self.board.GetMovePositions(move)
+            # piece_to_capture = self.GetPieceInPosition(position_to)
+            # # Check if there is a piece to capture
+            # if piece_to_capture:
+            #     captures.append(move)
+            if self.IsCapture(move):
                 captures.append(move)
         return captures
+
+    # Determine if a move is a pawn promotion; assume the move is a legal move
+    def IsPromotion(self, move):
+        position_from, position_to = self.board.GetMovePositions(move)
+        target_x, target_y = self.board.GetPositionXY(position_to)
+        piece_to_move = self.GetPieceInPosition(position_from)
+        
+        piece_color     = piece_to_move.GetColor()
+        piece_type      = piece_to_move.GetType()
+        
+        # The final row is based on the color
+        final_row = {"white": 0, "black": 7}
+
+        if piece_type == "pawn" and target_y == final_row[piece_color]:
+            return True
+        else:
+            return False
+
+    # Determine if a move is a capture; assume the move is a legal move
+    def IsCapture(self, move):
+        position_from, position_to = self.board.GetMovePositions(move)
+        piece_to_capture = self.GetPieceInPosition(position_to)
+        # Check if there is a piece to capture
+        if piece_to_capture:
+            return True
+        else:
+            return False
+        
+    # Determine if a move put the opponent in check; assume the move is a legal move
+    def IsCheck(self, move):
+        current_player  = self.GetCurrentPlayer()
+        opposing_player = self.GetOpposingPlayer()
+        position_from, position_to = self.board.GetMovePositions(move)
+        piece_to_move       = self.GetPieceInPosition(position_from)
+        piece_to_capture    = self.GetPieceInPosition(position_to)
+        
+        self.MakeMove(move)
+        result = self.PlayerIsInCheck(opposing_player, current_player)
+        self.UndoMove(move, piece_to_move, piece_to_capture)
+        
+        return result
 
     # Get position of player's king
     def GetPlayersKingPosition(self, player):
