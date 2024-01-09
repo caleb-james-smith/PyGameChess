@@ -21,7 +21,7 @@ class Search:
     def Minimax(self, state, depth, isMaximizingPlayer):
         # Get players from the state
         current_player  = state.GetCurrentPlayer()
-        opposing_player = state.GetOpposingPlayer()        
+        opposing_player = state.GetOpposingPlayer()
         
         # if depth is 0 or the game is over, return the current evaluation
         if depth == 0 or state.GameIsOver(current_player, opposing_player):
@@ -57,7 +57,7 @@ class Search:
     def Minimax(self, state, depth, alpha, beta, isMaximizingPlayer):
         # Get players from the state
         current_player  = state.GetCurrentPlayer()
-        opposing_player = state.GetOpposingPlayer()        
+        opposing_player = state.GetOpposingPlayer()
         
         # if depth is 0 or the game is over, return the current evaluation
         if depth == 0 or state.GameIsOver(current_player, opposing_player):

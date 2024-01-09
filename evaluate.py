@@ -41,13 +41,38 @@ class EvaluateMaterial:
             total_piece_value += value
         return total_piece_value
 
-    # Evaluation position: return difference in total piece values
+    # Evaluate position:
+    # - Checkmate: +infinity (white checkmates black), -infinity (black checkmates white)
+    # - Stalemate: 0 (white or black)
+    # - Otherwise, return difference in total piece values
     # - positive evaluation: good for white
     # - negative evaluation: good for black
     def Evaluate(self, state):
+        # Add to evaluation counter
+        self.IncrementCounter()
+        
+        # Get players from the state
+        current_player  = state.GetCurrentPlayer()
+        opposing_player = state.GetOpposingPlayer()
+        
+        # Current player is in checkmate: the opposing player wins!
+        if state.PlayerIsInCheckmate(current_player, opposing_player):
+            # The current player is white
+            if state.WhiteToMove():
+                # Black has checkmated white
+                return float('-inf')
+            # The current player is black
+            else:
+                # White has checkmated black
+                return float('inf')
+        
+        # Current player is in stalemate: both players get 0.
+        if state.PlayerIsInStalemate(current_player, opposing_player):
+            return 0
+
+        # Get value of pieces
         white_piece_value = self.GetTotalPieceValue(state, state.white_player)
         black_piece_value = self.GetTotalPieceValue(state, state.black_player)
-        evaluation = white_piece_value - black_piece_value
-        self.IncrementCounter()
+        evaluation = white_piece_value - black_piece_value    
         return evaluation
     
