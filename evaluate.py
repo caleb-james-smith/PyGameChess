@@ -2,7 +2,10 @@
 
 # TODO:
 # - Add evaluations for checkmate and stalemate
-# - Add evaluation maps for each piece
+# - Add position evaluation maps for each piece
+# - Plot position evaluation maps for each piece
+# DONE
+
 class EvaluateMaterial:
     def __init__(self):
         self.piece_values = {

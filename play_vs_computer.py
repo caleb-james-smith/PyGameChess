@@ -87,10 +87,10 @@ def run_game():
             
             # For computer player (with agent), choose a move
             if current_agent:
-                start_time = time.time()
+                start_time  = time.time()
                 chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
-                end_time = time.time()
-                calc_time = end_time - start_time
+                end_time    = time.time()
+                calc_time   = end_time - start_time
                 # Check that the move is not empty
                 if chosen_move:
                     print("Chosen move: {0}".format(chosen_move))

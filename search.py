@@ -2,6 +2,7 @@
 
 # TODO:
 # - Use alpha/beta pruning
+# - Print best evaluation score
 # DONE:
 # - Create and use game over function
 # - Create and use an undo move function
@@ -175,5 +176,7 @@ class Search:
                     best_eval = eval
                     best_move = move
 
+        print("Best evaluation: {0}".format(best_eval))
+        print("Best move: {0}".format(best_move))
+        
         return best_move
-

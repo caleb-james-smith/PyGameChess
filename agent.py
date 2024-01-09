@@ -37,6 +37,7 @@ class AgentCapture:
             result = random.choice(legal_moves)
         return result
 
+# Agent that uses the minimax algorithm.
 class AgentMinimax:
     def __init__(self, evaluator, max_depth):
         self.evaluator  = evaluator
@@ -51,4 +52,5 @@ class AgentMinimax:
         result  = self.search.GetBestMoveAlphaBeta(state, current_player, opposing_player)
         counter = self.evaluator.GetCounter()
         print("Number of evaluations: {0}".format(counter))
+        print("Result: {0}".format(result))
         return result
