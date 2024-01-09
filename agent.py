@@ -47,7 +47,8 @@ class AgentMinimax:
     def ChooseMove(self, state, current_player, opposing_player):
         result = ""
         self.evaluator.ResetCounter()
-        result  = self.search.GetBestMove(state, current_player, opposing_player)
+        #result  = self.search.GetBestMove(state, current_player, opposing_player)
+        result  = self.search.GetBestMoveAlphaBeta(state, current_player, opposing_player)
         counter = self.evaluator.GetCounter()
         print("Number of evaluations: {0}".format(counter))
         return result
