@@ -142,8 +142,8 @@ class State:
         legal_moves                     = self.GetPlayersLegalMoves(self.current_player, self.opposing_player)
         n_legal_moves                   = len(legal_moves)
         if evaluator:            
-            white_piece_value = evaluator.GetTotalPieceValue(self, self.white_player)
-            black_piece_value = evaluator.GetTotalPieceValue(self, self.black_player)
+            white_total_value = evaluator.GetTotalValue(self, self.white_player)
+            black_total_value = evaluator.GetTotalValue(self, self.black_player)
             evaluation = evaluator.Evaluate(self)
         
         # Print game state information
@@ -158,8 +158,8 @@ class State:
         print(" - Number of legal moves:            {0}".format(n_legal_moves))
         #print(" - Legal moves:                      {0}".format(legal_moves))
         if evaluator:
-            print(" - White piece value:                {0}".format(white_piece_value))
-            print(" - Black piece value:                {0}".format(black_piece_value))
+            print(" - White total value:                {0}".format(white_total_value))
+            print(" - Black total value:                {0}".format(black_total_value))
             print(" - Evaluation:                       {0}".format(evaluation))
         print("------------------------------------------")
 
@@ -189,7 +189,7 @@ class State:
         # Start with empty state
         self.SetEmptyState()
         # Initial state: chess starting position
-        # Note: index with y first (rows), then x (columns)
+        # Note: index with y first (row), then x (column)
         state = [
             [-4, -2, -3, -5, -6, -3, -2, -4],
             [-1, -1, -1, -1, -1, -1, -1, -1],

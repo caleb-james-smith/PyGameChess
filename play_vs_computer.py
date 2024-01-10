@@ -7,7 +7,8 @@ import time
 from board import Board
 from state import State
 from player import Player
-from evaluate import EvaluateMaterial
+from tables import PieceTable
+from evaluate import EvaluateMaterial, EvaluatePosition
 from agent import AgentRandom, AgentCapture, AgentMinimax
 
 # Run the game
@@ -40,7 +41,9 @@ def run_game():
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
     # Create evaluators
-    evaluator = EvaluateMaterial()
+    piece_table = PieceTable()
+    #evaluator = EvaluateMaterial()
+    evaluator = EvaluatePosition(piece_table)
     # Create agents
     time_delay  = 0.0
     max_depth   = 2
