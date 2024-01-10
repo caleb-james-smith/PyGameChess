@@ -116,6 +116,8 @@ class EvaluatePosition:
             piece_position  = piece.GetPosition()
             table_name      = piece_type
             
+            material_value = self.piece_values[piece_type]
+
             # FIXME: Switch between king middle game and end game tables
             if piece_type == "king":
                 table_name = "king_middle_game"
@@ -132,7 +134,7 @@ class EvaluatePosition:
                 row = 7 - piece_y
             # Note: index with y first (row), then x (column)
             position_value = table[row][column]
-            material_value = self.piece_values[piece_type]
+            
             all_the_value = material_value + position_value
             total_value += all_the_value
         

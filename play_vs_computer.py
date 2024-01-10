@@ -46,7 +46,7 @@ def run_game():
     evaluator = EvaluatePosition(piece_table)
     # Create agents
     time_delay  = 0.0
-    max_depth   = 2
+    max_depth   = 1
     #black_agent = AgentRandom()
     #black_agent = AgentCapture()
     black_agent = AgentMinimax(evaluator, max_depth)
