@@ -2,9 +2,15 @@
 
 Chess using the pygame library for python3.
 
-## Install pygame for python3
+## Install python3
 
-First, install the pygame library for python3.
+You will need to install python3 if it is not already installed on your system.
+For macOS, this can be done by first installing the package manager Homebrew (or "brew"); see instructions [here](https://brew.sh).
+Next, you can use brew to install python3; see instructions [here](https://docs.python-guide.org/starting/install3/osx).
+
+## Install pygame
+
+Now, install the pygame library for python3.
 ```
 pip3 install pygame
 ```
