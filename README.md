@@ -33,13 +33,23 @@ import pygame
 
 ## Install and run project
 
-Use this command to clone the repository in a directory of your choice.
+Clone the repository in a directory of your choice.
 ```
 git clone git@github.com:caleb-james-smith/PyGameChess.git
+cd PyGameChess
 ```
 
-To launch the game, run this script using the python3 version that has pygame installed:
+To start a game with two people (man vs. man), run this program (with the correct python3 version for your system):
 ```
-cd PyGameChess 
-python3.10 play.py
+python3.10 python/play.py
+```
+
+To start a game with two computer players (machine vs. machine), run this program (with the correct python3 version for your system):
+```
+python3.10 python/auto_play.py
+```
+
+To start a game against a computer player (man vs. machine), run this program (with the correct python3 version for your system):
+```
+python3.10 python/play_vs_computer.py
 ```
