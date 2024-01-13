@@ -190,12 +190,23 @@ class Board:
     # Get position string
     # Input: position as list [x, y]
     # Output: position as string "xy"
-    def GetPositionString(self, position):
+    def GetPositionString(self, position_list):
         result = ""
-        # Ensure that position is not an empty list
-        if position:
-            x, y = position
+        # Ensure that position is not empty
+        if position_list:
+            x, y = position_list
             result = "{0}{1}".format(x, y)
+        return result
+    
+    # Get position x, y
+    # Input: position as string "xy"
+    # Output: position as list [x, y]
+    def GetPositionXY(self, position_string):
+        result = []
+        # Ensure that position is not empty
+        if position_string:
+            x, y = position_string
+            result = [int(x), int(y)]
         return result
 
     # Check if location coordinate (x, y) is valid

@@ -1,5 +1,7 @@
-# Agent class
+# Agent classes
+
 import random
+from search import Search
 
 # Agent that chooses moves randomly.
 class AgentRandom:
@@ -33,4 +35,22 @@ class AgentCapture:
         # Check that there is at least one legal move
         elif legal_moves:
             result = random.choice(legal_moves)
+        return result
+
+# Agent that uses the minimax algorithm.
+class AgentMinimax:
+    def __init__(self, evaluator, max_depth):
+        self.evaluator  = evaluator
+        self.max_depth  = max_depth
+        self.search = Search(self.evaluator, self.max_depth)
+
+    # Choose move
+    def ChooseMove(self, state, current_player, opposing_player):
+        result = ""
+        self.evaluator.ResetCounter()
+        #result  = self.search.GetBestMove(state, current_player, opposing_player)
+        result  = self.search.GetBestMoveAlphaBeta(state, current_player, opposing_player)
+        counter = self.evaluator.GetCounter()
+        print("Number of evaluations: {0}".format(counter))
+        print("Result: {0}".format(result))
         return result
