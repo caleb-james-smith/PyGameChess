@@ -1,12 +1,12 @@
 # Evaluate classes
 
 # TODO:
-# - Piece tables assume that the player is white; need to fix for black player
-# - Add position evaluation maps for each piece
 # - Plot position evaluation maps for each piece
 # - Switch between king middle game and end game tables
 # DONE
 # - Add evaluations for checkmate and stalemate
+# - Add position evaluation maps for each piece
+# - Piece tables assume that the player is white; need to fix for black player
 
 # Evaluation class: uses material (piece value) to determine evaluation.
 class EvaluateMaterial:
@@ -106,7 +106,6 @@ class EvaluatePosition:
         self.counter += 1
     
     # Get total piece value: sum of piece values for a player
-    # FIXME: Piece tables assume that the player is white; need to fix for black player
     def GetTotalValue(self, state, player):
         total_value = 0
         player_color = player.GetColor()
@@ -121,7 +120,6 @@ class EvaluatePosition:
             # FIXME: Switch between king middle game and end game tables
             if piece_type == "king":
                 table_name = "king_middle_game"
-                #table_name = "king_caleb"
             
             table = self.piece_table.GetTable(table_name)
             

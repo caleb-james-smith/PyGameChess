@@ -8,8 +8,6 @@
 # -------------------------------------------- #
 
 # TODO:
-# - Determine how many moves and positions (nodes) are evaluated in total by Minimax()
-# - Determine how much time computer takes to calculate best move
 # - Define winner and loser or draw
 # - Consider putting SetStateFromPieceState() at the end of PlacePiece()
 # - Write legal moves using chess notation
@@ -68,6 +66,8 @@
 # - Create undo move function, including undoing pawn promotion (if applicable), restoring captured piece (if any), and switching players
 # - Define game is over
 # - Create search to find best move based on evaluating positions
+# - Determine how many moves and positions (nodes) are evaluated in total by Minimax()
+# - Determine how much time computer takes to calculate best move
 
 # Import the pygame library
 import pygame
