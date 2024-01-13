@@ -1,17 +1,5 @@
 # Search classes
 
-# TODO:
-# - Use alpha/beta pruning
-# - Print best evaluation score
-# DONE:
-# - Create and use game over function
-# - Create and use an undo move function
-# - Undoing move: update pieces, state, piece to move and capture
-# - Undo pawn promotion
-# - When moving, we probably need to switch current/opposing players
-# - Each call of Minimax() is for a certain player; need to switch current/opposing players
-# - Need to include pawn promotion in search
-
 class Search:
     def __init__(self, evaluator, max_depth):
         self.evaluator = evaluator

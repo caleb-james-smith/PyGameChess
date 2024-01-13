@@ -12,26 +12,6 @@
 # - 5: queen
 # - 6: king
 
-# TODO:
-# - Make function to get "state" (values) from "piece_state" (objects)
-# - Make function to get legal checks (subset of legal moves)
-# - Make function to get legal checkmates (subset of legal moves)
-# DONE:
-# - Create a class for the game state
-# - Define numbers and names for chess pieces
-# - Create a class for the chess board
-# - Make function to set initial piece state
-# - Write function to determine if there are any pieces on squares between two positions
-# - At the start of game, set state based on piece state
-# - After any move, update state based on piece state
-# - Make a function to get a list of all a player's pieces
-# - Make a function to get possible moves for a piece with constraints:
-#   no jumping, no capturing own pieces, pawn movement and captures.
-# - Track opposing player
-# - Make function to convert [x, y] position to "xy" string
-# - Make function to get the position of a player's king
-# - Make function to get legal captures (subset of legal moves)
-
 from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
 # Class to define current game state (piece positions)

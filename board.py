@@ -1,13 +1,5 @@
 # Board class
 
-# TODO:
-# DONE:
-# - Define a mapping between x, y coordinates and chess notation coordinates
-# - Define valid x, y coordinates
-# - Define valid chess notation
-# - Fix bug: x, y coordinates (rows, columns) are inverted for notation!
-# - Write function to return squares that are in between two positions
-
 # Round using a base
 def round_using_base(number, base):
     result = number - (number % base)

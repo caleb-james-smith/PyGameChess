@@ -7,68 +7,6 @@
 # - Date: Project started on November 10, 2023
 # -------------------------------------------- #
 
-# TODO:
-# - Define winner and loser or draw
-# - Consider putting SetStateFromPieceState() at the end of PlacePiece()
-# - Write legal moves using chess notation
-# - Use standard chess piece images
-# - Color the square for the computer's latest move
-# - For moves, color to and from squares yellow (shade based on light/dark square)
-# - For possible moves, use blue squares (shade based on light/dark square)
-# - Define pawn en passant
-# - Define castling
-# - Define draw: insufficient material
-# - Define draw: threefold repetition
-# - Define draw: fifty-move rule
-# - Highlighting possible moves:
-#   Try green square for piece-to-move location
-#   Try alternating shades of blue (light/dark based on board) for move locations
-# - Should we create a "Rules" class that knows the state and current player
-#   and enforces valid moves?
-# - Save all moves made in chess game
-# - Information to save for each move: piece, position from, position to, and piece captured (or empty)
-# DONE:
-# - Draw colored square when clicked
-# - Fix bug: use square location instead of click location
-# - When a square is clicked, print out the x, y and chess notation coordinates
-# - For clicked square, print number and name of piece in square (or empty).
-# - Draw different shapes for all chess pieces
-# - Move board parameters and drawing functions to board class
-# - Change click color depending on whether square is empty or occupied
-# - Make it possible to move pieces
-# - Make piece class
-# - Draw pieces using piece classes
-# - Move some functions to board class
-# - Define player class
-# - Track current player turn in state class
-# - Switch between players
-# - Add black borders to chess pieces
-# - Do not let a player capture his own pieces
-# - Differentiate pawn movement and capture
-# - Do not let pieces jump other pieces (except for knights)
-# - Define allowed piece movement and captures
-# - When you click on a piece, show its possible moves: gray squares or little circles; use borders
-# - Use GetPiecePossibleMoves() to determine if move is valid
-# - Define check
-# - Get all possible moves for a given player
-# - Fix bug: program crashes when a king is captured when PlayerIsInCheck() is used
-# - Fix bug: program crashes when MoveResultsInCheck() is used
-# - Fix bug: program crashes when capture results in check; we need to put back the piece to capture!
-# - Determine if a move would put a player in check
-# - Get legal moves for a given player
-# - Legal moves: constrain moves based on check
-# - Define checkmate: in check, no legal moves
-# - Define stalemate: not in check, no legal moves
-# - Define pawn promotion
-# - Create a chess agent!
-# - Evaluate current position - initially based on sum of piece values
-# - Create a make move function that moves the piece, handles pawn promotion, and switches the current player
-# - Create undo move function, including undoing pawn promotion (if applicable), restoring captured piece (if any), and switching players
-# - Define game is over
-# - Create search to find best move based on evaluating positions
-# - Determine how many moves and positions (nodes) are evaluated in total by Minimax()
-# - Determine how much time computer takes to calculate best move
-
 # Import the pygame library
 import pygame
 from board import Board

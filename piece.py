@@ -1,14 +1,5 @@
 # Piece class and subclasses
 
-# TODO:
-# - Consolidate redundant functions in state and piece classes
-# DONE:
-# - Create piece class (superclass or base class)
-# - Create subclass for each type of piece
-# - Define how each type of piece is drawn
-# - Define how each piece can move
-# - Add piece type variable (pawn, knight, etc.)
-
 class Piece:
     def __init__(self, color, position):
         self.color      = color
