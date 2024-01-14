@@ -4,6 +4,9 @@
 # See the "Simplified Evaluation Function" page here:
 # https://www.chessprogramming.org/Simplified_Evaluation_Function
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 class PieceTable:
     def __init__(self):
         # Pawn table
@@ -83,6 +86,7 @@ class PieceTable:
             [-30,-30,  0,  0,  0,  0,-30,-30],
             [-50,-30,-30,-30,-30,-30,-30,-50]
         ]
+        # Dictionary of tables
         self.tables = {
             "pawn"              : self.pawn_table,
             "knight"            : self.knight_table,
@@ -93,6 +97,11 @@ class PieceTable:
             "king_end_game"     : self.king_end_game_table
         }
 
+    # Get dictionary of tables
+    def GetTables(self):
+        return self.tables
+
+    # Return a table based on the table name
     def GetTable(self, table_name):
         result = None
         if table_name in self.tables:
@@ -101,24 +110,24 @@ class PieceTable:
             print("ERROR: The table name '{0}' was not found.".format(table_name))
         return result
 
-    def GetPawnTable(self):
-        return self.pawn_table
-    
-    def GetKnightTable(self):
-        return self.knight_table
-    
-    def GetBishopTable(self):
-        return self.bishop_table
-    
-    def GetRookTable(self):
-        return self.rook_table
-    
-    def GetQueenTable(self):
-        return self.queen_table
-    
-    def GetKingMiddleGameTable(self):
-        return self.king_middle_game_table
-    
-    def GetKingEndGameTable(self):
-        return self.king_end_game_table
-    
+    # Plot tables
+    def PlotTables(self):
+        tables = self.GetTables()
+        for table_name in tables:
+            table = tables[table_name]
+            self.PlotTable(table)
+
+    # Plot a table
+    def PlotTable(self, table):
+        data = np.array(table)
+        fig, ax = plt.subplots()
+        print(data)
+        ax.pcolormesh(data)
+        plt.show()
+
+def main():
+    piece_table = PieceTable()
+    piece_table.PlotTables()
+
+if __name__ == "__main__":
+    main()
