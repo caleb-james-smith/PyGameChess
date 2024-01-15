@@ -268,6 +268,7 @@ class State:
                 piece.Draw(game, screen, border_color, x_position, y_position, size)
                 # Draw piece (primary color)
                 piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
+                screen.blit(game.image.load("images/white_pawn.svg"), (x_position, y_position))
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
