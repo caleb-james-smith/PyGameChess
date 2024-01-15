@@ -121,23 +121,26 @@ class PieceTable:
     # Plot a table
     def PlotTable(self, plot_dir, table_name, table):
         data = np.array(table)
-        fig, ax = plt.subplots()
-        
+        title = "Piece-square values: {0}".format(table_name)
+        #color_map = 'viridis'
+        color_map = 'Blues'
         print(table_name)
         print(data)
-        
-        ax.pcolormesh(data)
-        
-        #plt.show()
-        
-        output_pdf = "{0}/{1}.pdf".format(plot_dir, table_name)
-        output_png = "{0}/{1}.png".format(plot_dir, table_name)
 
+        fig, ax = plt.subplots()
+        mesh = ax.pcolormesh(data, cmap=color_map, shading='auto')
+        ax.set_title(title)
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.invert_yaxis()
+        fig.colorbar(mesh, ax=ax, label="z")
+        
+        output_pdf = "{0}/piece_square_values_{1}.pdf".format(plot_dir, table_name)
+        output_png = "{0}/piece_square_values_{1}.png".format(plot_dir, table_name)
         plt.savefig(output_png, bbox_inches='tight')
         plt.savefig(output_pdf, bbox_inches='tight')
-        
+        #plt.show()
         plt.close('all')
-
 
 def main():
     plot_dir = "plots"
