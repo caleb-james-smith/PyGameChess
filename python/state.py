@@ -114,6 +114,16 @@ class State:
         else:
             return False
     
+    # Print piece image sizes
+    def PrintPieceImageSizes(self, game, square_side):
+        for piece_name in self.chess_piece_images:
+            piece_image         = self.chess_piece_images[piece_name]
+            loaded_image        = game.image.load(piece_image)
+            scaled_image        = game.transform.scale(loaded_image, (square_side, square_side))
+            original_piece_size = loaded_image.get_rect().size
+            scaled_piece_size   = scaled_image.get_rect().size
+            print("{0}: original size = {1}, scaled size = {2}".format(piece_name, original_piece_size, scaled_piece_size))
+
     # Print current player
     def PrintCurrentPlayer(self):
         print("----------------------------------")
@@ -285,20 +295,27 @@ class State:
                     primary_color = light_color
                 if piece_color == "black":
                     primary_color = dark_color
-
-                # Get piece position: note that this is different than the square position
-                x_position = (x + 0.5) * square_side
-                y_position = (y + 0.5) * square_side
-                # Piece size should be smaller than square side
-                size = square_side / 4
-                if self.piece_theme == "shapes":
+                
+                if self.piece_theme == "standard":
+                    piece_image     = self.chess_piece_images[piece_name]
+                    loaded_image    = game.image.load(piece_image)
+                    scaled_image    = game.transform.scale(loaded_image, (square_side, square_side))
+                    piece_size      = scaled_image.get_rect().size
+                    piece_width, piece_height = piece_size
+                    # Get piece position: note that this is different than the square position
+                    x_position = (x + 0.5) * square_side - 0.5 * piece_width
+                    y_position = (y + 0.5) * square_side - 0.5 * piece_height
+                    screen.blit(scaled_image, (x_position, y_position))
+                elif self.piece_theme == "shapes":
+                    # Get piece position: note that this is different than the square position
+                    x_position = (x + 0.5) * square_side
+                    y_position = (y + 0.5) * square_side
+                    # Piece size should be smaller than square side
+                    size = square_side / 4
                     # Draw piece (border color)
                     piece.Draw(game, screen, border_color, x_position, y_position, size)
                     # Draw piece (primary color)
                     piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
-                elif self.piece_theme == "standard":
-                    piece_image = self.chess_piece_images[piece_name]
-                    screen.blit(game.image.load(piece_image), (x_position, y_position))
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):

@@ -59,6 +59,7 @@ def run_game():
     opposing_player = state.GetOpposingPlayer()
     # Print detailed game state
     state.PrintGameState()
+    state.PrintPieceImageSizes(pygame, SQUARE_SIDE)
     
     # Click position
     click_position  = None
