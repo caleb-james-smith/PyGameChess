@@ -6,6 +6,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import tools
 
 class PieceTable:
     def __init__(self):
@@ -111,23 +112,38 @@ class PieceTable:
         return result
 
     # Plot tables
-    def PlotTables(self):
+    def PlotTables(self, plot_dir):
         tables = self.GetTables()
         for table_name in tables:
             table = tables[table_name]
-            self.PlotTable(table)
+            self.PlotTable(plot_dir, table_name, table)
 
     # Plot a table
-    def PlotTable(self, table):
+    def PlotTable(self, plot_dir, table_name, table):
         data = np.array(table)
         fig, ax = plt.subplots()
+        
+        print(table_name)
         print(data)
+        
         ax.pcolormesh(data)
-        plt.show()
+        
+        #plt.show()
+        
+        output_pdf = "{0}/{1}.pdf".format(plot_dir, table_name)
+        output_png = "{0}/{1}.png".format(plot_dir, table_name)
+
+        plt.savefig(output_png, bbox_inches='tight')
+        plt.savefig(output_pdf, bbox_inches='tight')
+        
+        plt.close('all')
+
 
 def main():
+    plot_dir = "plots"
+    tools.makeDir(plot_dir)
     piece_table = PieceTable()
-    piece_table.PlotTables()
+    piece_table.PlotTables(plot_dir)
 
 if __name__ == "__main__":
     main()
