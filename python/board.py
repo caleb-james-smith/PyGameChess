@@ -1,20 +1,6 @@
 # Board class
 
-# Round using a base
-def round_using_base(number, base):
-    result = number - (number % base)
-    return result
-
-# Get integers between two integers
-def get_numbers_between_numbers(a, b):
-    numbers = []
-    if a == b:
-        return numbers
-    elif a < b:
-        numbers = [x for x in range(a + 1, b)]
-    elif a > b:
-        numbers = [x for x in range(b + 1, a)]
-    return numbers
+import tools
 
 class Board:
     def __init__(self, game, screen, light_color, dark_color, squares_per_side, square_side):
@@ -78,8 +64,8 @@ class Board:
         click_y = click_position[1]
         # Find square x, y based on click x, y;
         # round using the side length as the base.
-        square_x = round_using_base(click_x, self.square_side)
-        square_y = round_using_base(click_y, self.square_side)
+        square_x = tools.round_using_base(click_x, self.square_side)
+        square_y = tools.round_using_base(click_y, self.square_side)
         return [square_x, square_y]
     
     # Get x, y coordinates (ints) based on square x, y position
@@ -256,8 +242,8 @@ class Board:
                 return squares
             else:
                 # Get in between x and y values
-                x_values = get_numbers_between_numbers(x_1, x_2)
-                y_values = get_numbers_between_numbers(y_1, y_2)
+                x_values = tools.get_numbers_between_numbers(x_1, x_2)
+                y_values = tools.get_numbers_between_numbers(y_1, y_2)
                 # Positions are in the same column
                 if x_diff == 0:
                     squares = [[x_1, y] for y in y_values]
