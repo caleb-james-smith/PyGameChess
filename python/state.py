@@ -34,6 +34,21 @@ class State:
             5: "queen",
             6: "king"
         }
+        # Chess piece images
+        self.chess_piece_images = {
+            "white pawn"    : "images/white_pawn.svg",
+            "white knight"  : "images/white_knight.svg",
+            "white bishop"  : "images/white_bishop.svg",
+            "white rook"    : "images/white_rook.svg",
+            "white queen"   : "images/white_queen.svg",
+            "white king"    : "images/white_king.svg",
+            "black pawn"    : "images/black_pawn.svg",
+            "black knight"  : "images/black_knight.svg",
+            "black bishop"  : "images/black_bishop.svg",
+            "black rook"    : "images/black_rook.svg",
+            "black queen"   : "images/black_queen.svg",
+            "black king"    : "images/black_king.svg"
+        }
 
     def __str__(self):
         return str(self.state)
@@ -253,6 +268,7 @@ class State:
                 
                 # Determine color
                 piece_color = piece.GetColor()
+                piece_name  = piece.GetName()
                 primary_color = None
                 if piece_color == "white":
                     primary_color = light_color
@@ -268,7 +284,8 @@ class State:
                 piece.Draw(game, screen, border_color, x_position, y_position, size)
                 # Draw piece (primary color)
                 piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
-                screen.blit(game.image.load("images/white_pawn.svg"), (x_position, y_position))
+                piece_image = self.chess_piece_images[piece_name]
+                screen.blit(game.image.load(piece_image), (x_position, y_position))
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
