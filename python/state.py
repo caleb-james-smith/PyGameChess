@@ -38,7 +38,7 @@ class State:
         # Chess piece images
         # The svg files are from this webpage:
         # https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
-        self.chess_piece_images = {
+        self.chess_piece_image_files = {
             "white pawn"    : "images/white_pawn.svg",
             "white knight"  : "images/white_knight.svg",
             "white bishop"  : "images/white_bishop.svg",
@@ -114,16 +114,21 @@ class State:
         else:
             return False
     
-    # Print piece image sizes
-    def PrintPieceImageSizes(self, game, square_side):
-        for piece_name in self.chess_piece_images:
-            piece_image         = self.chess_piece_images[piece_name]
-            loaded_image        = game.image.load(piece_image)
+    # Load piece images
+    def LoadPieceImages(self, game, square_side):
+        verbose = True
+        self.chess_piece_images = {}
+        for piece_name in self.chess_piece_image_files:
+            piece_image_file    = self.chess_piece_image_files[piece_name]
+            loaded_image        = game.image.load(piece_image_file)
             scaled_image        = game.transform.scale(loaded_image, (square_side, square_side))
-            original_piece_size = loaded_image.get_rect().size
-            scaled_piece_size   = scaled_image.get_rect().size
-            print("{0}: original size = {1}, scaled size = {2}".format(piece_name, original_piece_size, scaled_piece_size))
-
+            # Store scaled image
+            self.chess_piece_images[piece_name] = scaled_image
+            if verbose:
+                original_piece_size = loaded_image.get_rect().size
+                scaled_piece_size   = scaled_image.get_rect().size
+                print("{0}: original size = {1}, scaled size = {2}".format(piece_name, original_piece_size, scaled_piece_size))
+    
     # Print current player
     def PrintCurrentPlayer(self):
         print("----------------------------------")
@@ -296,16 +301,14 @@ class State:
                 if piece_color == "black":
                     primary_color = dark_color
                 
-                if self.piece_theme == "standard":
-                    piece_image     = self.chess_piece_images[piece_name]
-                    loaded_image    = game.image.load(piece_image)
-                    scaled_image    = game.transform.scale(loaded_image, (square_side, square_side))
-                    piece_size      = scaled_image.get_rect().size
+                if self.piece_theme == "standard":                    
+                    piece_image = self.chess_piece_images[piece_name]
+                    piece_size  = piece_image.get_rect().size
                     piece_width, piece_height = piece_size
                     # Get piece position: note that this is different than the square position
                     x_position = (x + 0.5) * square_side - 0.5 * piece_width
                     y_position = (y + 0.5) * square_side - 0.5 * piece_height
-                    screen.blit(scaled_image, (x_position, y_position))
+                    screen.blit(piece_image, (x_position, y_position))
                 elif self.piece_theme == "shapes":
                     # Get piece position: note that this is different than the square position
                     x_position = (x + 0.5) * square_side

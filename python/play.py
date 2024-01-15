@@ -51,6 +51,7 @@ def run_game():
     black_player = Player("Gollum", "black")    
     # Setup the game state
     state = State(board, piece_theme, white_player, black_player)
+    state.LoadPieceImages(pygame, SQUARE_SIDE)
     state.SetInitialPieceState()
     # Set current and opposing players
     state.SetCurrentPlayer(white_player)
@@ -59,7 +60,6 @@ def run_game():
     opposing_player = state.GetOpposingPlayer()
     # Print detailed game state
     state.PrintGameState()
-    state.PrintPieceImageSizes(pygame, SQUARE_SIDE)
     
     # Click position
     click_position  = None
