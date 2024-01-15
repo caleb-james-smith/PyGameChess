@@ -36,6 +36,10 @@ def run_game():
     SQUARE_SIDE         = 75
     SQUARES_PER_SIDE    = 8
     
+    # Define themes
+    piece_theme = "standard"
+    #piece_theme = "shapes"
+
     # Initialize pygame
     pygame.init()    
     # Create the screen
@@ -46,7 +50,7 @@ def run_game():
     white_player = Player("Bilbo",  "white")
     black_player = Player("Gollum", "black")    
     # Setup the game state
-    state = State(board, white_player, black_player)
+    state = State(board, piece_theme, white_player, black_player)
     state.SetInitialPieceState()
     # Set current and opposing players
     state.SetCurrentPlayer(white_player)

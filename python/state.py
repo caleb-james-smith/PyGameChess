@@ -16,8 +16,9 @@ from piece import Pawn, Knight, Bishop, Rook, Queen, King
 
 # Class to define current game state (piece positions)
 class State:
-    def __init__(self, board, white_player, black_player):
+    def __init__(self, board, piece_theme, white_player, black_player):
         self.board = board
+        self.piece_theme = piece_theme
         self.state = None
         self.piece_state = None
         self.white_player = white_player
@@ -35,6 +36,8 @@ class State:
             6: "king"
         }
         # Chess piece images
+        # The svg files are from this webpage:
+        # https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
         self.chess_piece_images = {
             "white pawn"    : "images/white_pawn.svg",
             "white knight"  : "images/white_knight.svg",
@@ -49,6 +52,14 @@ class State:
             "black queen"   : "images/black_queen.svg",
             "black king"    : "images/black_king.svg"
         }
+        # Supported piece themes
+        self.piece_themes = [
+            "standard",
+            "shapes"
+        ]
+        # Print an error message if the piece theme is not supported
+        if self.piece_theme not in self.piece_themes:
+            print("ERROR: The piece theme '{0}' is not supported.".format(self.piece_theme))
 
     def __str__(self):
         return str(self.state)
@@ -280,12 +291,14 @@ class State:
                 y_position = (y + 0.5) * square_side
                 # Piece size should be smaller than square side
                 size = square_side / 4
-                # Draw piece (border color)
-                piece.Draw(game, screen, border_color, x_position, y_position, size)
-                # Draw piece (primary color)
-                piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
-                piece_image = self.chess_piece_images[piece_name]
-                screen.blit(game.image.load(piece_image), (x_position, y_position))
+                if self.piece_theme == "shapes":
+                    # Draw piece (border color)
+                    piece.Draw(game, screen, border_color, x_position, y_position, size)
+                    # Draw piece (primary color)
+                    piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
+                elif self.piece_theme == "standard":
+                    piece_image = self.chess_piece_images[piece_name]
+                    screen.blit(game.image.load(piece_image), (x_position, y_position))
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
