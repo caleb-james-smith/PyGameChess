@@ -39,35 +39,35 @@ class State:
         # The standard svg files are from this webpage:
         # https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
         self.standard_pieces = {
-            "white pawn"    : "standard_pieces_svg/white_pawn.svg",
-            "white knight"  : "standard_pieces_svg/white_knight.svg",
-            "white bishop"  : "standard_pieces_svg/white_bishop.svg",
-            "white rook"    : "standard_pieces_svg/white_rook.svg",
-            "white queen"   : "standard_pieces_svg/white_queen.svg",
-            "white king"    : "standard_pieces_svg/white_king.svg",
-            "black pawn"    : "standard_pieces_svg/black_pawn.svg",
-            "black knight"  : "standard_pieces_svg/black_knight.svg",
-            "black bishop"  : "standard_pieces_svg/black_bishop.svg",
-            "black rook"    : "standard_pieces_svg/black_rook.svg",
-            "black queen"   : "standard_pieces_svg/black_queen.svg",
-            "black king"    : "standard_pieces_svg/black_king.svg"
+            "white pawn"    : "standard_pieces_2048_png/white_pawn.png",
+            "white knight"  : "standard_pieces_2048_png/white_knight.png",
+            "white bishop"  : "standard_pieces_2048_png/white_bishop.png",
+            "white rook"    : "standard_pieces_2048_png/white_rook.png",
+            "white queen"   : "standard_pieces_2048_png/white_queen.png",
+            "white king"    : "standard_pieces_2048_png/white_king.png",
+            "black pawn"    : "standard_pieces_2048_png/black_pawn.png",
+            "black knight"  : "standard_pieces_2048_png/black_knight.png",
+            "black bishop"  : "standard_pieces_2048_png/black_bishop.png",
+            "black rook"    : "standard_pieces_2048_png/black_rook.png",
+            "black queen"   : "standard_pieces_2048_png/black_queen.png",
+            "black king"    : "standard_pieces_2048_png/black_king.png"
         }
-        # Neo pieces from chess.com
-        # For example, Neo theme white pawn (size 300):
+        # Neo pieces from chess.com (by inspecting https://www.chess.com/play)
+        # For example, the Neo theme white pawn image (size 300) is at this link:
         # https://images.chesscomfiles.com/chess-themes/pieces/neo/300/wp.png
         self.neo_pieces = {
-            "white pawn"    : "chesscom_neo_300_pieces/white_pawn.png",
-            "white knight"  : "chesscom_neo_300_pieces/white_knight.png",
-            "white bishop"  : "chesscom_neo_300_pieces/white_bishop.png",
-            "white rook"    : "chesscom_neo_300_pieces/white_rook.png",
-            "white queen"   : "chesscom_neo_300_pieces/white_queen.png",
-            "white king"    : "chesscom_neo_300_pieces/white_king.png",
-            "black pawn"    : "chesscom_neo_300_pieces/black_pawn.png",
-            "black knight"  : "chesscom_neo_300_pieces/black_knight.png",
-            "black bishop"  : "chesscom_neo_300_pieces/black_bishop.png",
-            "black rook"    : "chesscom_neo_300_pieces/black_rook.png",
-            "black queen"   : "chesscom_neo_300_pieces/black_queen.png",
-            "black king"    : "chesscom_neo_300_pieces/black_king.png",
+            "white pawn"    : "chesscom_pieces_neo_300/white_pawn.png",
+            "white knight"  : "chesscom_pieces_neo_300/white_knight.png",
+            "white bishop"  : "chesscom_pieces_neo_300/white_bishop.png",
+            "white rook"    : "chesscom_pieces_neo_300/white_rook.png",
+            "white queen"   : "chesscom_pieces_neo_300/white_queen.png",
+            "white king"    : "chesscom_pieces_neo_300/white_king.png",
+            "black pawn"    : "chesscom_pieces_neo_300/black_pawn.png",
+            "black knight"  : "chesscom_pieces_neo_300/black_knight.png",
+            "black bishop"  : "chesscom_pieces_neo_300/black_bishop.png",
+            "black rook"    : "chesscom_pieces_neo_300/black_rook.png",
+            "black queen"   : "chesscom_pieces_neo_300/black_queen.png",
+            "black king"    : "chesscom_pieces_neo_300/black_king.png",
         }
         # Supported piece themes
         self.piece_themes = {
@@ -135,10 +135,14 @@ class State:
     # Load piece images
     def LoadPieceImages(self, game, square_side):
         verbose = True
-        self.chess_piece_images = {}
         image_files = None
+        self.chess_piece_images = {}
+        
+        print("Loading piece theme: {0}".format(self.piece_theme))
+        
         if self.piece_theme in self.piece_themes:
             image_files = self.piece_themes[self.piece_theme]
+        
         if image_files:
             for piece_name in image_files:
                 piece_image_file    = image_files[piece_name]
