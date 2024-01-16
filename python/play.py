@@ -37,8 +37,10 @@ def run_game():
     SQUARES_PER_SIDE    = 8
     
     # Define themes
-    piece_theme = "standard"
     #piece_theme = "shapes"
+    #piece_theme = "standard"
+    piece_theme = "neo"
+    #piece_theme = "dummy"
 
     # Initialize pygame
     pygame.init()    

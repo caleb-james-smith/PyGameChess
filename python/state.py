@@ -36,27 +36,45 @@ class State:
             6: "king"
         }
         # Chess piece images
-        # The svg files are from this webpage:
+        # The standard svg files are from this webpage:
         # https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces
-        self.chess_piece_image_files = {
-            "white pawn"    : "images/white_pawn.svg",
-            "white knight"  : "images/white_knight.svg",
-            "white bishop"  : "images/white_bishop.svg",
-            "white rook"    : "images/white_rook.svg",
-            "white queen"   : "images/white_queen.svg",
-            "white king"    : "images/white_king.svg",
-            "black pawn"    : "images/black_pawn.svg",
-            "black knight"  : "images/black_knight.svg",
-            "black bishop"  : "images/black_bishop.svg",
-            "black rook"    : "images/black_rook.svg",
-            "black queen"   : "images/black_queen.svg",
-            "black king"    : "images/black_king.svg"
+        self.standard_pieces = {
+            "white pawn"    : "standard_pieces_svg/white_pawn.svg",
+            "white knight"  : "standard_pieces_svg/white_knight.svg",
+            "white bishop"  : "standard_pieces_svg/white_bishop.svg",
+            "white rook"    : "standard_pieces_svg/white_rook.svg",
+            "white queen"   : "standard_pieces_svg/white_queen.svg",
+            "white king"    : "standard_pieces_svg/white_king.svg",
+            "black pawn"    : "standard_pieces_svg/black_pawn.svg",
+            "black knight"  : "standard_pieces_svg/black_knight.svg",
+            "black bishop"  : "standard_pieces_svg/black_bishop.svg",
+            "black rook"    : "standard_pieces_svg/black_rook.svg",
+            "black queen"   : "standard_pieces_svg/black_queen.svg",
+            "black king"    : "standard_pieces_svg/black_king.svg"
+        }
+        # Neo pieces from chess.com
+        # For example, Neo theme white pawn (size 300):
+        # https://images.chesscomfiles.com/chess-themes/pieces/neo/300/wp.png
+        self.neo_pieces = {
+            "white pawn"    : "chesscom_neo_300_pieces/white_pawn.png",
+            "white knight"  : "chesscom_neo_300_pieces/white_knight.png",
+            "white bishop"  : "chesscom_neo_300_pieces/white_bishop.png",
+            "white rook"    : "chesscom_neo_300_pieces/white_rook.png",
+            "white queen"   : "chesscom_neo_300_pieces/white_queen.png",
+            "white king"    : "chesscom_neo_300_pieces/white_king.png",
+            "black pawn"    : "chesscom_neo_300_pieces/black_pawn.png",
+            "black knight"  : "chesscom_neo_300_pieces/black_knight.png",
+            "black bishop"  : "chesscom_neo_300_pieces/black_bishop.png",
+            "black rook"    : "chesscom_neo_300_pieces/black_rook.png",
+            "black queen"   : "chesscom_neo_300_pieces/black_queen.png",
+            "black king"    : "chesscom_neo_300_pieces/black_king.png",
         }
         # Supported piece themes
-        self.piece_themes = [
-            "standard",
-            "shapes"
-        ]
+        self.piece_themes = {
+            "standard"  : self.standard_pieces,
+            "neo"       : self.neo_pieces,
+            "shapes"    : None
+        }
         # Print an error message if the piece theme is not supported
         if self.piece_theme not in self.piece_themes:
             print("ERROR: The piece theme '{0}' is not supported.".format(self.piece_theme))
@@ -118,16 +136,20 @@ class State:
     def LoadPieceImages(self, game, square_side):
         verbose = True
         self.chess_piece_images = {}
-        for piece_name in self.chess_piece_image_files:
-            piece_image_file    = self.chess_piece_image_files[piece_name]
-            loaded_image        = game.image.load(piece_image_file)
-            scaled_image        = game.transform.scale(loaded_image, (square_side, square_side))
-            # Store scaled image
-            self.chess_piece_images[piece_name] = scaled_image
-            if verbose:
-                original_piece_size = loaded_image.get_rect().size
-                scaled_piece_size   = scaled_image.get_rect().size
-                print("{0}: original size = {1}, scaled size = {2}".format(piece_name, original_piece_size, scaled_piece_size))
+        image_files = None
+        if self.piece_theme in self.piece_themes:
+            image_files = self.piece_themes[self.piece_theme]
+        if image_files:
+            for piece_name in image_files:
+                piece_image_file    = image_files[piece_name]
+                loaded_image        = game.image.load(piece_image_file)
+                scaled_image        = game.transform.scale(loaded_image, (square_side, square_side))
+                # Store scaled image
+                self.chess_piece_images[piece_name] = scaled_image
+                if verbose:
+                    original_piece_size = loaded_image.get_rect().size
+                    scaled_piece_size   = scaled_image.get_rect().size
+                    print("{0}: original size = {1}, scaled size = {2}".format(piece_name, original_piece_size, scaled_piece_size))
     
     # Print current player
     def PrintCurrentPlayer(self):
@@ -301,15 +323,7 @@ class State:
                 if piece_color == "black":
                     primary_color = dark_color
                 
-                if self.piece_theme == "standard":                    
-                    piece_image = self.chess_piece_images[piece_name]
-                    piece_size  = piece_image.get_rect().size
-                    piece_width, piece_height = piece_size
-                    # Get piece position: note that this is different than the square position
-                    x_position = (x + 0.5) * square_side - 0.5 * piece_width
-                    y_position = (y + 0.5) * square_side - 0.5 * piece_height
-                    screen.blit(piece_image, (x_position, y_position))
-                elif self.piece_theme == "shapes":
+                if self.piece_theme == "shapes":
                     # Get piece position: note that this is different than the square position
                     x_position = (x + 0.5) * square_side
                     y_position = (y + 0.5) * square_side
@@ -319,6 +333,15 @@ class State:
                     piece.Draw(game, screen, border_color, x_position, y_position, size)
                     # Draw piece (primary color)
                     piece.Draw(game, screen, primary_color, x_position, y_position, 0.75 * size)
+                elif self.piece_theme in self.piece_themes:
+                    piece_image = self.chess_piece_images[piece_name]
+                    piece_size  = piece_image.get_rect().size
+                    piece_width, piece_height = piece_size
+                    # Get piece position: note that this is different than the square position
+                    x_position = (x + 0.5) * square_side - 0.5 * piece_width
+                    y_position = (y + 0.5) * square_side - 0.5 * piece_height
+                    screen.blit(piece_image, (x_position, y_position))
+                
     
     # Place a piece in the piece state
     def PlacePiece(self, piece):
