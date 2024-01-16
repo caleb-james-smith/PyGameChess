@@ -1,5 +1,5 @@
-# PyGameChess
-# Todo List (FIXME: put year here)
+# Project Title
+# Todo List (year)
 
 ## TODO
 - 1
