@@ -4,6 +4,10 @@
 # See the "Simplified Evaluation Function" page here:
 # https://www.chessprogramming.org/Simplified_Evaluation_Function
 
+import matplotlib.pyplot as plt
+import numpy as np
+import tools
+
 class PieceTable:
     def __init__(self):
         # Pawn table
@@ -83,6 +87,7 @@ class PieceTable:
             [-30,-30,  0,  0,  0,  0,-30,-30],
             [-50,-30,-30,-30,-30,-30,-30,-50]
         ]
+        # Dictionary of tables
         self.tables = {
             "pawn"              : self.pawn_table,
             "knight"            : self.knight_table,
@@ -93,6 +98,11 @@ class PieceTable:
             "king_end_game"     : self.king_end_game_table
         }
 
+    # Get dictionary of tables
+    def GetTables(self):
+        return self.tables
+
+    # Return a table based on the table name
     def GetTable(self, table_name):
         result = None
         if table_name in self.tables:
@@ -101,24 +111,42 @@ class PieceTable:
             print("ERROR: The table name '{0}' was not found.".format(table_name))
         return result
 
-    def GetPawnTable(self):
-        return self.pawn_table
-    
-    def GetKnightTable(self):
-        return self.knight_table
-    
-    def GetBishopTable(self):
-        return self.bishop_table
-    
-    def GetRookTable(self):
-        return self.rook_table
-    
-    def GetQueenTable(self):
-        return self.queen_table
-    
-    def GetKingMiddleGameTable(self):
-        return self.king_middle_game_table
-    
-    def GetKingEndGameTable(self):
-        return self.king_end_game_table
-    
+    # Plot tables
+    def PlotTables(self, plot_dir):
+        tables = self.GetTables()
+        for table_name in tables:
+            table = tables[table_name]
+            self.PlotTable(plot_dir, table_name, table)
+
+    # Plot a table
+    def PlotTable(self, plot_dir, table_name, table):
+        data = np.array(table)
+        title = "Piece-square values: {0}".format(table_name)
+        #color_map = 'viridis'
+        color_map = 'Blues'
+        print(table_name)
+        print(data)
+
+        fig, ax = plt.subplots()
+        mesh = ax.pcolormesh(data, cmap=color_map, shading='auto')
+        ax.set_title(title)
+        ax.set_xlabel("x")
+        ax.set_ylabel("y")
+        ax.invert_yaxis()
+        fig.colorbar(mesh, ax=ax, label="z")
+        
+        output_pdf = "{0}/piece_square_values_{1}.pdf".format(plot_dir, table_name)
+        output_png = "{0}/piece_square_values_{1}.png".format(plot_dir, table_name)
+        plt.savefig(output_png, bbox_inches='tight')
+        plt.savefig(output_pdf, bbox_inches='tight')
+        #plt.show()
+        plt.close('all')
+
+def main():
+    plot_dir = "plots"
+    tools.makeDir(plot_dir)
+    piece_table = PieceTable()
+    piece_table.PlotTables(plot_dir)
+
+if __name__ == "__main__":
+    main()

@@ -1,15 +1,17 @@
 # Play chess
-# - One human player against one computer player on one computer.
+# - Two human players on one computer.
+
+# -------------------------------------------- #
+# Chess using the pygame library.
+# - Author: Caleb Smith
+# - Date: Project started on November 10, 2023
+# -------------------------------------------- #
 
 # Import the pygame library
 import pygame
-import time
 from board import Board
 from state import State
 from player import Player
-from tables import PieceTable
-from evaluate import EvaluateMaterial, EvaluatePosition
-from agent import AgentRandom, AgentCapture, AgentMinimax
 
 # Run the game
 def run_game():
@@ -34,27 +36,24 @@ def run_game():
     SQUARE_SIDE         = 75
     SQUARES_PER_SIDE    = 8
     
+    # Define themes
+    #piece_theme = "shapes"
+    #piece_theme = "standard"
+    piece_theme = "neo"
+    #piece_theme = "dummy"
+
     # Initialize pygame
     pygame.init()    
     # Create the screen
     screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
     # Initialize the board
     board = Board(pygame, screen, BOARD_LIGHT_COLOR, BOARD_DARK_COLOR, SQUARES_PER_SIDE, SQUARE_SIDE)
-    # Create evaluators
-    piece_table = PieceTable()
-    #evaluator = EvaluateMaterial()
-    evaluator = EvaluatePosition(piece_table)
-    # Create agents
-    time_delay  = 0.0
-    max_depth   = 1
-    #black_agent = AgentRandom()
-    #black_agent = AgentCapture()
-    black_agent = AgentMinimax(evaluator, max_depth)
     # Create players
     white_player = Player("Bilbo",  "white")
-    black_player = Player("Gollum", "black", black_agent)
+    black_player = Player("Gollum", "black")    
     # Setup the game state
-    state = State(board, white_player, black_player)
+    state = State(board, piece_theme, white_player, black_player)
+    state.LoadPieceImages(pygame, SQUARE_SIDE)
     state.SetInitialPieceState()
     # Set current and opposing players
     state.SetCurrentPlayer(white_player)
@@ -62,7 +61,7 @@ def run_game():
     current_player  = state.GetCurrentPlayer()
     opposing_player = state.GetOpposingPlayer()
     # Print detailed game state
-    state.PrintGameState(evaluator)
+    state.PrintGameState()
     
     # Click position
     click_position  = None
@@ -72,7 +71,6 @@ def run_game():
     position_to     = None
     clicked_square_exists   = False
     clicked_square_is_empty = False
-    agent_move_position = None
 
     # Game running condition
     running = True
@@ -84,38 +82,8 @@ def run_game():
             # If the user clicks the window close button, stop running.
             if event.type == pygame.QUIT:
                 running = False
-            
-            # Get the current agent
-            current_agent = current_player.GetAgent()
-            
-            # For computer player (with agent), choose a move
-            if current_agent:
-                start_time  = time.time()
-                chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
-                end_time    = time.time()
-                calc_time   = end_time - start_time
-                # Check that the move is not empty
-                if chosen_move:
-                    print("Chosen move: {0}".format(chosen_move))
-                    print("Calculation time: {0:.3f} seconds".format(calc_time))
-                    # Get move positions
-                    position_from, position_to = state.board.GetMovePositions(chosen_move)
-                    agent_move_position = position_to
-                    #print("position_from: {0}, position_to: {1}".format(position_from, position_to))
-                                        
-                    # Make move
-                    state.MakeMove(chosen_move)
-                    # Switch current and opposing players
-                    current_player  = state.GetCurrentPlayer()
-                    opposing_player = state.GetOpposingPlayer()
-                    # Print detailed game state
-                    state.PrintGameState(evaluator)
-                    # Add a time delay... take a breathe. :)
-                    if time_delay:
-                        time.sleep(time_delay)
-            
-            # For human player (without agent), get position of click
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            # Get position of click
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 # click position
                 click_position = pygame.mouse.get_pos()
                 click_x = click_position[0]
@@ -177,14 +145,17 @@ def run_game():
                                     all_systems_go = True
 
                         # All systems go: move the piece!
-                        if all_systems_go:                            
-                            # Make move
-                            state.MakeMove(move_notation)
+                        if all_systems_go:
+                            # Move piece
+                            state.MovePiece(move_notation)
+                            # Promote pawn if necessary
+                            state.PromotePawn(piece_to_move)
                             # Switch current and opposing players
+                            state.SwitchTurn()
                             current_player  = state.GetCurrentPlayer()
                             opposing_player = state.GetOpposingPlayer()
                             # Print detailed game state
-                            state.PrintGameState(evaluator)
+                            state.PrintGameState()
                                                     
                         # Reset clicked square and position from
                         # Do this whether or not we moved a piece
@@ -208,13 +179,6 @@ def run_game():
         
         # Draw the board
         board.DrawBoard()
-
-        # Draw the agent move
-        if agent_move_position:
-            agent_square_position = board.GetSquarePosition(agent_move_position)
-            square_x = agent_square_position[0]
-            square_y = agent_square_position[1]
-            board.DrawSquare(CLICK_COLOR_PIECE, square_x, square_y)
 
         # If there was a click, draw the clicked square
         if click_position:

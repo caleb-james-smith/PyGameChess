@@ -1,13 +1,5 @@
 # Evaluate classes
 
-# TODO:
-# - Plot position evaluation maps for each piece
-# - Switch between king middle game and end game tables
-# DONE
-# - Add evaluations for checkmate and stalemate
-# - Add position evaluation maps for each piece
-# - Piece tables assume that the player is white; need to fix for black player
-
 # Evaluation class: uses material (piece value) to determine evaluation.
 class EvaluateMaterial:
     def __init__(self):
