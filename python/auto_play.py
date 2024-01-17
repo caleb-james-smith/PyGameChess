@@ -62,9 +62,9 @@ def run_game():
     time_delay  = 0.0
     max_depth   = 1
     
-    black_agent = AgentRandom()
+    #black_agent = AgentRandom()
     #black_agent = AgentCapture()
-    #black_agent = AgentMinimax(black_evaluator, max_depth)
+    black_agent = AgentMinimax(black_evaluator, max_depth)
     
     #white_agent = AgentRandom()
     #white_agent = AgentCapture()
