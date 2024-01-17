@@ -32,6 +32,12 @@ def run_game():
     SQUARE_SIDE         = 75
     SQUARES_PER_SIDE    = 8
 
+    # Define themes
+    #piece_theme = "shapes"
+    #piece_theme = "standard"
+    piece_theme = "neo"
+    #piece_theme = "dummy"
+
     # Initialize pygame
     pygame.init()    
     # Create the screen
@@ -47,7 +53,8 @@ def run_game():
     white_player = Player("Merry",  "white", white_agent)
     black_player = Player("Pippin", "black", black_agent)
     # Setup the game state
-    state = State(board, white_player, black_player)
+    state = State(board, piece_theme, white_player, black_player)
+    state.LoadPieceImages(pygame, SQUARE_SIDE)
     state.SetInitialPieceState()
     # Set current and opposing players
     state.SetCurrentPlayer(white_player)
