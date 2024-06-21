@@ -59,16 +59,16 @@ def run_game():
     black_evaluator = EvaluatePosition(piece_table)
     
     # Create agents
-    time_delay  = 0.0
+    time_delay  = 0.5
     max_depth   = 1
-    
-    #black_agent = AgentRandom()
-    #black_agent = AgentCapture()
-    black_agent = AgentMinimax(black_evaluator, max_depth)
     
     #white_agent = AgentRandom()
     #white_agent = AgentCapture()
     white_agent = AgentMinimax(white_evaluator, max_depth)
+    
+    black_agent = AgentRandom()
+    #black_agent = AgentCapture()
+    #black_agent = AgentMinimax(black_evaluator, max_depth)
     
     # Create players
     white_player = Player("Merry",  "white", white_agent)
