@@ -95,8 +95,9 @@ def run_game():
             # Get the current agent
             current_agent = current_player.GetAgent()
             
-            # For computer player (with agent), choose a move
+            # Check if the player has an agent (is a computer player)
             if current_agent:
+                # Let the agent choose a move
                 start_time  = time.time()
                 chosen_move = current_agent.ChooseMove(state, current_player, opposing_player)
                 end_time    = time.time()
