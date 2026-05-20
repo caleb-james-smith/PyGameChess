@@ -9,9 +9,12 @@
 
 # Import the pygame library
 import pygame
+import tools
 from board import Board
 from state import State
 from player import Player
+
+tools.check_pygame_image_extended(pygame)
 
 # Run the game
 def run_game():

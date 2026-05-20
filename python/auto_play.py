@@ -4,12 +4,15 @@
 # Import the pygame library
 import pygame
 import time
+import tools
 from board import Board
 from state import State
 from player import Player
 from tables import PieceTable
 from evaluate import EvaluateMaterial, EvaluatePosition
 from agent import AgentRandom, AgentCapture, AgentMinimax
+
+tools.check_pygame_image_extended(pygame)
 
 # Run the game
 def run_game():

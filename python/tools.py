@@ -20,3 +20,11 @@ def get_numbers_between_numbers(a, b):
     elif a > b:
         numbers = [x for x in range(b + 1, a)]
     return numbers
+
+# Check that current Pygame installation supports extended image formats
+def check_pygame_image_extended(pg):
+    if pg.image.get_extended():
+        print("Pygame: extended image formats (PNG, JPG, etc.) are supported.")
+    else:
+        print("Pygame: only BMP images are supported.")
+
